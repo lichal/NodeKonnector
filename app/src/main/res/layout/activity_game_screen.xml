@@ -15,19 +15,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <crorg.node_konnector.GamePanel.MyGLSurfaceView
-        android:id="@+id/gamePanel"
+    <crorg.node_konnector.GamePanel.GameCanvas
+        android:id="@+id/gameCanvas"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/shapeRecyclerView"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/shapeRecyclerView"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
