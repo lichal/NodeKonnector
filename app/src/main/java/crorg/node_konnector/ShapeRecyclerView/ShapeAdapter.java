@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -41,6 +42,46 @@ public class ShapeAdapter extends RecyclerView.Adapter<ShapeAdapter.ViewHolder> 
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
+
+        holder.mView.setOnDragListener(new View.OnDragListener(){
+
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                final int action = event.getAction();
+                switch(action) {
+
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        break;
+
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        break;
+
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        break;
+
+                    case DragEvent.ACTION_DROP:
+                        return true;
+
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        return true;
+
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+        holder.mView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent arg1) {
+                // TODO Auto-generated method stub
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(holder.mView);
+                v.startDrag(data, shadow, null, 0);
+                return true;
+            }
+        });
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
