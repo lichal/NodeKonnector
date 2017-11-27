@@ -37,8 +37,16 @@ public class Konnection {
     }
 
 
-    public void setType(int a) {
-        classOfKonnection = a;
+    public void setBondType(int a) {
+        if (a == Konnection.SINGLE_BOND) {
+            classOfKonnection = Konnection.SINGLE_BOND;
+        } else if (a == Konnection.DOUBLE_BOND) {
+            classOfKonnection = Konnection.DOUBLE_BOND;
+        } else if (a == Konnection.TRIPLE_BOND) {
+            classOfKonnection = Konnection.TRIPLE_BOND;
+        } else {
+            return;
+        }
     }
 
     public int getType(int a) {

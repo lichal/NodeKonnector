@@ -12,6 +12,8 @@ import java.util.Random;
 
 
 public class Logic {
+    private static int NUM_TOTAL_SHAPES = 4;
+
 
 
     public static void randomizeAStructure(int n) {
@@ -38,8 +40,9 @@ public class Logic {
         }
         System.out.println("Number of nodes before: " + st.getNodes().size() + ", Number of connections: " + konnections.size());
 
-        // Step 3: Remove all konnections except the bare minimum number
-        // necessary for the structure to stay intact
+        // Step 3: Systematically remove all konnections except the bare minimum number
+        // necessary for the structure to stay intact (a.k.a. all SINGLE bonds)
+        // POTENTIAL PROBLEM - CANNOT LEAVE NODES WITH CONNECTIONS HIGHER THAN Logic.NUM_OF_SHAPES!!!
         Random r = new Random();
         for (int current = konnections.size(); current > n - 1; current--) {
             int one = r.nextInt(konnections.size());
@@ -50,21 +53,44 @@ public class Logic {
             //if only one connection for a node, don't remove
             int num1 = Logic.numberOfRepresenations(n1, konnections);
             int num2 = Logic.numberOfRepresenations(n2, konnections);
-            if ((num1 >= 1) && (num2 >= 1)) {
-                System.out.println("current: " + current);
+            if ((num1 > 1) && (num2 > 1)) {
                 konnections.remove(one);
             } else {
                 current++;
             }
         }
 
-        System.out.println("Number of nodes: " + st.getNodes().size() + ", Number of connections: " + konnections.size());
-        // randomly classify remaining connections as single or double, etc.
+        System.out.println("Number of nodes after: " + st.getNodes().size() + ", Number of connections: " + konnections.size());
+        // randomly classify all connections as single, double, or triple (don't go any higher - triple bonds are enough)
+        for (Konnection k : konnections) {
+            int m = r.nextInt(Logic.NUM_TOTAL_SHAPES);
+            Node n1 = k.getNode1();
+            Node n2 = k.getNode2();
+            int num1 = Logic.numberOfRepresenations(n1, konnections);
+            int num2 = Logic.numberOfRepresenations(n2, konnections);
+
+            // Add double bond, check
+            if (m == Konnection.DOUBLE_BOND) {
+                if ((num1 <= 3) && (num2 <= 3)) {
+
+                }
+            }
+
+
+
+        }
+
+
+
         // through logic, figure out what shapes the nodes must be
         // based on last step, give summary ("3 shapes: 2 unique, 1 unique...")
+        // save this structure for gameplay
 
+
+
+        // display all connections with text
         for (Konnection k : konnections) {
-            System.out.println("Node" + k.getNode1().getNum() + " bonded to " + k.getNode2().getNum());
+            System.out.println("Node-" + k.getNode1().getNum() + " bonded to Node-" + k.getNode2().getNum());
         }
 
 
