@@ -1,47 +1,29 @@
 package crorg.node_konnector.Shapes;
 
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.Shape;
 
 /**
  * Created by Cheng Li on 11/23/2017.
  */
 
-public class Shape extends Drawable{
+public class KonnectorShape extends ShapeDrawable{
 
     protected int connection;
     protected int positionX;
     protected int positionY;
     protected int height;
     protected int width;
+    protected boolean select;
+    protected Shape s;
 
-    public Shape(){
-
+    public KonnectorShape(){
+        select = false;
     }
 
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-
-    }
-
-    @Override
-    public void setAlpha(@IntRange(from = 0, to = 255) int i) {
-
-    }
-
-    @Override
-    public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.OPAQUE;
+    public KonnectorShape(Shape s){
+        super(s);
+        this.s = s;
     }
 
     public int getConnection(){
@@ -64,6 +46,10 @@ public class Shape extends Drawable{
         return width;
     }
 
+    public boolean getSelect(){
+        return select;
+    }
+
     public void setConnection(int connection) {
         this.connection = connection;
     }
@@ -82,5 +68,9 @@ public class Shape extends Drawable{
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public void setSelect(boolean select){
+        this.select = select;
     }
 }
