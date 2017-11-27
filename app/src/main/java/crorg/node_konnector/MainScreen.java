@@ -10,6 +10,7 @@ import crorg.node_konnector.dummy.LevelContent;
 public class MainScreen extends AppCompatActivity implements LevelFragment.OnListFragmentInteractionListener {
     public static final String LEVEL_MESSAGE = "crorg.nodekonnector.LEVELMESSAGE";
 
+    // a comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
