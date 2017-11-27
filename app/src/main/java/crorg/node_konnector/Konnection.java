@@ -16,7 +16,7 @@ public class Konnection {
     public Konnection(Node n1, Node n2) {
         node1 = n1;
         node2 = n2;
-        classOfKonnection = SINGLE_BOND;
+        classOfKonnection = Konnection.SINGLE_BOND;
     }
 
 
@@ -43,6 +43,23 @@ public class Konnection {
 
     public int getType(int a) {
         return classOfKonnection;
+    }
+
+
+
+
+
+
+
+    public static boolean areEqual(Konnection k1, Konnection k2) {
+        Node n1 = k1.getNode1();
+        Node n2 = k1.getNode2();
+        Node n3 = k2.getNode1();
+        Node n4 = k2.getNode2();
+        if (((n1 == n3) || (n1 == n4)) && ((n2 == n3) || (n2 == n4))) {
+            return true;
+        }
+        return false;
     }
 
 
