@@ -18,12 +18,12 @@ public class Logic {
 
     public static void randomizeAStructure(int numberOfNodes) {
         Structure st = new Structure();
-        ArrayList<Konnection> konnections = st.getKonnections();
+        ArrayList<Bond> bonds = st.getBonds();
         ArrayList<Node> nodes = st.getNodes();
         Logic.createNodes(st, numberOfNodes);
-        Logic.konnectAllNodesToEachOther(st);
-        Logic.removeKonnectionsToBareMinimum(st, numberOfNodes);
-        //Logic.correctAllFaultyKonnections(st, n);
+        Logic.bondAllNodesToEachOther(st);
+        Logic.removeBondsToBareMinimum(st, numberOfNodes);
+        //Logic.correctAllFaultyBonds(st, n);
         Logic.randomizeBondTypes(st);
         Logic.displayAllKonnections(st);
 
@@ -32,15 +32,15 @@ public class Logic {
         // based on last step, give summary ("3 shapes: 2 unique, 1 unique...")
         // save this structure for gameplay
         for (int i = 0; i < nodes.size(); i++) {
-            System.out.println("Node" + i + ": " + nodes.get(i).getNumberKonnections());
+            System.out.println("Node" + i + ": " + nodes.get(i).getNumberOfBonds());
         }
     }
 
 
 
-    private static int numberOfRepresenations(Node interest, ArrayList<Konnection> list) {
+    private static int numberOfRepresenations(Node interest, ArrayList<Bond> list) {
         int sum = 0;
-        for (Konnection k : list) {
+        for (Bond k : list) {
             Node n1 = k.getNode1();
             Node n2 = k.getNode2();
             if ((n1 == interest) || (n2 == interest)) {
@@ -59,10 +59,10 @@ public class Logic {
         }
     }
 
-    // Step 2: Connect them all [n(n - 1)/2 total konnections]
-    private static void konnectAllNodesToEachOther(Structure st) {
+    // Step 2: Connect them all [n(n - 1)/2 total bonds]
+    private static void bondAllNodesToEachOther(Structure st) {
         ArrayList<Node> nodes = st.getNodes();
-        ArrayList<Konnection> konnections = st.getKonnections();
+        ArrayList<Bond> bonds = st.getBonds();
         for (int node1 = 0; node1 < nodes.size(); node1++) {
             for (int node2 = node1; node2 < nodes.size(); node2++) {
                 Node n1 = nodes.get(node1);
@@ -70,33 +70,33 @@ public class Logic {
                 if (n1 == n2) {
                     continue;
                 }
-                Konnection k = new Konnection(n1, n2);
-                st.addKonnection(k);
+                Bond k = new Bond(n1, n2);
+                st.addBond(k);
                 n1.incrementKonnections();
                 n2.incrementKonnections();
             }
         }
-        System.out.println("Number of nodes before: " + st.getNodes().size() + ", Number of connections: " + konnections.size());
+        System.out.println("Number of nodes before: " + st.getNodes().size() + ", Number of connections: " + bonds.size());
     }
 
-    // Step 3: Systematically remove all konnections except the bare minimum number
+    // Step 3: Systematically remove all bonds except the bare minimum number
     // necessary for the structure to stay intact (a.k.a. all SINGLE bonds)
     // SUBTLE PROBLEM - SOME NODES ARE GIVEN CONNECTIONS HIGHER THAN Logic.NUM_OF_SHAPES!!!
-    private static void removeKonnectionsToBareMinimum(Structure st, int numNodes) {
-        ArrayList<Konnection> konnections = st.getKonnections();
+    private static void removeBondsToBareMinimum(Structure st, int numNodes) {
+        ArrayList<Bond> bonds = st.getBonds();
         ArrayList<Node> nodes = st.getNodes();
         Random r = new Random();
-        for (int current = konnections.size(); current > numNodes - 1; current--) {
-            int one = r.nextInt(konnections.size());
-            Konnection k = konnections.get(one);
+        for (int current = bonds.size(); current > numNodes - 1; current--) {
+            int one = r.nextInt(bonds.size());
+            Bond k = bonds.get(one);
             Node n1 = k.getNode1();
             Node n2 = k.getNode2();
 
             //if only one connection for a node, don't remove
-            int num1 = n1.getNumberKonnections();
-            int num2 = n2.getNumberKonnections();
+            int num1 = n1.getNumberOfBonds();
+            int num2 = n2.getNumberOfBonds();
             if ((num1 > 1) && (num2 > 1)) {
-                konnections.remove(one);
+                bonds.remove(one);
                 n1.decrementKonnections();
                 n2.decrementKonnections();
             } else {
@@ -104,26 +104,26 @@ public class Logic {
             }
         }
 
-        System.out.println("Number of nodes after: " + st.getNodes().size() + ", Number of connections: " + konnections.size());
+        System.out.println("Number of nodes after: " + st.getNodes().size() + ", Number of connections: " + bonds.size());
         int sum = 0;
         for (Node nn : nodes) {
-            sum += nn.getNumberKonnections();
+            sum += nn.getNumberOfBonds();
         }
         sum = sum / 2;
 
-        System.out.println("Number of konnections from NODES: " + sum);
+        System.out.println("Number of bonds from NODES: " + sum);
     }
 
 
     // randomly classify all connections as single, double, or triple (don't go any higher - triple bonds are enough)
     private static void randomizeBondTypes(Structure st) {
-        ArrayList<Konnection> konnections = st.getKonnections();
+        ArrayList<Bond> bonds = st.getBonds();
         Random r = new Random();
-        for (Konnection k : konnections) {
+        for (Bond k : bonds) {
             Node n1 = k.getNode1();
             Node n2 = k.getNode2();
-            int num1 = n1.getNumberKonnections();
-            int num2 = n2.getNumberKonnections();
+            int num1 = n1.getNumberOfBonds();
+            int num2 = n2.getNumberOfBonds();
             int largerKonnection = Math.max(num1, num2);
             int maxAddableKonnections = Logic.NUM_TOTAL_SHAPES - largerKonnection;
             if (maxAddableKonnections >= 1) {
@@ -132,19 +132,19 @@ public class Logic {
                     maxAddableKonnections = 2;
                 }
                 int howManyToAdd = r.nextInt(1 + maxAddableKonnections);
-                if (howManyToAdd == Konnection.DOUBLE_BOND - 1) {
-                    k.setBondType(Konnection.DOUBLE_BOND);
+                if (howManyToAdd == Bond.DOUBLE - 1) {
+                    k.setBondType(Bond.DOUBLE);
                     n1.incrementKonnections();
                     n2.incrementKonnections();
-                } else if (howManyToAdd == Konnection.TRIPLE_BOND - 1) {
-                    k.setBondType(Konnection.TRIPLE_BOND);
+                } else if (howManyToAdd == Bond.TRIPLE - 1) {
+                    k.setBondType(Bond.TRIPLE);
                     n1.incrementKonnections();
                     n1.incrementKonnections();
                     n2.incrementKonnections();
                     n2.incrementKonnections();
                 }
             } else {
-                k.setBondType(Konnection.SINGLE_BOND);
+                k.setBondType(Bond.SINGLE);
             }
         }
     }
@@ -157,15 +157,15 @@ public class Logic {
      * @param st
      */
     private static void displayAllKonnections(Structure st) {
-        ArrayList<Konnection> konnections = st.getKonnections();
-        for (Konnection k : konnections) {
+        ArrayList<Bond> bonds = st.getBonds();
+        for (Bond k : bonds) {
             System.out.println();
             System.out.print(k.getNode1().getNum() + " --- " + k.getNode2().getNum());
             int m = k.getBondType();
             String s = "";
-            if (m == Konnection.SINGLE_BOND) {
+            if (m == Bond.SINGLE) {
                 s += "single";
-            } else if (m == Konnection.DOUBLE_BOND) {
+            } else if (m == Bond.DOUBLE) {
                 s += "double";
             } else {
                 s += "triple";

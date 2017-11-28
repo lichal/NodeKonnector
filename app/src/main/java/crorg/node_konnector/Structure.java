@@ -1,6 +1,5 @@
 package crorg.node_konnector;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -8,11 +7,11 @@ import java.util.ArrayList;
  */
 
 public class Structure {
-    private ArrayList<Konnection> konnections;
+    private ArrayList<Bond> bonds;
     private ArrayList<Node> nodes;
 
     public Structure() {
-        konnections = new ArrayList<Konnection>();
+        bonds = new ArrayList<Bond>();
         nodes = new ArrayList<Node>();
     }
 
@@ -20,8 +19,8 @@ public class Structure {
         nodes.add(n);
     }
     
-    public void addKonnections(Konnection n) {
-        konnections.add(n);
+    public void addKonnections(Bond n) {
+        bonds.add(n);
     }
 
 
@@ -29,19 +28,19 @@ public class Structure {
         return nodes;
     }
 
-    public ArrayList<Konnection> getKonnections() {
-        return konnections;
+    public ArrayList<Bond> getBonds() {
+        return bonds;
     }
 
-    public void addKonnection(Konnection k) {
-        if (konnections.size() == 0) {
-            konnections.add(k);
+    public void addBond(Bond k) {
+        if (bonds.size() == 0) {
+            bonds.add(k);
             return;
         }
 
-        for (Konnection ko : konnections) {
-            if (!Konnection.areEqual(k, ko)) {
-                konnections.add(k);
+        for (Bond ko : bonds) {
+            if (!Bond.areEqual(k, ko)) {
+                bonds.add(k);
                 return;
             }
         }

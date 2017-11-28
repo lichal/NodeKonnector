@@ -4,19 +4,19 @@ package crorg.node_konnector;
  * Created by Ryan on 2017-11-27.
  */
 
-public class Konnection {
-    public static int SINGLE_BOND = 1;
-    public static int DOUBLE_BOND = 2;
-    public static int TRIPLE_BOND = 3;
+public class Bond {
+    public static int SINGLE = 1;
+    public static int DOUBLE = 2;
+    public static int TRIPLE = 3;
     private Node node1;
     private Node node2;
     private int classOfKonnection;
 
 
-    public Konnection(Node n1, Node n2) {
+    public Bond(Node n1, Node n2) {
         node1 = n1;
         node2 = n2;
-        classOfKonnection = Konnection.SINGLE_BOND;
+        classOfKonnection = Bond.SINGLE;
     }
 
 
@@ -38,12 +38,12 @@ public class Konnection {
 
 
     public void setBondType(int a) {
-        if (a == Konnection.SINGLE_BOND) {
-            classOfKonnection = Konnection.SINGLE_BOND;
-        } else if (a == Konnection.DOUBLE_BOND) {
-            classOfKonnection = Konnection.DOUBLE_BOND;
-        } else if (a == Konnection.TRIPLE_BOND) {
-            classOfKonnection = Konnection.TRIPLE_BOND;
+        if (a == Bond.SINGLE) {
+            classOfKonnection = Bond.SINGLE;
+        } else if (a == Bond.DOUBLE) {
+            classOfKonnection = Bond.DOUBLE;
+        } else if (a == Bond.TRIPLE) {
+            classOfKonnection = Bond.TRIPLE;
         } else {
             return;
         }
@@ -59,7 +59,7 @@ public class Konnection {
 
 
 
-    public static boolean areEqual(Konnection k1, Konnection k2) {
+    public static boolean areEqual(Bond k1, Bond k2) {
         Node n1 = k1.getNode1();
         Node n2 = k1.getNode2();
         Node n3 = k2.getNode1();
