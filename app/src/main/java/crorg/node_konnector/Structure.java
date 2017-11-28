@@ -45,30 +45,6 @@ public class Structure {
             }
         }
     }
-<<<<<<< HEAD
-    
-
-
-    public void addKonnections(Konnection n) {
-        konnections.add(n);
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private static int numberOfRepresenations(Node interest, ArrayList<Bond> list) {
@@ -81,7 +57,6 @@ public class Structure {
             }
         }
         return sum;
->>>>>>> 4d69880d8ff8d60ba64dd27ec0a26b0b15bb43e1
     }
 
 
