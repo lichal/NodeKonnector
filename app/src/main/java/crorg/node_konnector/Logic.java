@@ -16,19 +16,24 @@ public class Logic {
 
 
 
-    public static void randomizeAStructure(int n) {
+    public static void randomizeAStructure(int numberOfNodes) {
         Structure st = new Structure();
         ArrayList<Konnection> konnections = st.getKonnections();
         ArrayList<Node> nodes = st.getNodes();
-        Logic.createNodes(st, n);
+        Logic.createNodes(st, numberOfNodes);
         Logic.konnectAllNodesToEachOther(st);
-        Logic.removeKonnectionsToBareMinimum(st, n);
+        Logic.removeKonnectionsToBareMinimum(st, numberOfNodes);
+        //Logic.correctAllFaultyKonnections(st, n);
         Logic.randomizeBondTypes(st);
         Logic.displayAllKonnections(st);
+
 
         // through logic, figure out what shapes the nodes must be
         // based on last step, give summary ("3 shapes: 2 unique, 1 unique...")
         // save this structure for gameplay
+        for (int i = 0; i < nodes.size(); i++) {
+            System.out.println("Node" + i + ": " + nodes.get(i).getNumberKonnections());
+        }
     }
 
 
@@ -54,7 +59,7 @@ public class Logic {
         }
     }
 
-    // Step 2: Connect them all [n(n + 1)/2 total konnections]
+    // Step 2: Connect them all [n(n - 1)/2 total konnections]
     private static void konnectAllNodesToEachOther(Structure st) {
         ArrayList<Node> nodes = st.getNodes();
         ArrayList<Konnection> konnections = st.getKonnections();
@@ -76,7 +81,7 @@ public class Logic {
 
     // Step 3: Systematically remove all konnections except the bare minimum number
     // necessary for the structure to stay intact (a.k.a. all SINGLE bonds)
-    // POTENTIAL PROBLEM - CANNOT LEAVE NODES WITH CONNECTIONS HIGHER THAN Logic.NUM_OF_SHAPES!!!
+    // SUBTLE PROBLEM - SOME NODES ARE GIVEN CONNECTIONS HIGHER THAN Logic.NUM_OF_SHAPES!!!
     private static void removeKonnectionsToBareMinimum(Structure st, int numNodes) {
         ArrayList<Konnection> konnections = st.getKonnections();
         ArrayList<Node> nodes = st.getNodes();
@@ -115,18 +120,28 @@ public class Logic {
         ArrayList<Konnection> konnections = st.getKonnections();
         Random r = new Random();
         for (Konnection k : konnections) {
-            int typeOfBond = r.nextInt(3);
             Node n1 = k.getNode1();
             Node n2 = k.getNode2();
             int num1 = n1.getNumberKonnections();
             int num2 = n2.getNumberKonnections();
-            if (typeOfBond == Konnection.DOUBLE_BOND) {
-                if ((num1 <= 3) && (num2 <= 3)) {
-                    k.setBondType(Konnection.DOUBLE_BOND);
+            int largerKonnection = Math.max(num1, num2);
+            int maxAddableKonnections = Logic.NUM_TOTAL_SHAPES - largerKonnection;
+            if (maxAddableKonnections >= 1) {
+                // Only  have single, double, and triple bonds to deal with...
+                if (maxAddableKonnections >= 3) {
+                    maxAddableKonnections = 2;
                 }
-            } else if (typeOfBond == Konnection.TRIPLE_BOND) {
-                if ((num1 <= 2) && (num2 <= 2)) {
+                int howManyToAdd = r.nextInt(1 + maxAddableKonnections);
+                if (howManyToAdd == Konnection.DOUBLE_BOND - 1) {
+                    k.setBondType(Konnection.DOUBLE_BOND);
+                    n1.incrementKonnections();
+                    n2.incrementKonnections();
+                } else if (howManyToAdd == Konnection.TRIPLE_BOND - 1) {
                     k.setBondType(Konnection.TRIPLE_BOND);
+                    n1.incrementKonnections();
+                    n1.incrementKonnections();
+                    n2.incrementKonnections();
+                    n2.incrementKonnections();
                 }
             } else {
                 k.setBondType(Konnection.SINGLE_BOND);
@@ -144,7 +159,8 @@ public class Logic {
     private static void displayAllKonnections(Structure st) {
         ArrayList<Konnection> konnections = st.getKonnections();
         for (Konnection k : konnections) {
-            System.out.println("Node-" + k.getNode1().getNum() + " bonded to Node-" + k.getNode2().getNum());
+            System.out.println();
+            System.out.print(k.getNode1().getNum() + " --- " + k.getNode2().getNum());
             int m = k.getBondType();
             String s = "";
             if (m == Konnection.SINGLE_BOND) {
@@ -155,7 +171,7 @@ public class Logic {
                 s += "triple";
             }
 
-            System.out.println("\tType of connection:  " + s);
+            System.out.println("\t" + s);
         }
     }
 }

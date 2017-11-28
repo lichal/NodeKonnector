@@ -2,6 +2,8 @@ package crorg.node_konnector;
 
 import org.junit.Test;
 
+import java.util.Random;
+
 import static org.junit.Assert.*;
 
 /**
@@ -10,7 +12,9 @@ import static org.junit.Assert.*;
 public class LogicTest {
     @Test
     public void randomizeAStructure() throws Exception {
-        Logic.randomizeAStructure(8);
+        Logic.randomizeAStructure(15);
+
+
     }
 
 }
