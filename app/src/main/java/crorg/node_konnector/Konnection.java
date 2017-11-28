@@ -49,7 +49,7 @@ public class Konnection {
         }
     }
 
-    public int getType(int a) {
+    public int getBondType() {
         return classOfKonnection;
     }
 

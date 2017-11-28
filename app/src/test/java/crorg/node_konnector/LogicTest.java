@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class LogicTest {
     @Test
     public void randomizeAStructure() throws Exception {
-        Logic.randomizeAStructure(5);
+        Logic.randomizeAStructure(8);
     }
 
 }
