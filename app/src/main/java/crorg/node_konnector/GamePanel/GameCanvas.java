@@ -31,15 +31,15 @@ public class GameCanvas extends View {
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        mDrawable = new Circle(new OvalShape(), 200, 10, 100, 100);
+        mDrawable = new Circle(new OvalShape(), 200, 10);
         // If the color isn't set, the shape uses black as the default.
         mDrawable.getPaint().setColor(0xff74AC23);
         // If the bounds aren't set, the shape can't be drawn.
 
-        mTriangle = new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200, 100, 100);
+        mTriangle = new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200);
         mTriangle.getPaint().setColor(0xff74AC23);
 
-        mHexagon = new Hexagon(new PathShape(drawHexagon(), 100, 100), 300, 300, 100, 100);
+        mHexagon = new Hexagon(new PathShape(drawHexagon(), 100, 100), 300, 300);
         mHexagon.getPaint().setColor(0xff74AC23);
     }
 

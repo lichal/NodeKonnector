@@ -1,7 +1,5 @@
 package crorg.node_konnector.Shapes;
 
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.drawable.shapes.Shape;
 
 /**
@@ -10,55 +8,14 @@ import android.graphics.drawable.shapes.Shape;
 
 public class Triangle extends KonnectorShape {
 
-
-    public Triangle(Shape s, int x, int y, int height, int width){
+    public Triangle(Shape s, int x, int y){
         super(s);
         this.s = s;
         this.positionX = x;
         this.positionY = y;
-        this.height = height;
-        this.width = width;
+        this.height = 100;
+        this.width = 100;
         setBounds(x, y, x + width, y + height);
     }
-
-    public boolean checkSelect(int xSelect, int ySelect){
-        int leftBound = this.getPositionX();
-        int rightBound = this.getPositionX() + this.getWidth();
-        int topBound = this.getPositionY();
-        int bottomBound = this.getPositionY() + this.getHeight();
-
-        if(xSelect > leftBound && xSelect < rightBound && ySelect > topBound && ySelect < bottomBound){
-            this.select = true;
-            return this.select;
-        }
-        this.select = false;
-        return this.select;
-    }
-
-    public void redraw(int x, int y){
-        this.positionX = x - width/2;
-        this.positionY = y - height/2;
-        setBounds(positionX, positionY, x + width/2, y + height/2);
-    }
-
-//    private Path drawTriangle() {
-//        Point p1 = new Point();
-//        p1.x = 100;
-//        p1.y = 100;
-//
-//        Point p2 = null, p3 = null;
-//
-//        p2 = new Point(p1.x - 50, p1.y + 100);
-//        p3 = new Point(p1.x + 50, p1.y + 100);
-//
-//        Path path = new Path();
-//        path.moveTo(p1.x, p1.y);
-//        path.lineTo(p2.x, p2.y);
-//        path.lineTo(p3.x, p3.y);
-//        path.lineTo(p1.x, p1.y);
-//
-//        return path;
-//    }
-
 
 }

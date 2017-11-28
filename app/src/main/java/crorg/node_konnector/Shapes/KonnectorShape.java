@@ -73,4 +73,24 @@ public class KonnectorShape extends ShapeDrawable{
     public void setSelect(boolean select){
         this.select = select;
     }
+
+    public boolean checkSelect(int xSelect, int ySelect) {
+        int leftBound = this.getPositionX();
+        int rightBound = this.getPositionX() + this.getWidth();
+        int topBound = this.getPositionY();
+        int bottomBound = this.getPositionY() + this.getHeight();
+
+        if(xSelect > leftBound && xSelect < rightBound && ySelect > topBound && ySelect < bottomBound){
+            this.select = true;
+            return this.select;
+        }
+        this.select = false;
+        return this.select;
+    }
+
+    public void redraw(int x, int y){
+        this.positionX = x - width/2;
+        this.positionY = y - height/2;
+        setBounds(positionX, positionY, x + width/2, y + height/2);
+    }
 }

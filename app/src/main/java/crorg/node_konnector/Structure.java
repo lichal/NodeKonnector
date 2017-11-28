@@ -19,8 +19,7 @@ public class Structure {
     public void addNode(Node n) {
         nodes.add(n);
     }
-
-
+    
     public void addKonnections(Konnection n) {
         konnections.add(n);
     }
