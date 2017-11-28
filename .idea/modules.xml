@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Node-Konnector.iml" filepath="$PROJECT_DIR$/Node-Konnector.iml" />
       <module fileurl="file://$PROJECT_DIR$/NodeKonnector.iml" filepath="$PROJECT_DIR$/NodeKonnector.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -5,4 +5,5 @@ package crorg.node_konnector.Shapes;
  */
 
 public class Square extends KonnectorShape {
+    
 }

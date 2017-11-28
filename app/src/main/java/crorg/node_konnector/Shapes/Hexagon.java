@@ -1,17 +1,14 @@
 package crorg.node_konnector.Shapes;
 
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.drawable.shapes.Shape;
 
 /**
- * Created by Cheng Li on 11/23/2017.
+ * Created by d on 11/27/17.
  */
 
-public class Triangle extends KonnectorShape {
+public class Hexagon extends KonnectorShape{
 
-
-    public Triangle(Shape s, int x, int y, int height, int width){
+    public Hexagon(Shape s, int x, int y, int height, int width){
         super(s);
         this.s = s;
         this.positionX = x;
@@ -40,25 +37,4 @@ public class Triangle extends KonnectorShape {
         this.positionY = y - height/2;
         setBounds(positionX, positionY, x + width/2, y + height/2);
     }
-
-//    private Path drawTriangle() {
-//        Point p1 = new Point();
-//        p1.x = 100;
-//        p1.y = 100;
-//
-//        Point p2 = null, p3 = null;
-//
-//        p2 = new Point(p1.x - 50, p1.y + 100);
-//        p3 = new Point(p1.x + 50, p1.y + 100);
-//
-//        Path path = new Path();
-//        path.moveTo(p1.x, p1.y);
-//        path.lineTo(p2.x, p2.y);
-//        path.lineTo(p3.x, p3.y);
-//        path.lineTo(p1.x, p1.y);
-//
-//        return path;
-//    }
-
-
 }
