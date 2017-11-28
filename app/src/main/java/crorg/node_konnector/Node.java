@@ -27,7 +27,7 @@ public class Node {
         numberKonnections--;
     }
 
-    public int getNumberOfBonds() {
+    public int getNumberOfKonnections() {
         return numberKonnections;
     }
 }

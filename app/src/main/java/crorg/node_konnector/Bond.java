@@ -10,13 +10,13 @@ public class Bond {
     public static int TRIPLE = 3;
     private Node node1;
     private Node node2;
-    private int classOfKonnection;
+    private int classOfBond;
 
 
     public Bond(Node n1, Node n2) {
         node1 = n1;
         node2 = n2;
-        classOfKonnection = Bond.SINGLE;
+        classOfBond = Bond.SINGLE;
     }
 
 
@@ -39,18 +39,18 @@ public class Bond {
 
     public void setBondType(int a) {
         if (a == Bond.SINGLE) {
-            classOfKonnection = Bond.SINGLE;
+            classOfBond = Bond.SINGLE;
         } else if (a == Bond.DOUBLE) {
-            classOfKonnection = Bond.DOUBLE;
+            classOfBond = Bond.DOUBLE;
         } else if (a == Bond.TRIPLE) {
-            classOfKonnection = Bond.TRIPLE;
+            classOfBond = Bond.TRIPLE;
         } else {
             return;
         }
     }
 
     public int getBondType() {
-        return classOfKonnection;
+        return classOfBond;
     }
 
 
@@ -59,11 +59,11 @@ public class Bond {
 
 
 
-    public static boolean areEqual(Bond k1, Bond k2) {
-        Node n1 = k1.getNode1();
-        Node n2 = k1.getNode2();
-        Node n3 = k2.getNode1();
-        Node n4 = k2.getNode2();
+    public static boolean areEqual(Bond b1, Bond b2) {
+        Node n1 = b1.getNode1();
+        Node n2 = b1.getNode2();
+        Node n3 = b2.getNode1();
+        Node n4 = b2.getNode2();
         if (((n1 == n3) || (n1 == n4)) && ((n2 == n3) || (n2 == n4))) {
             return true;
         }
