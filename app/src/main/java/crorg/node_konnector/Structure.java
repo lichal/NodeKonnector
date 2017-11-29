@@ -1,5 +1,6 @@
 package crorg.node_konnector;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,55 +19,34 @@ public class Structure {
         this.numNodes = numNodes;
         createNodes();
         bondAllNodesToEachOther();
-        removeBondsToBareMinimum();
+        removeBondsToBareMinimum(); // the PROBLEM is HERE - the other ones are commented out, so THIS is the culprit!!!
         fixAnyOverkonnectedNodes();
         randomizeBondTypes();
+        displayStringDescription();
 
         // through logic, figure out what shapes the nodes must be
         // based on last step, give summary ("3 shapes: 2 unique, 1 unique...")
+        System.out.println("Is Structure INTACT?: " + isStrutureIntact());
         displayStructureInfoForDebugging();
     }
 
-
-    private void addBond(Bond k) {
+    // true if successfully added a unique one
+    private boolean addBond(Bond k) {
         if (bonds.size() == 0) {
             bonds.add(k);
-            return;
+            return true;
         }
 
+        boolean isNotCopycat = true;
         for (Bond ko : bonds) {
-            if (!Bond.areEqual(k, ko)) {
-                bonds.add(k);
-                return;
-            }
-        }
-    }
-
-
-
-
-
-    // returns true if no node exceeds allowable konnection limit
-    private boolean statusOfNodes() {
-        for (Node n : nodes) {
-            if (n.getNumberOfKonnections() > Logic.NUM_TOTAL_SHAPES) {
+            if (Bond.areEqual(k, ko)) {
                 return false;
             }
         }
+
+        bonds.add(k);
         return true;
     }
-
-
-    private int getMaxKonnectionsFromAllNodes() {
-        int max = -7;
-        for (Node n : nodes) {
-            if (n.getNumberOfKonnections() >= max) {
-                max = n.getNumberOfKonnections();
-            }
-        }
-        return max;
-    }
-
 
     // step 1
     private void createNodes() {
@@ -85,9 +65,12 @@ public class Structure {
                     continue;
                 }
                 Bond k = new Bond(n1, n2);
-                addBond(k);
-                n1.incrementKonnections();
-                n2.incrementKonnections();
+                if (addBond(k)) {
+                    n1.incrementKonnections();
+                    n2.incrementKonnections();
+                    n1.addNeighborNode(n2);
+                    n2.addNeighborNode(n1);
+                }
             }
         }
 
@@ -100,18 +83,29 @@ public class Structure {
     private void removeBondsToBareMinimum() {
         Random r = new Random();
         for (int current = bonds.size(); current > numNodes - 1; current--) {
-            int one = r.nextInt(bonds.size());
-            Bond k = bonds.get(one);
-            Node n1 = k.getNode1();
-            Node n2 = k.getNode2();
+            int randIndex = r.nextInt(bonds.size());
+            Bond bondSelected = bonds.get(randIndex);
+            Node n1 = bondSelected.getNode1();
+            Node n2 = bondSelected.getNode2();
 
             //if only one konnection for a node, don't remove
             int num1 = n1.getNumberOfKonnections();
             int num2 = n2.getNumberOfKonnections();
             if ((num1 > 1) && (num2 > 1)) {
-                bonds.remove(one);
-                n1.decrementKonnections();
-                n2.decrementKonnections();
+
+                // if removing the bond won't upset the structure, then do it...
+                // temporarily remove the both  nodes as neighbors - if it still works, you can remove the bond
+                n1.removeNeighborNode(n2);
+                n2.removeNeighborNode(n1);
+                if (isStrutureIntact()) {               // comment this out to show Cheng - use 5 as nodes and 26
+                    n1.decrementKonnections();
+                    n2.decrementKonnections();
+                    bonds.remove(bondSelected);
+                } else {                                // comment this out to show Cheng
+                    n1.addNeighborNode(n2);             // comment this out to show Cheng
+                    n2.addNeighborNode(n1);             // comment this out to show Cheng
+                    current++;                          // comment this out to show Cheng
+                }                                       // comment this out to show Cheng
             } else {
                 current++;
             }
@@ -130,6 +124,11 @@ public class Structure {
 
     // This method MUST be called BEFORE randomize bonds - it assumes that all bonds are single
     // and reconnects them based on if there are too manay konnections somewhere.
+    // this one should not have a problem like the other one - if a node is
+    // disconnected but then connected again to another one, the entire structure should
+    // still stay intact
+    // if worst comes to worst, we can just ensure that a structure is intact by testing it
+    // if it fails, generate a new one for the player
     private void fixAnyOverkonnectedNodes() {
         // Search all nodes - see if num konnections is greater than Logic.Nums
         Random r = new Random();
@@ -160,21 +159,44 @@ public class Structure {
 
                     // Find a suitable partner for this loner
                     Node replacementPartner = null;
+                    mainLoop:
                     for (Node potentialReplacement : nodes) {
-                        if (potentialReplacement == currentNode) {
-                            continue;
-                        }
-                        if (potentialReplacement.getNumberOfKonnections() < Logic.NUM_TOTAL_SHAPES) {
-                            replacementPartner = potentialReplacement;
-                            break;
+                        if (potentialReplacement != currentNode) {
+                            boolean isNotOverkonnected = potentialReplacement.getNumberOfKonnections() < Logic.NUM_TOTAL_SHAPES;
+                            boolean alreadyANeighbor = potentialReplacement.hasNeighborNode(loner);
+                            if (isNotOverkonnected && (!alreadyANeighbor)) {
+                                // Temporarily remove both  nodes as neighbors - if it doesn't upset the structure, do it
+                                currentNode.removeNeighborNode(loner);
+                                loner.removeNeighborNode(currentNode);
+                                potentialReplacement.addNeighborNode(loner);
+                                loner.addNeighborNode(potentialReplacement);
+
+                                if (isStrutureIntact()) {
+                                    replacementPartner = potentialReplacement;
+                                    break mainLoop;
+                                } else {
+                                    currentNode.addNeighborNode(loner);
+                                    loner.addNeighborNode(currentNode);
+                                    potentialReplacement.removeNeighborNode(loner);
+                                    loner.removeNeighborNode(potentialReplacement);
+                                }
+                            }
                         }
                     }
 
                     // Migrate the bond over to its new place, remove bond from list
                     bondToMove.setNode1(loner);
                     bondToMove.setNode2(replacementPartner);
+
                     currentNode.decrementKonnections();
                     replacementPartner.incrementKonnections();
+
+                    // this feels redundant... (it is NOT if I didn't have the test here)
+                    //currentNode.removeNeighborNode(loner);
+                    //loner.removeNeighborNode(currentNode);
+                    //replacementPartner.addNeighborNode(loner);
+                    //loner.addNeighborNode(replacementPartner);
+
                     allBondsThisNodeHas.remove(bondSelected);
                 }
             }
@@ -185,9 +207,9 @@ public class Structure {
     // randomly classify all connections as single, double, or triple (don't go any higher - triple bonds are enough)
     private void randomizeBondTypes() {
         Random r = new Random();
-        for (Bond k : bonds) {
-            Node n1 = k.getNode1();
-            Node n2 = k.getNode2();
+        for (Bond current : bonds) {
+            Node n1 = current.getNode1();
+            Node n2 = current.getNode2();
             int num1 = n1.getNumberOfKonnections();
             int num2 = n2.getNumberOfKonnections();
             int largerKonnection = Math.max(num1, num2);
@@ -199,18 +221,18 @@ public class Structure {
                 }
                 int howManyToAdd = r.nextInt(1 + maxAddableKonnections);
                 if (howManyToAdd == Bond.DOUBLE - 1) {
-                    k.setBondType(Bond.DOUBLE);
+                    current.setBondType(Bond.DOUBLE);
                     n1.incrementKonnections();
                     n2.incrementKonnections();
                 } else if (howManyToAdd == Bond.TRIPLE - 1) {
-                    k.setBondType(Bond.TRIPLE);
+                    current.setBondType(Bond.TRIPLE);
                     n1.incrementKonnections();
                     n1.incrementKonnections();
                     n2.incrementKonnections();
                     n2.incrementKonnections();
                 }
             } else {
-                k.setBondType(Bond.SINGLE);
+                current.setBondType(Bond.SINGLE);
             }
         }
     }
@@ -242,5 +264,96 @@ public class Structure {
         }
 
         System.out.println("Max konnections: " + getMaxKonnectionsFromAllNodes());
+    }
+
+
+    private void displayStringDescription() {
+        int numNodes = nodes.size();
+        int numKonnections = 0;
+
+        ArrayList<String> shapeResults = new ArrayList<String>();
+        for (int i = 0; i < Logic.NUM_TOTAL_SHAPES; i++) {
+            String s = "# of Shape-" + (i + 1) + ": ";
+            int count = 0;
+            for (Node n : nodes) {
+                numKonnections += n.getNumberOfKonnections();
+                if (n.getNumberOfKonnections() == 1 + i) {
+                    count++;
+                }
+            }
+            s += count;
+            shapeResults.add(s);
+        }
+
+        numKonnections = numKonnections / 2;
+        System.out.println("Total Nodes: " + numNodes + "\nTotal Konnections: "
+                + numKonnections + "\nTotal Bonds: " + bonds.size());
+        for (String s1 : shapeResults) {
+            System.out.println(s1);
+        }
+
+        int numSingleBonds = 0;
+        int numDoubleBonds = 0;
+        int numTripleBonds = 0;
+        for (Bond b : bonds) {
+            if (b.getBondType() == Bond.SINGLE) {
+                numSingleBonds++;
+            } else if (b.getBondType() == Bond.DOUBLE) {
+                numDoubleBonds++;
+            } else if (b.getBondType() == Bond.TRIPLE) {
+                numTripleBonds++;
+            }
+        }
+
+        System.out.println("# of Single Bonds: " + numSingleBonds + "\n# of Double Bonds: " + numDoubleBonds + "\n# of Triple Bonds: " + numTripleBonds);
+
+    }
+
+
+
+
+    // pick a random node - if structure is intact, all nodes should be counted
+    public boolean isStrutureIntact() {
+        Random r = new Random();
+        int selection = r.nextInt(nodes.size());
+        Node theOne = nodes.get(selection);
+        ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
+        boolean isEqual = (nodes.size() == countAllNodeRelatives(theOne, allFriendKonnections));
+        return isEqual;
+    }
+
+
+    // use this to test if removing a bond is NOT okay!
+    private int countAllNodeRelatives(Node startingNode, ArrayList<Node> allFriendKonnections) {
+        ArrayList<Node> onlyCloseFriends = new ArrayList<Node>();
+        if (!allFriendKonnections.contains(startingNode)) {
+            allFriendKonnections.add(startingNode);
+        }
+
+        for (Node m : startingNode.getNeighbors()) {
+            if (!onlyCloseFriends.contains(m)) {
+                onlyCloseFriends.add(m);
+            }
+        }
+
+        // now the recursive part...
+        for (Node immediateFriend : onlyCloseFriends) {
+            if (!allFriendKonnections.contains(immediateFriend)) {
+                countAllNodeRelatives(immediateFriend, allFriendKonnections);
+            }
+        }
+
+        return allFriendKonnections.size();
+    }
+
+
+    private int getMaxKonnectionsFromAllNodes() {
+        int max = -7;
+        for (Node n : nodes) {
+            if (n.getNumberOfKonnections() >= max) {
+                max = n.getNumberOfKonnections();
+            }
+        }
+        return max;
     }
 }

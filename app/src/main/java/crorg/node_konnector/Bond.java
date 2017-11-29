@@ -60,11 +60,11 @@ public class Bond {
 
 
     public static boolean areEqual(Bond b1, Bond b2) {
-        Node n1 = b1.getNode1();
-        Node n2 = b1.getNode2();
-        Node n3 = b2.getNode1();
-        Node n4 = b2.getNode2();
-        if (((n1 == n3) || (n1 == n4)) && ((n2 == n3) || (n2 == n4))) {
+        Node b1First = b1.getNode1();
+        Node b1Second = b1.getNode2();
+        Node b2First = b2.getNode1();
+        Node b2Second = b2.getNode2();
+        if (((b1First == b2First) || (b1First == b2Second)) && ((b1Second == b2First) || (b1Second == b2Second))) {
             return true;
         }
         return false;
