@@ -12,5 +12,5 @@ import java.util.Random;
 
     // use logic class to handle gameplay
 public class Logic {
-    public static int NUM_TOTAL_SHAPES = 4;
+    public static int NUM_TOTAL_SHAPES = 5;
 }

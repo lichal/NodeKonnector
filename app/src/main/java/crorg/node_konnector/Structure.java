@@ -19,16 +19,12 @@ public class Structure {
         createNodes();
         bondAllNodesToEachOther();
         removeBondsToBareMinimum();
-        //Logic.correctAllFaultyBonds();
+        fixAnyOverkonnectedNodes();
         randomizeBondTypes();
-        displayAllKonnections();
 
         // through logic, figure out what shapes the nodes must be
         // based on last step, give summary ("3 shapes: 2 unique, 1 unique...")
-        // save this structure for gameplay
-        for (int i = 0; i < nodes.size(); i++) {
-            System.out.println("Node" + i + ": " + nodes.get(i).getNumberOfKonnections());
-        }
+        displayStructureInfoForDebugging();
     }
 
 
@@ -51,34 +47,48 @@ public class Structure {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private static int numberOfRepresenations(Node interest, ArrayList<Bond> list) {
-        int sum = 0;
-        for (Bond k : list) {
-            Node n1 = k.getNode1();
-            Node n2 = k.getNode2();
-            if ((n1 == interest) || (n2 == interest)) {
-                sum++;
+    // returns true if no node exceeds allowable konnection limit
+    private boolean statusOfNodes() {
+        for (Node n : nodes) {
+            if (n.getNumberOfKonnections() > Logic.NUM_TOTAL_SHAPES) {
+                return false;
             }
         }
-        return sum;
+        return true;
+    }
+
+
+    private int getMaxKonnectionsFromAllNodes() {
+        int max = -7;
+        for (Node n : nodes) {
+            if (n.getNumberOfKonnections() >= max) {
+                max = n.getNumberOfKonnections();
+            }
+        }
+        return max;
     }
 
 
 
-    // Step 1
+
+
+
+
+
+//    private static int numberOfRepresenations(Node interest, ArrayList<Bond> list) {
+//        int sum = 0;
+//        for (Bond k : list) {
+//            Node n1 = k.getNode1();
+//            Node n2 = k.getNode2();
+//            if ((n1 == interest) || (n2 == interest)) {
+//                sum++;
+//            }
+//        }
+//        return sum;
+//    }
+
+
+
     private void createNodes() {
         for (int i = 0; i < numNodes; i++) {
             nodes.add(new Node(i));
@@ -100,12 +110,13 @@ public class Structure {
                 n2.incrementKonnections();
             }
         }
+
+        // get rid of this when done
         System.out.println("Number of nodes before: " + nodes.size() + ", Number of connections: " + bonds.size());
     }
 
     // Step 3: Systematically remove all bonds except the bare minimum number
     // necessary for the structure to stay intact (a.k.a. all SINGLE bonds)
-    // SUBTLE PROBLEM - SOME NODES ARE GIVEN CONNECTIONS HIGHER THAN Logic.NUM_OF_SHAPES!!!
     private void removeBondsToBareMinimum() {
         Random r = new Random();
         for (int current = bonds.size(); current > numNodes - 1; current--) {
@@ -114,7 +125,7 @@ public class Structure {
             Node n1 = k.getNode1();
             Node n2 = k.getNode2();
 
-            //if only one connection for a node, don't remove
+            //if only one konnection for a node, don't remove
             int num1 = n1.getNumberOfKonnections();
             int num2 = n2.getNumberOfKonnections();
             if ((num1 > 1) && (num2 > 1)) {
@@ -126,14 +137,68 @@ public class Structure {
             }
         }
 
+        // just for testing... get rid of later
         System.out.println("Number of nodes after: " + nodes.size() + ", Number of connections: " + bonds.size());
         int sum = 0;
         for (Node nn : nodes) {
             sum += nn.getNumberOfKonnections();
         }
         sum = sum / 2;
+        System.out.println("Number of bonds calc from KONNECTIONS: " + sum);
+    }
 
-        System.out.println("Number of bonds from NODES: " + sum);
+
+    // This method MUST be called BEFORE randomize bonds - it assumes that all bonds are single
+    // and reconnects them based on if there are too manay konnections somewhere.
+    private void fixAnyOverkonnectedNodes() {
+        // Search all nodes - see if num konnections is greater than Logic.Nums
+        Random r = new Random();
+        for (Node currentNode : nodes) {
+            int konns = currentNode.getNumberOfKonnections();
+            if (konns > Logic.NUM_TOTAL_SHAPES) {
+                int numToRemove = konns - Logic.NUM_TOTAL_SHAPES;
+
+                // acqure a list of all Bonds which include the current Node
+                ArrayList<Bond> allBondsThisNodeHas = new ArrayList<Bond>();
+                for (Bond bo : bonds) {
+                    if ((bo.getNode1() == currentNode) || (bo.getNode2() == currentNode)) {
+                        if (allBondsThisNodeHas.contains(bo) == false) {
+                            allBondsThisNodeHas.add(bo);
+                        }
+                    }
+                }
+
+                // Keep removing bonds from this Node until it is no longer overkonnected...
+                for (int i = 0; i < numToRemove; i++) {
+                    // randomly pick one of these to move and get the other node it's bonded to
+                    int bondSelected = r.nextInt(allBondsThisNodeHas.size());
+                    Bond bondToMove = allBondsThisNodeHas.get(bondSelected);
+                    Node loner = bondToMove.getNode1();
+                    if (loner == currentNode) {
+                        loner = bondToMove.getNode2();
+                    }
+
+                    // Find a suitable partner for this loner
+                    Node replacementPartner = null;
+                    for (Node potentialReplacement : nodes) {
+                        if (potentialReplacement == currentNode) {
+                            continue;
+                        }
+                        if (potentialReplacement.getNumberOfKonnections() < Logic.NUM_TOTAL_SHAPES) {
+                            replacementPartner = potentialReplacement;
+                            break;
+                        }
+                    }
+
+                    // Migrate the bond over to its new place, remove bond from list
+                    bondToMove.setNode1(loner);
+                    bondToMove.setNode2(replacementPartner);
+                    currentNode.decrementKonnections();
+                    replacementPartner.incrementKonnections();
+                    allBondsThisNodeHas.remove(bondSelected);
+                }
+            }
+        }
     }
 
 
@@ -170,19 +235,11 @@ public class Structure {
         }
     }
 
-    // This method MUST be called BEFORE randomize bonds - it assumes that all bonds are single
-    // and reconnects them based on if there are too manay konnections somewhere.
-    private void correctAllFaultySingleBonds() {
-
-    }
-
-
-
 
     /**
      * display all connections with text
      */
-    private void displayAllKonnections() {
+    private void displayStructureInfoForDebugging() {
         for (Bond k : bonds) {
             System.out.println();
             System.out.print(k.getNode1().getNum() + " --- " + k.getNode2().getNum());
@@ -198,5 +255,12 @@ public class Structure {
 
             System.out.println("\t" + s);
         }
+
+
+        for (int i = 0; i < nodes.size(); i++) {
+            System.out.println("Node" + i + ": " + nodes.get(i).getNumberOfKonnections());
+        }
+
+        System.out.println("Max konnections: " + getMaxKonnectionsFromAllNodes());
     }
 }

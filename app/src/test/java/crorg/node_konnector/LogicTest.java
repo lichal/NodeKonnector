@@ -13,7 +13,5 @@ public class LogicTest {
     @Test
     public void randomizeAStructure() throws Exception {
         new Structure(7);
-
     }
-
 }
