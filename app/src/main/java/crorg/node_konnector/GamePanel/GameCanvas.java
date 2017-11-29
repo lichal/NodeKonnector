@@ -122,4 +122,25 @@ public class GameCanvas extends View {
 
         return path;
     }
+
+    private Path drawRectangle(){
+        Point p1 = new Point();
+        p1.x = 0;
+        p1.y = 0;
+
+        Point p2, p3, p4;
+
+        p2 = new Point(p1.x+100, p1.y);
+        p3 = new Point(p1.x + 100, p2.y + 100);
+        p4 = new Point(p1.x, p1.y + 100);
+
+        Path rectangle = new Path();
+        rectangle.moveTo(p1.x, p1.y);
+        rectangle.lineTo(p2.x,p2.y);
+        rectangle.lineTo(p3.x, p3.y);
+        rectangle.lineTo(p4.x, p4.y);
+        rectangle.lineTo(p1.x, p1.y);
+
+        return rectangle;
+    }
 }

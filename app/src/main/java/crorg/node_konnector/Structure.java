@@ -43,6 +43,7 @@ public class Structure {
     }
 
 
+<<<<<<< HEAD
 
 
 
@@ -66,10 +67,23 @@ public class Structure {
             }
         }
         return max;
+=======
+    private static int numberOfRepresenations(Node interest, ArrayList<Bond> list) {
+        int sum = 0;
+        for (Bond k : list) {
+            Node n1 = k.getNode1();
+            Node n2 = k.getNode2();
+            if ((n1 == interest) || (n2 == interest)) {
+                sum++;
+            }
+        }
+        return sum;
+>>>>>>> c29addaee7b522ed9bb4b470c795a8391eb2f072
     }
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -89,6 +103,9 @@ public class Structure {
 
 
 
+=======
+    // Step 1
+>>>>>>> c29addaee7b522ed9bb4b470c795a8391eb2f072
     private void createNodes() {
         for (int i = 0; i < numNodes; i++) {
             nodes.add(new Node(i));
