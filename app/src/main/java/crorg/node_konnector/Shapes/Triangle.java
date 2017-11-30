@@ -13,8 +13,7 @@ public class Triangle extends KonnectorShape {
         this.s = s;
         this.positionX = x;
         this.positionY = y;
-        this.height = 100;
-        this.width = 100;
+        getPaint().setColor(0xff74AC23);
         setBounds(x, y, x + width, y + height);
     }
 

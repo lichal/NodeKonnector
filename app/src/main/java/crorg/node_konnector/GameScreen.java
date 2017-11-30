@@ -15,7 +15,7 @@ public class GameScreen extends AppCompatActivity implements
     /* The shape recycler view holds shapes */
     private RecyclerView shapeRecyclerView;
 
-    private GameCanvas game;
+//    private GameCanvas game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class GameScreen extends AppCompatActivity implements
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         shapeRecyclerView.setLayoutManager(layoutManager);
 
-        game = (GameCanvas)findViewById(R.id.gameCanvas);
+//        game = (GameCanvas)findViewById(R.id.gameCanvas);
 //        Intent intent = getIntent();
 //        String message = intent.getStringExtra(MainScreen.LEVEL_MESSAGE);
 

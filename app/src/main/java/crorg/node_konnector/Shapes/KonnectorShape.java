@@ -3,6 +3,8 @@ package crorg.node_konnector.Shapes;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
+import crorg.node_konnector.Scaler;
+
 /**
  * Created by Cheng Li on 11/23/2017.
  */
@@ -24,6 +26,8 @@ public class KonnectorShape extends ShapeDrawable{
     public KonnectorShape(Shape s){
         super(s);
         this.s = s;
+        this.width = Scaler.width;
+        this.height = Scaler.width;
     }
 
     public int getConnection(){
