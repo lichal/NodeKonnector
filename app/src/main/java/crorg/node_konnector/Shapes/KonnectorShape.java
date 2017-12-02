@@ -17,10 +17,13 @@ public class KonnectorShape extends ShapeDrawable{
     protected int height;
     protected int width;
     protected boolean select;
+
+    protected boolean bondingMode;
     protected Shape s;
 
     public KonnectorShape(){
         select = false;
+        bondingMode = false;
     }
 
     public KonnectorShape(Shape s){
@@ -50,8 +53,16 @@ public class KonnectorShape extends ShapeDrawable{
         return width;
     }
 
-    public boolean getSelect(){
+    public boolean isSelect(){
         return select;
+    }
+
+    public boolean isBondingMode() {
+        return bondingMode;
+    }
+
+    public void setBondingMode(boolean bondingMode) {
+        this.bondingMode = bondingMode;
     }
 
     public void setConnection(int connection) {
@@ -93,8 +104,8 @@ public class KonnectorShape extends ShapeDrawable{
     }
 
     public void redraw(int x, int y){
-        this.positionX = x - width/2;
+        this.positionX = x;
         this.positionY = y - height/2;
-        setBounds(positionX, positionY, x + width/2, y + height/2);
+        setBounds(positionX - width/2, positionY - height/2, x + width/2, y + height/2);
     }
 }

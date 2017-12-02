@@ -2,6 +2,8 @@ package crorg.node_konnector.GamePanel;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.shapes.OvalShape;
@@ -13,6 +15,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import crorg.node_konnector.Bonds.KonnectorBond;
 import crorg.node_konnector.Scaler;
 import crorg.node_konnector.Shapes.Circle;
 import crorg.node_konnector.Shapes.Hexagon;
@@ -30,10 +33,16 @@ public class GameCanvas extends View {
 
     private ArrayList<KonnectorShape> shapeArrayList;
 
+    private ArrayList<KonnectorBond> bondArrayList;
+
+    private boolean bonding;
+
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        shapeArrayList = new ArrayList<>();
+        shapeArrayList = new ArrayList<KonnectorShape>();
+
+        bonding = false;
 
 //        mDrawable = new Circle(new OvalShape(), 200, 10);
 //        // If the color isn't set, the shape uses black as the default.
@@ -51,16 +60,17 @@ public class GameCanvas extends View {
 
     }
 
-
-
-    private boolean draw = false;
     protected void onDraw(Canvas canvas){
         scale = new Scaler(getWidth(), getHeight());
 
         for(KonnectorShape k: shapeArrayList){
             k.draw(canvas);
         }
+
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -76,21 +86,46 @@ public class GameCanvas extends View {
                 invalidate();
             case MotionEvent.ACTION_MOVE:
                 for(KonnectorShape k: shapeArrayList){
-                    if(k.getSelect()) {
+                    if(k.isSelect() && !k.isBondingMode()) {
                         k.redraw(x, y);
-                        invalidate();
                     }
                 }
-
+                invalidate();
         }
         return true;
+    }
+
+    public void bondingMode(){
+        bonding = true;
+    }
+
+    private Path drawBond(int startPointX, int startPointY, int touchX, int touchY){
+        Point startPoint = new Point();
+        startPoint.x = startPointX;
+        startPoint.y = startPointY;
+
+        Point p2, p3, p4;
+
+        p2 = new Point(touchX, touchY);
+        p3 = new Point(p2.x-10, p2.y);
+        p4 = new Point(startPoint.x-10, startPoint.y);
+
+        Path bond = new Path();
+
+        bond.moveTo(startPoint.x, startPoint.y);
+        bond.lineTo(p2.x,p2.y);
+        bond.lineTo(p3.x, p3.y);
+        bond.lineTo(p4.x, p4.y);
+        bond.lineTo(startPoint.x, startPoint.y);
+
+        return bond;
     }
 
     /******************************************************************
      * Getter for the list of shapes on the canvas
      * @return shapeArrayList - the arraylist holds all shapes
      *****************************************************************/
-    public ArrayList getShapArrayList(){
+    public ArrayList getShapeArrayList(){
         return shapeArrayList;
     }
 
