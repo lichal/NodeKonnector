@@ -77,6 +77,14 @@ public class KonnectorShape extends ShapeDrawable{
         this.positionY = positionY;
     }
 
+    public int getMidX() {
+        return positionX+width/2;
+    }
+
+    public int getMidY() {
+        return positionY+width/2;
+    }
+
     public void setHeight(int height) {
         this.height = height;
     }
@@ -104,8 +112,8 @@ public class KonnectorShape extends ShapeDrawable{
     }
 
     public void redraw(int x, int y){
-        this.positionX = x;
-        this.positionY = y - height/2;
-        setBounds(positionX - width/2, positionY - height/2, x + width/2, y + height/2);
+        this.positionX = x -width/2;
+        this.positionY = y - width/2;
+        setBounds(positionX, positionY, x + width/2, y + height/2);
     }
 }
