@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class LogicTest {
     @Test
     public void randomizeAStructure() throws Exception {
-        new Structure(2);
+        new Structure(3);
     }
 
     // this one won't work anymore because I made the methods private
@@ -40,16 +40,5 @@ public class LogicTest {
         ArrayList<Node> allKonnectedNodes = new ArrayList<Node>();
         //int totalRelatives = Structure.countAllNodeRelatives(c, allKonnectedNodes);
         //System.out.println("# Nodes In Structure containing C: " + totalRelatives);
-    }
-
-    @Test
-    public void testMathClass() {
-        int n = 2;
-        int total = (n * (n - 1))/2;
-        int p = 2;
-        double minAmountToRemoveDOUBLE = ((double)n * ((double)n - 1 - (double)p) / 2.0);
-        int minAmountToRemove = (int) Math.ceil(minAmountToRemoveDOUBLE);
-        System.out.println("Total # bonds: " + total);
-        System.out.println("Min # bonds to remove: " + minAmountToRemove);
     }
 }

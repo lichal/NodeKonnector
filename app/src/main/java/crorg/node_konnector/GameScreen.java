@@ -1,6 +1,8 @@
 package crorg.node_konnector;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.shapes.OvalShape;
@@ -9,8 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
@@ -32,6 +40,10 @@ public class GameScreen extends AppCompatActivity implements
 
     private GameCanvas game;
 
+    private File userProgress;  // local storage of user progress
+
+    private Structure structure;    // the logic holding the answer for a given level
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +64,7 @@ public class GameScreen extends AppCompatActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    game.setBonding(true);
+                    //game.setBonding(true);
                     game.invalidate();
                 }
             }
@@ -76,6 +88,13 @@ public class GameScreen extends AppCompatActivity implements
                 }
             }
         });
+
+
+        // setting up local storage for user
+        String filename = "userProgress123";
+        userProgress = new File(getFilesDir(), filename);
+        structure = new Structure(5);
+
 
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainScreen.LEVEL_MESSAGE);
@@ -104,4 +123,43 @@ public class GameScreen extends AppCompatActivity implements
     public void onListFragmentInteraction(ShapeContent.ShapeItem item) {
 
     }
+
+    // use these to save the state of the game
+    public void writeToFile(View view) {
+        String textToDisplay = "hello, boyo!";
+        FileOutputStream outputStream;
+        try {
+            outputStream = openFileOutput(userProgress.getName(), Context.MODE_PRIVATE);
+            outputStream.write(textToDisplay.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void readFromFileThing(View view) {
+        FileInputStream inputStream;
+        String s = "";
+        try {
+            inputStream = openFileInput(userProgress.getName());
+            int nextByte = 0;
+            while (nextByte != -1) {
+                nextByte = inputStream.read();
+                s += (char) nextByte;
+            }
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // change button
+        TextView fileStuffs = (TextView) findViewById(R.id.fileStuffs);
+        fileStuffs.setText(s);
+    }
+
+    Paint p = new Paint();
+    p.setStyle();
+
+
 }

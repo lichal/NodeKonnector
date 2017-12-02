@@ -24,7 +24,8 @@ public class Structure {
         displayStringDescriptionForPlayer();
 
         // through logic, figure out what shapes the nodes must be
-        // based on last step, give summary ("3 shapes: 2 unique, 1 unique...")
+        // if the generated structure does NOT work (is not INTACT), then just keep
+        // generating a new one until it works
         System.out.println("Is Structure INTACT?: " + isStrutureIntact());
         displayStructureInfoForDebugging();
     }
@@ -72,25 +73,21 @@ public class Structure {
                 }
             }
         }
-
-        // get rid of this when done
-        System.out.println("Number of nodes before: " + nodes.size() + ", Number of connections: " + bonds.size());
     }
 
-    // Step 3: Systematically remove all bonds except the bare minimum number
-    // necessary for the structure to stay intact (a.k.a. all SINGLE bonds)
+    // Step 3: Systematically remove a random number of bonds between
+    // whatever the minimum is (in relation to shapes) to the max (keeping structure intact).
     // Note:  n must be at LEAST 2, and p must be at LEAST 2, for this formula to work!
     private void randomlyRemoveRandomNumBondsFromStructure() {
         Random r = new Random();
         int minToRemove = calcMinNumBondsToRemove();
         int maxToRemove = bonds.size() - (numNodes - 1);
         int difference = maxToRemove - minToRemove;
-        int numBondsLeftToRemove = minToRemove + r.nextInt(1 + difference);
-        System.out.println("numBondsLeftToRemove BEFORE: " + numBondsLeftToRemove);
-
+        // temporary - what if only the lower half are available?  Does it make gameplay easier?  What about rings?
+        int halfDifference = difference / 2;
+        //int numBondsLeftToRemove = minToRemove + r.nextInt(1 + difference);
+        int numBondsLeftToRemove = minToRemove + halfDifference + r.nextInt(1 + halfDifference);
         while (numBondsLeftToRemove > 0) {
-        //for (int current = bonds.size(); current > numNodes - 1; current--) {
-            System.out.println("numBondsRemove LEFT: " + numBondsLeftToRemove);
             int randIndex = r.nextInt(bonds.size());
             Bond bondSelected = bonds.get(randIndex);
             Node n1 = bondSelected.getNode1();
@@ -102,7 +99,6 @@ public class Structure {
             if ((num1 > 1) && (num2 > 1)) {
 
                 // if removing the bond won't upset the structure, then do it...
-                // temporarily remove the both  nodes as neighbors - if it still works, you can remove the bond
                 n1.removeNeighborNode(n2);
                 n2.removeNeighborNode(n1);
                 if (isStrutureIntact()) {
@@ -116,31 +112,10 @@ public class Structure {
                 }
             }
         }
-
-        // just for testing... get rid of later
-        System.out.println("minToRemove: " + minToRemove);
-        System.out.println("maxToRemove: " + maxToRemove);
-        System.out.println("difference: " + difference);
-        System.out.println("numBondsLeftToRemove AFTER: " + numBondsLeftToRemove);
-
-
-        System.out.println("Number of nodes after: " + nodes.size() + ", Number of connections: " + bonds.size());
-        int sum = 0;
-        for (Node nn : nodes) {
-            sum += nn.getNumberOfKonnections();
-        }
-        sum = sum / 2;
-        System.out.println("Number of bonds calc from KONNECTIONS: " + sum);
     }
-
 
     // This method MUST be called BEFORE randomize bonds - it assumes that all bonds are single
     // and reconnects them based on if there are too manay konnections somewhere.
-    // this one should not have a problem like the other one - if a node is
-    // disconnected but then connected again to another one, the entire structure should
-    // still stay intact
-    // if worst comes to worst, we can just ensure that a structure is intact by testing it
-    // if it fails, generate a new one for the player
     private void fixAnyOverkonnectedNodes() {
         // Search all nodes - see if num konnections is greater than Logic.Nums
         Random r = new Random();
@@ -148,9 +123,6 @@ public class Structure {
             int konns = currentNode.getNumberOfKonnections();
             if (konns > Logic.NUM_TOTAL_SHAPES) {
                 int numToRemove = konns - Logic.NUM_TOTAL_SHAPES;
-
-                System.out.println("Found an overkonnected node!  Has " + konns + " konnections, needs " + numToRemove + " gone.");
-
 
                 // acqure a list of all Bonds which include the current Node
                 ArrayList<Bond> allBondsThisNodeHas = new ArrayList<Bond>();
@@ -161,8 +133,6 @@ public class Structure {
                         }
                     }
                 }
-
-                System.out.println("Number of bonds konnected to this node:  " + allBondsThisNodeHas.size());
 
                 // Keep removing bonds from this Node until it is no longer overkonnected...
                 for (int i = 0; i < numToRemove; i++) {
@@ -178,59 +148,40 @@ public class Structure {
                     Node replacementPartner = null;
                     mainLoop:
                     for (Node potentialReplacement : nodes) {
-                        System.out.println("-------------------------------");
-                        System.out.println("Looking for a partner...");
                         if ((potentialReplacement != currentNode) && (potentialReplacement != loner)) {
-                            System.out.println("NOT the current node... not the loner...");
                             boolean isNotOverkonnected = (potentialReplacement.getNumberOfKonnections() < Logic.NUM_TOTAL_SHAPES);
                             boolean alreadyANeighbor = potentialReplacement.hasNeighborNode(loner);
                             if (isNotOverkonnected && (!alreadyANeighbor)) {
-                                System.out.println("Passed tests (not overkonnected, not already a neighbor...");
-                                // Temporarily remove both  nodes as neighbors - if it doesn't upset the structure, do it
+                                // Temporarily remove both  nodes as neighbors - if it doesn't
+                                // upset the structure, do it
                                 currentNode.removeNeighborNode(loner);
                                 loner.removeNeighborNode(currentNode);
                                 potentialReplacement.addNeighborNode(loner);
                                 loner.addNeighborNode(potentialReplacement);
-
                                 if (isStrutureIntact()) {
-                                    System.out.println("Passed structure test... EXITING LOOP FOR GOOD!!!");
-                                    System.out.println("--- END OF BUILDING -------");
-                                    System.out.println("--- END OF BUILDING -------");
-                                    System.out.println("--- END OF BUILDING -------");
-                                    System.out.println("--- END OF BUILDING -------");
-                                    System.out.println("--- END OF BUILDING -------");
-                                    System.out.println("--- END OF BUILDING -------");
                                     replacementPartner = potentialReplacement;
                                     break mainLoop;
                                 } else {
-                                    System.out.println("FAILED structure test...");
                                     currentNode.addNeighborNode(loner);
                                     loner.addNeighborNode(currentNode);
                                     potentialReplacement.removeNeighborNode(loner);
                                     loner.removeNeighborNode(potentialReplacement);
                                 }
-                            } else {
-                                System.out.println("Failed tests (either overkonnected or already a neighbor...");
                             }
-                        } else {
-                            System.out.println("FAILED - same as current Node.");
                         }
                     }
 
                     // Do magic if it works...
+                    // Migrate the bond over to its new place, remove bond from list
                     if (replacementPartner != null) {
-                        // Migrate the bond over to its new place, remove bond from list
                         bondToMove.setNode1(loner);
                         bondToMove.setNode2(replacementPartner);
                         currentNode.decrementKonnections();
                         replacementPartner.incrementKonnections();
                         allBondsThisNodeHas.remove(bondSelected);
                     } else {
-                        // pick a different bond to remove - remove it from the list of choices
-                        // up the counter to ensure the loop continues...
                         allBondsThisNodeHas.remove(bondToMove);
                         i++;
-                        System.out.println("Couldn't find a dance partner!");
                     }
                 }
             }
@@ -288,16 +239,8 @@ public class Structure {
             } else {
                 s += "triple";
             }
-
             System.out.println("\t" + s);
         }
-
-
-        for (int i = 0; i < nodes.size(); i++) {
-            System.out.println("Node" + i + ": " + nodes.get(i).getNumberOfKonnections());
-        }
-
-        System.out.println("Max konnections: " + getMaxKonnectionsFromAllNodes());
     }
 
 
@@ -343,9 +286,6 @@ public class Structure {
 
     }
 
-
-
-
     // pick a random node - if structure is intact, all nodes should be counted
     public boolean isStrutureIntact() {
         Random r = new Random();
@@ -353,15 +293,6 @@ public class Structure {
         Node theOne = nodes.get(selection);
         ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
         boolean isEqual = (nodes.size() == countAllNodeRelatives(theOne, allFriendKonnections));
-
-        // testing only
-        int number = countAllNodeRelatives(theOne, allFriendKonnections);
-        int size = nodes.size();
-        System.out.println("--- Inside Structure Test Method -------");
-        System.out.println("Size of nodes: " + size);
-        System.out.println("Total relatives: " + number);
-        System.out.println("--- Exiting Structure Test Method... -------");
-
         return isEqual;
     }
 
@@ -393,18 +324,12 @@ public class Structure {
 
     private int calcMinNumBondsToRemove() {
         int p = Logic.NUM_TOTAL_SHAPES;
+        if (p >= numNodes - 1) {
+            return 0;
+        }
         double minAmountToRemoveDOUBLE = (((double)numNodes *
                 ((double)(numNodes - 1) - (double)p)) / 2.0);
         int minAmountToRemove = (int) Math.ceil(minAmountToRemoveDOUBLE);
-
-        // too many shapes, not enough nodes need that many
-        if (p >= numNodes - 1) {
-            minAmountToRemove = 0;
-        }
-
-
-        System.out.println("Total # bonds: " + bonds.size());
-        System.out.println("Min # bonds to remove: " + minAmountToRemove);
         return minAmountToRemove;
     }
 
