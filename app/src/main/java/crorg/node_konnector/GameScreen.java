@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
@@ -48,11 +49,28 @@ public class GameScreen extends AppCompatActivity implements
         triangleButton = (ToggleButton) findViewById(R.id.triangleButton);
         circleButton = (ToggleButton) findViewById(R.id.circleButton);
 
+//        bondButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(bondButton.isChecked()){
+//                    game.setBondingMode(true);
+//                    game.invalidate();
+//                }
+//                else {
+//                    game.setBondingMode(false);
+//                    game.invalidate();
+//                }
+//            }
+//        });
+
         bondButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    game.setBonding(true);
+                    game.setBondingMode(true);
+                    game.invalidate();
+                }else{
+                    game.setBondingMode(false);
                     game.invalidate();
                 }
             }
@@ -62,6 +80,7 @@ public class GameScreen extends AppCompatActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    game.getShapeArrayList().add(new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200));
                     game.invalidate();
                 }
             }
@@ -71,7 +90,7 @@ public class GameScreen extends AppCompatActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    game.getShapeArrayList().add(new Circle(new OvalShape(), 200, 10));
+                    game.getShapeArrayList().add(new Circle(new OvalShape(), 500, 10));
                     game.invalidate();
                 }
             }

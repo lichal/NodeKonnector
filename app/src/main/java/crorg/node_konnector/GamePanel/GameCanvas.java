@@ -16,6 +16,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import crorg.node_konnector.Bonds.KonnectorBond;
+import crorg.node_konnector.Bonds.SingleBond;
 import crorg.node_konnector.Scaler;
 import crorg.node_konnector.Shapes.Circle;
 import crorg.node_konnector.Shapes.Hexagon;
@@ -33,16 +34,32 @@ public class GameCanvas extends View {
 
     private ArrayList<KonnectorShape> shapeArrayList;
 
-    private ArrayList<KonnectorBond> bondArrayList;
+    private ArrayList<SingleBond> bondArrayList;
 
-    private boolean bonding;
+    private boolean bondingMode;
+
+    private int numSelect;
+
+    private int startx;
+    private int starty;
+    private int touchx;
+    private int touchy;
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         shapeArrayList = new ArrayList<KonnectorShape>();
 
-        bonding = false;
+        bondArrayList = new ArrayList<SingleBond>();
+
+        bondingMode = false;
+
+        numSelect = 0;
+
+        startx = 0;
+        starty = 0;
+        touchx = 0;
+        touchy = 0;
 
 //        mDrawable = new Circle(new OvalShape(), 200, 10);
 //        // If the color isn't set, the shape uses black as the default.
@@ -63,14 +80,30 @@ public class GameCanvas extends View {
     protected void onDraw(Canvas canvas){
         scale = new Scaler(getWidth(), getHeight());
 
-        for(KonnectorShape k: shapeArrayList){
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(10f);
+
+        for(SingleBond b: bondArrayList){
+            canvas.drawPath(b, paint);
+        }
+
+        for(KonnectorShape k: shapeArrayList) {
             k.draw(canvas);
         }
 
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
+//        canvas.drawPath(pathbond, paint);
+
     }
 
+    public void setBondingMode(boolean startBonding){
+        this.bondingMode = startBonding;
+    }
+
+
+    public void selections(){
+
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -80,23 +113,44 @@ public class GameCanvas extends View {
 
         switch (action){
             case MotionEvent.ACTION_DOWN:
-                for(KonnectorShape k: shapeArrayList){
-                    k.checkSelect(x, y);
+                if(!bondingMode) {
+                    for (KonnectorShape k : shapeArrayList) {
+                        k.checkSelect(x, y);
+                    }
+                }
+                if(bondingMode) {
+                    for (KonnectorShape k : shapeArrayList) {
+                        if(k.checkSelect(x, y)) {
+                            if (numSelect == 1) {
+                                touchx = k.getMidX();
+                                touchy = k.getMidY();
+                                numSelect++;
+                            }
+
+                            if (numSelect == 0) {
+                                startx = k.getMidX();
+                                starty = k.getMidY();
+                                numSelect++;
+                            }
+                        }
+                    }
+                    if(numSelect == 2){
+                        bondArrayList.add(new SingleBond(startx, starty, touchx, touchy));
+                        numSelect = 0;
+                    }
                 }
                 invalidate();
             case MotionEvent.ACTION_MOVE:
-                for(KonnectorShape k: shapeArrayList){
-                    if(k.isSelect() && !k.isBondingMode()) {
-                        k.redraw(x, y);
+                if(!bondingMode) {
+                    for (KonnectorShape k : shapeArrayList) {
+                        if (k.isSelect()) {
+                            k.redraw(x, y);
+                        }
                     }
                 }
                 invalidate();
         }
         return true;
-    }
-
-    public void bondingMode(){
-        bonding = true;
     }
 
     private Path drawBond(int startPointX, int startPointY, int touchX, int touchY){
