@@ -353,7 +353,7 @@ public class Structure {
 
 
 
-    private void displayStringDescriptionForPlayer() {
+    public void displayStringDescriptionForPlayer() {
         // check relative shape amounts...
         int numNodes = nodes.size();
         int numKonnections = 0;
