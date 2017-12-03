@@ -23,12 +23,11 @@ import java.util.ArrayList;
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
 import crorg.node_konnector.Shapes.Circle;
-<<<<<<< HEAD
-=======
+
 import crorg.node_konnector.Shapes.Hexagon;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
->>>>>>> bf3554a3c0280afdd50d99c36c98b56500ee11f8
+
 import crorg.node_konnector.dummy.ShapeContent;
 
 public class GameScreen extends AppCompatActivity implements
@@ -145,12 +144,8 @@ public class GameScreen extends AppCompatActivity implements
                     if(number != game.getShapeArrayList().size()){
                         gameStatus.setText("Not intact!");
                     }else{
-<<<<<<< HEAD
                         //boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
-                        boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), structure.getNodes(), structure.getBonds());
-=======
-                        boolean test = gameStruct.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
->>>>>>> bf3554a3c0280afdd50d99c36c98b56500ee11f8
+                        boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), gameStruct.getNodes(), gameStruct.getBonds());
                         if (test){
                             gameStatus.setText("pass level!");
                         }else if (!test){

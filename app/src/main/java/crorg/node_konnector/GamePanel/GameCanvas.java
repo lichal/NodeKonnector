@@ -8,10 +8,10 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
+import android.support.constraint.solver.widgets.Rectangle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.util.ArrayList;
 
 import crorg.node_konnector.Bond;
@@ -49,6 +49,8 @@ public class GameCanvas extends View {
 
         selectedNode1 = null;
         selectedNode2 = null;
+
+        movingNode = null;
 
         paint = new Paint();
         paint.setColor(Color.DKGRAY);
@@ -88,6 +90,11 @@ public class GameCanvas extends View {
 
     private Node selectedNode1;
     private Node selectedNode2;
+
+    private Node movingNode;
+
+    private Rectangle move = new Rectangle();
+    private Rectangle collide = new Rectangle();
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -138,27 +145,50 @@ public class GameCanvas extends View {
                     }
                 }
                 invalidate();
+                break;
             case MotionEvent.ACTION_MOVE:
                 if(!bondingMode) {
                     for (Node k : shapeArrayList) {
                         if (k.isSelect()) {
-                                k.redraw(x, y);
-//                            for (Node collide : shapeArrayList) {
-//                                if(collide == k){
-//                                    break;
-//                                }
-//                                if(x > collide.getPositionX() && x < collide.getPositionX()+collide.getWidth()
-//                                        && y > collide.getPositionY() && y < collide.getPositionY()+collide.getHeight()){
-//                                    k.redraw(collide.getPositionX()+collide.getWidth(), collide.getPositionY()+collide.getHeight());
-//                                }
-//                            }
+                            movingNode = k;
+                            k.redraw(x, y);
                         }
                     }
                 }
                 invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                move.setBounds(movingNode.getPositionX(), movingNode.getPositionY(), movingNode.getWidth(), movingNode.getHeight());
+                    for (Node collide : shapeArrayList) {
+                        if (movingNode != collide) {
+//                            if (movingNode.getPositionX() >= collide.getPositionX() && movingNode.getPositionX() <= collide.getPositionX() + collide.getWidth()) {
+//                                movingNode.redraw(collide.getPositionX() + (int) (collide.getWidth() * 2), collide.getPositionY() + (int) (collide.getHeight() * 2));
+//                            }
+                            if (movingNode.getPositionY() > collide.getPositionY() && movingNode.getPositionY() < collide.getPositionY() + collide.getHeight()) {
+                                movingNode.redraw(collide.getPositionX() + collide.getWidth() / 2, collide.getPositionY() + (int) (collide.getHeight() * 2));
+                            }
+//                            && x < collide.getPositionX() + collide.getWidth()
+//                            && y > collide.getPositionY()
+//                            && y < collide.getPositionY() + collide.getHeight()) {
+//                        k.redraw(collide.getPositionX() + 200, collide.getPositionY() + 200);
+//                                movingNode = null;
+
+                        }
+                    }
+
+                invalidate();
+                break;
         }
+
         return true;
     }
+//    public boolean collide(final Node other) {
+//        move.setBounds(getX(), getY(), getWidth(), getHeight());
+//        shoot.setBounds(other.getX(), other.getY(),
+//                other.getWidth(), other.getHeight());
+//
+//        return enemy.intersects(shoot);
+//    }
 
     /******************************************************************
      * Getter for the list of shapes on the canvas
