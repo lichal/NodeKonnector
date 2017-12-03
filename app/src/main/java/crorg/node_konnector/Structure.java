@@ -30,13 +30,21 @@ public class Structure {
         randomlyRemoveRandomNumBondsFromStructure();
         fixAnyOverkonnectedNodes();
         randomizeBondTypes();
+<<<<<<< HEAD
         //displayStringDescriptionForPlayer();
+=======
+//        displayStringDescriptionForPlayer();
+>>>>>>> 11f9e400af3376069d78977a09940069167422dc
 
         // through logic, figure out what shapes the nodes must be
         // if the generated structure does NOT work (is not INTACT), then just keep
         // generating a new one until it works
         //System.out.println("Is Structure INTACT?: " + isStrutureIntact());
+<<<<<<< HEAD
         //displayStructureInfoForDebugging();
+=======
+//        displayStructureInfoForDebugging();
+>>>>>>> 11f9e400af3376069d78977a09940069167422dc
     }
 
     // true if successfully added a unique one

@@ -168,6 +168,10 @@ public class GameCanvas extends View {
         return shapeArrayList;
     }
 
+    public ArrayList<Bond> getBondArrayList(){
+        return bondArrayList;
+    }
+
     private Path drawTriangle() {
         Point p1 = new Point();
         p1.x = 50;
