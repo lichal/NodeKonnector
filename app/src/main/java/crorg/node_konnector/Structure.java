@@ -31,19 +31,28 @@ public class Structure {
         fixAnyOverkonnectedNodes();
         randomizeBondTypes();
 
+
         displayStringDescriptionForPlayer();
 
 //       displayStringDescriptionForPlayer();
 
 
+        displayStringDescriptionForPlayer();
+
+
         // through logic, figure out what shapes the nodes must be
         // if the generated structure does NOT work (is not INTACT), then just keep
         // generating a new one until it works
+
         //System.out.println("Is Structure INTACT?: " + isStrutureIntact());
 
         displayStructureInfoForDebugging();
 
 //        displayStructureInfoForDebugging();
+
+
+        System.out.println("Is Structure INTACT?: " + isStrutureIntact());
+        displayStructureInfoForDebugging();
 
     }
 

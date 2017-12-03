@@ -174,13 +174,13 @@ public class GameScreen extends AppCompatActivity implements
                     if(number != game.getShapeArrayList().size()){
                         gameStatus.setText("Not intact!");
                     }else{
-                        if (structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList())){
+                        boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
+                        if (test){
                             gameStatus.setText("pass level!");
-                        }else if (!structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList())){
+                        }else if (!test){
                             gameStatus.setText("failed!");
                         }
                     }
-
                 }
 
             }
