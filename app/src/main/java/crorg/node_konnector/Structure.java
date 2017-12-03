@@ -30,13 +30,13 @@ public class Structure {
         randomlyRemoveRandomNumBondsFromStructure();
         fixAnyOverkonnectedNodes();
         randomizeBondTypes();
-        displayStringDescriptionForPlayer();
+//        displayStringDescriptionForPlayer();
 
         // through logic, figure out what shapes the nodes must be
         // if the generated structure does NOT work (is not INTACT), then just keep
         // generating a new one until it works
         System.out.println("Is Structure INTACT?: " + isStrutureIntact());
-        displayStructureInfoForDebugging();
+//        displayStructureInfoForDebugging();
     }
 
     // true if successfully added a unique one
@@ -307,10 +307,12 @@ public class Structure {
         int size1 = answerConfigShapes.size();
         int size2 = userConfigShapes.size();
         if (size1 != size2) {
+            System.out.println("-----------------\n\nSize1: " + size1 + "Size2:" + size2);
             return false;
         } else {
             for (int i = 0; i < size1; i++) {
                 if (answerConfigShapes.get(i).intValue() != userConfigShapes.get(i).intValue()) {
+                    System.out.println("-----------------\n\nfail in comparison");
                     return false;
                 }
             }
