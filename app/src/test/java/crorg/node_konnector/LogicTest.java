@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class LogicTest {
     @Test
     public void randomizeAStructure() throws Exception {
-        new Structure(3);
+        new Structure(4);
     }
 
     // this one won't work anymore because I made the methods private

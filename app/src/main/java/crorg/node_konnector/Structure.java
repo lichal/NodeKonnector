@@ -244,6 +244,11 @@ public class Structure {
     }
 
 
+
+    
+
+
+
     private void displayStringDescriptionForPlayer() {
         int numNodes = nodes.size();
         int numKonnections = 0;
@@ -292,13 +297,13 @@ public class Structure {
         int selection = r.nextInt(nodes.size());
         Node theOne = nodes.get(selection);
         ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
-        boolean isEqual = (nodes.size() == countAllNodeRelatives(theOne, allFriendKonnections));
+        boolean isEqual = (nodes.size() == Structure.countAllNodeRelatives(theOne, allFriendKonnections));
         return isEqual;
     }
 
 
     // use this to test if removing a bond is NOT okay!
-    private int countAllNodeRelatives(Node startingNode, ArrayList<Node> allFriendKonnections) {
+    public static int countAllNodeRelatives(Node startingNode, ArrayList<Node> allFriendKonnections) {
         ArrayList<Node> onlyCloseFriends = new ArrayList<Node>();
         if (!allFriendKonnections.contains(startingNode)) {
             allFriendKonnections.add(startingNode);
@@ -331,15 +336,5 @@ public class Structure {
                 ((double)(numNodes - 1) - (double)p)) / 2.0);
         int minAmountToRemove = (int) Math.ceil(minAmountToRemoveDOUBLE);
         return minAmountToRemove;
-    }
-
-    private int getMaxKonnectionsFromAllNodes() {
-        int max = -7;
-        for (Node n : nodes) {
-            if (n.getNumberOfKonnections() >= max) {
-                max = n.getNumberOfKonnections();
-            }
-        }
-        return max;
     }
 }
