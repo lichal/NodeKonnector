@@ -2,11 +2,13 @@ package crorg.node_konnector.Shapes;
 
 import android.graphics.drawable.shapes.Shape;
 
+import crorg.node_konnector.Node;
+
 /**
  * Created by Cheng Li on 11/23/2017.
  */
 
-public class Triangle extends KonnectorShape {
+public class Triangle extends Node {
 
     public Triangle(Shape s, int x, int y){
         super(s);

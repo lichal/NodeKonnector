@@ -15,8 +15,10 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import crorg.node_konnector.Bond;
 import crorg.node_konnector.Bonds.KonnectorBond;
 import crorg.node_konnector.Bonds.SingleBond;
+import crorg.node_konnector.Node;
 import crorg.node_konnector.Scaler;
 import crorg.node_konnector.Shapes.Circle;
 import crorg.node_konnector.Shapes.Hexagon;
@@ -32,13 +34,15 @@ public class GameCanvas extends View {
 
     private Scaler scale;
 
-    private ArrayList<KonnectorShape> shapeArrayList;
+    private ArrayList<Node> shapeArrayList;
 
-    private ArrayList<SingleBond> bondArrayList;
+    private ArrayList<Bond> bondArrayList;
 
     private boolean bondingMode;
 
     private int numSelect;
+
+    private Path drawBonding;
 
     private int startx;
     private int starty;
@@ -48,13 +52,18 @@ public class GameCanvas extends View {
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        shapeArrayList = new ArrayList<KonnectorShape>();
+        shapeArrayList = new ArrayList<Node>();
 
-        bondArrayList = new ArrayList<SingleBond>();
+        bondArrayList = new ArrayList<Bond>();
 
         bondingMode = false;
 
         numSelect = 0;
+
+        selectedNode1 = null;
+        selectedNode2 = null;
+
+        drawBonding = new Path();
 
         startx = 0;
         starty = 0;
@@ -82,18 +91,15 @@ public class GameCanvas extends View {
 
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-        paint.setStrokeWidth(10f);
+        paint.setStrokeWidth(100f);
 
-        for(SingleBond b: bondArrayList){
-            canvas.drawPath(b, paint);
+        for(Bond b: bondArrayList){
+            canvas.drawPath(b.drawSingleBond(), paint);
         }
 
-        for(KonnectorShape k: shapeArrayList) {
+        for(Node k: shapeArrayList) {
             k.draw(canvas);
         }
-
-//        canvas.drawPath(pathbond, paint);
-
     }
 
     public void setBondingMode(boolean startBonding){
@@ -101,9 +107,8 @@ public class GameCanvas extends View {
     }
 
 
-    public void selections(){
-
-    }
+    private Node selectedNode1;
+    private Node selectedNode2;
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -114,35 +119,38 @@ public class GameCanvas extends View {
         switch (action){
             case MotionEvent.ACTION_DOWN:
                 if(!bondingMode) {
-                    for (KonnectorShape k : shapeArrayList) {
+                    for (Node k : shapeArrayList) {
                         k.checkSelect(x, y);
                     }
                 }
+                // bonding mode
                 if(bondingMode) {
-                    for (KonnectorShape k : shapeArrayList) {
+                    for (Node k : shapeArrayList) {
                         if(k.checkSelect(x, y)) {
                             if (numSelect == 1) {
-                                touchx = k.getMidX();
-                                touchy = k.getMidY();
-                                numSelect++;
+                                if(selectedNode1 != k) {
+                                    selectedNode2 = k;
+                                    numSelect++;
+                                }
                             }
 
                             if (numSelect == 0) {
-                                startx = k.getMidX();
-                                starty = k.getMidY();
+                                selectedNode1 = k;
                                 numSelect++;
                             }
                         }
                     }
                     if(numSelect == 2){
-                        bondArrayList.add(new SingleBond(startx, starty, touchx, touchy));
+                        bondArrayList.add(new Bond(selectedNode1, selectedNode2));
+                        selectedNode1 = null;
+                        selectedNode2 = null;
                         numSelect = 0;
                     }
                 }
                 invalidate();
             case MotionEvent.ACTION_MOVE:
                 if(!bondingMode) {
-                    for (KonnectorShape k : shapeArrayList) {
+                    for (Node k : shapeArrayList) {
                         if (k.isSelect()) {
                             k.redraw(x, y);
                         }

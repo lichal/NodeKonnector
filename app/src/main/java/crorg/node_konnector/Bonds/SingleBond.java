@@ -25,13 +25,11 @@ public class SingleBond extends KonnectorBond{
     private Point p3;
     private Point p4;
 
-    private Point endPoint;
-
     public SingleBond(int startX, int startY, int touchX, int touchY){
-//        this.startX = startX;
-//        this.startY = startY;
-//        this.touchX = touchX;
-//        this.touchY = touchY;
+        this.startX = startX;
+        this.startY = startY;
+        this.touchX = touchX;
+        this.touchY = touchY;
 //
 //        start1 = new Point();
 //        start2 = new Point();
@@ -42,24 +40,17 @@ public class SingleBond extends KonnectorBond{
         startPoint.x = startX;
         startPoint.y = startY;
 
-        endPoint = new Point(touchX, touchY);
+        p2 = new Point(touchX, touchY);
+        p3 = new Point(p2.x-10, p2.y);
+        p4 = new Point(startPoint.x-10, startPoint.y);
 
         moveTo(startPoint.x, startPoint.y);
-        lineTo(endPoint.x, endPoint.y);
-
-//        p2 = new Point(touchX, touchY);
-//        p3 = new Point(p2.x-10, p2.y);
-//        p4 = new Point(startPoint.x-10, startPoint.y);
-//
-//        moveTo(startPoint.x, startPoint.y);
-//        lineTo(p2.x,p2.y);
-//        lineTo(p3.x, p3.y);
-//        lineTo(p4.x, p4.y);
-//        lineTo(startPoint.x, startPoint.y);
+        lineTo(p2.x,p2.y);
+        lineTo(p3.x, p3.y);
+        lineTo(p4.x, p4.y);
+        lineTo(startPoint.x, startPoint.y);
 
     }
-
-
 
 //    public Path getPath(){
 //        return this;

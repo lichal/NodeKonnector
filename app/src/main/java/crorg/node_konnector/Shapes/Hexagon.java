@@ -2,11 +2,13 @@ package crorg.node_konnector.Shapes;
 
 import android.graphics.drawable.shapes.Shape;
 
+import crorg.node_konnector.Node;
+
 /**
  * Created by d on 11/27/17.
  */
 
-public class Hexagon extends KonnectorShape{
+public class Hexagon extends Node{
 
     public Hexagon(Shape s, int x, int y){
         super(s);

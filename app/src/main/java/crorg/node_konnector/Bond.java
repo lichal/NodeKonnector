@@ -1,5 +1,8 @@
 package crorg.node_konnector;
 
+import android.graphics.Path;
+import android.graphics.Point;
+
 /**
  * Created by Ryan on 2017-11-27.
  */
@@ -12,10 +15,16 @@ public class Bond {
     private Node node2;
     private int classOfBond;
 
+    private Path bondPath;
+
+    private Point startPoint;
+    private Point p2, p3, p4;
+
 
     public Bond(Node n1, Node n2) {
         node1 = n1;
         node2 = n2;
+        bondPath = new Path();
         classOfBond = Bond.SINGLE;
     }
 
@@ -53,12 +62,6 @@ public class Bond {
         return classOfBond;
     }
 
-
-
-
-
-
-
     public static boolean areEqual(Bond b1, Bond b2) {
         Node b1First = b1.getNode1();
         Node b1Second = b1.getNode2();
@@ -70,5 +73,24 @@ public class Bond {
         return false;
     }
 
+
+    public Path drawSingleBond() {
+
+        startPoint = new Point();
+        startPoint.x = node1.getMidX();
+        startPoint.y = node1.getMidY();
+
+        p2 = new Point(node2.getMidX(), node2.getMidY());
+        p3 = new Point(p2.x - 10, p2.y);
+        p4 = new Point(startPoint.x - 10, startPoint.y);
+
+        bondPath.moveTo(startPoint.x, startPoint.y);
+        bondPath.lineTo(p2.x, p2.y);
+        bondPath.lineTo(p3.x, p3.y);
+        bondPath.lineTo(p4.x, p4.y);
+        bondPath.lineTo(startPoint.x, startPoint.y);
+
+        return bondPath;
+    }
 
 }
