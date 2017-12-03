@@ -3,6 +3,7 @@ package crorg.node_konnector;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 
 
-public class Node extends ShapeDrawable{
+public class Node extends ShapeDrawable implements Serializable {
     private int num;
     private int numberKonnections;
     private ArrayList<Node> neighbors;

@@ -3,13 +3,15 @@ package crorg.node_konnector.Shapes;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
+import java.io.Serializable;
+
 import crorg.node_konnector.Scaler;
 
 /**
  * Created by Cheng Li on 11/23/2017.
  */
 
-public class KonnectorShape extends ShapeDrawable{
+public class KonnectorShape extends ShapeDrawable implements Serializable {
 
     protected int connection;
     protected int positionX;

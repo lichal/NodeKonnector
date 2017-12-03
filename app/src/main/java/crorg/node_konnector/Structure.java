@@ -2,6 +2,7 @@ package crorg.node_konnector;
 
 import android.graphics.Color;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import crorg.node_konnector.Shapes.Triangle;
  * Created by Ryan on 2017-11-27.
  */
 
-public class Structure {
+public class Structure implements Serializable {
     private ArrayList<Bond> bonds;
     private ArrayList<Node> nodes;
     private int numNodes;

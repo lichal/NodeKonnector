@@ -3,11 +3,13 @@ package crorg.node_konnector;
 import android.graphics.Path;
 import android.graphics.Point;
 
+import java.io.Serializable;
+
 /**
  * Created by Ryan on 2017-11-27.
  */
 
-public class Bond {
+public class Bond implements Serializable {
     public static int SINGLE = 1;
     public static int DOUBLE = 2;
     public static int TRIPLE = 3;

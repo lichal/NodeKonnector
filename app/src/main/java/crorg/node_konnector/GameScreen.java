@@ -294,4 +294,13 @@ public class GameScreen extends AppCompatActivity implements
     }
 
 
+    public ArrayList<Structure> getStorageArrayList() {
+
+
+
+
+        return null;
+    }
+
+
 }
