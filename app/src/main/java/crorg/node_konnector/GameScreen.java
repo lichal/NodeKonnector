@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ import crorg.node_konnector.Shapes.Triangle;
 import crorg.node_konnector.dummy.ShapeContent;
 
 public class GameScreen extends AppCompatActivity implements
-        ShapeFragment.OnListFragmentInteractionListener {
+        ShapeFragment.OnListFragmentInteractionListener, Serializable {
 
     /* The shape recycler view holds shapes */
     private RecyclerView shapeRecyclerView;

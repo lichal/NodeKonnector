@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
+
 import crorg.node_konnector.R;
 import crorg.node_konnector.dummy.LevelContent;
 import crorg.node_konnector.dummy.LevelContent.LevelItem;
@@ -20,7 +22,7 @@ import crorg.node_konnector.dummy.LevelContent.LevelItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class LevelFragment extends Fragment {
+public class LevelFragment extends Fragment implements Serializable {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";

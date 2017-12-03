@@ -13,6 +13,8 @@ import android.support.constraint.solver.widgets.Rectangle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import crorg.node_konnector.Bond;
@@ -23,7 +25,7 @@ import crorg.node_konnector.Scaler;
  * Created by Cheng on 11/27/17.
  */
 
-public class GameCanvas extends View {
+public class GameCanvas extends View implements Serializable {
 
     private Scaler scale;
 

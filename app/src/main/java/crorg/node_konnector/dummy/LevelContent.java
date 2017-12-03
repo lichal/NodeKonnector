@@ -1,5 +1,6 @@
 package crorg.node_konnector.dummy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Map;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class LevelContent {
+public class LevelContent implements Serializable {
 
     /**
      * An array of sample (dummy) items.

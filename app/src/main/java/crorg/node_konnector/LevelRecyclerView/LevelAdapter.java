@@ -10,6 +10,7 @@ import crorg.node_konnector.LevelRecyclerView.LevelFragment.OnListFragmentIntera
 import crorg.node_konnector.R;
 import crorg.node_konnector.dummy.LevelContent.LevelItem;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> {
+public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> implements Serializable {
 
     private final List<LevelItem> mValues;
     private final OnListFragmentInteractionListener mListener;

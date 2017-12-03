@@ -13,6 +13,7 @@ import crorg.node_konnector.R;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment.OnListFragmentInteractionListener;
 import crorg.node_konnector.dummy.ShapeContent.ShapeItem;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class ShapeAdapter extends RecyclerView.Adapter<ShapeAdapter.ViewHolder> {
+public class ShapeAdapter extends RecyclerView.Adapter<ShapeAdapter.ViewHolder> implements Serializable {
 
     private final List<ShapeItem> mValues;
     private final OnListFragmentInteractionListener mListener;

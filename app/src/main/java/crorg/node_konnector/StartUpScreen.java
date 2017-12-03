@@ -20,9 +20,10 @@ import java.io.InvalidClassException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 
-public class StartUpScreen extends AppCompatActivity {
+public class StartUpScreen extends AppCompatActivity implements Serializable {
 
     /* The TextView for Press to Start */
     private TextView pressStart;
@@ -159,6 +160,7 @@ public class StartUpScreen extends AppCompatActivity {
             System.out.println("Failed to write - InvalidClassException");
          } catch (NotSerializableException e3) {
             System.out.println("Failed to write - NotSerializableException");
+            System.out.println("Message: " + e3.getMessage());
         } catch (IOException e4) {
             System.out.println("Failed to write - IOException");
         }

@@ -218,19 +218,24 @@ public class Structure implements Serializable {
                     maxAddableKonnections = 2;
                 }
                 int howManyToAdd = r.nextInt(1 + maxAddableKonnections);
-                if (howManyToAdd == Bond.DOUBLE - 1) {
-                    current.setBondType(Bond.DOUBLE);
+                //if (howManyToAdd == Bond.DOUBLE - 1) {
+                if (howManyToAdd == 1) {
+                    //current.setBondType(Bond.DOUBLE);
+                    current.setBondType(2);
                     n1.incrementKonnections();
                     n2.incrementKonnections();
-                } else if (howManyToAdd == Bond.TRIPLE - 1) {
-                    current.setBondType(Bond.TRIPLE);
+                //} else if (howManyToAdd == Bond.TRIPLE - 1) {
+                } else if (howManyToAdd == 2) {
+                    //current.setBondType(Bond.TRIPLE);
+                    current.setBondType(3);
                     n1.incrementKonnections();
                     n1.incrementKonnections();
                     n2.incrementKonnections();
                     n2.incrementKonnections();
                 }
             } else {
-                current.setBondType(Bond.SINGLE);
+                //current.setBondType(Bond.SINGLE);
+                current.setBondType(1);
             }
         }
     }
@@ -246,9 +251,9 @@ public class Structure implements Serializable {
             System.out.print(k.getNode1().getNum() + " --- " + k.getNode2().getNum());
             int m = k.getBondType();
             String s = "";
-            if (m == Bond.SINGLE) {
+            if (m == 1) {
                 s += "single";
-            } else if (m == Bond.DOUBLE) {
+            } else if (m == 2) {
                 s += "double";
             } else {
                 s += "triple";
@@ -335,12 +340,12 @@ public class Structure implements Serializable {
         int structure2Doubles = 0;
         int structure2Triples = 0;
         for (int i = 0; i < size1; i++) {
-            structure1Singles += (bonds1.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
-            structure1Doubles += (bonds1.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
-            structure1Triples += (bonds1.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
-            structure2Singles += (bonds2.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
-            structure2Doubles += (bonds2.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
-            structure2Triples += (bonds2.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
+            structure1Singles += (bonds1.get(i).getBondType() == 1 ? 1 : 0);
+            structure1Doubles += (bonds1.get(i).getBondType() == 2 ? 1 : 0);
+            structure1Triples += (bonds1.get(i).getBondType() == 3 ? 1 : 0);
+            structure2Singles += (bonds2.get(i).getBondType() == 1 ? 1 : 0);
+            structure2Doubles += (bonds2.get(i).getBondType() == 2 ? 1 : 0);
+            structure2Triples += (bonds2.get(i).getBondType() == 3 ? 1 : 0);
         }
 
         // Return result...
@@ -369,11 +374,11 @@ public class Structure implements Serializable {
         int numDoubleBonds = 0;
         int numTripleBonds = 0;
         for (Bond b : bonds) {
-            if (b.getBondType() == Bond.SINGLE) {
+            if (b.getBondType() == 1) {
                 numSingleBonds++;
-            } else if (b.getBondType() == Bond.DOUBLE) {
+            } else if (b.getBondType() == 2) {
                 numDoubleBonds++;
-            } else if (b.getBondType() == Bond.TRIPLE) {
+            } else if (b.getBondType() == 3) {
                 numTripleBonds++;
             }
         }

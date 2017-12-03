@@ -10,9 +10,9 @@ import java.io.Serializable;
  */
 
 public class Bond implements Serializable {
-    public static int SINGLE = 1;
-    public static int DOUBLE = 2;
-    public static int TRIPLE = 3;
+    //public static int SINGLE = 1;
+    //public static int DOUBLE = 2;
+    //public static int TRIPLE = 3;
     private Node node1;
     private Node node2;
     private int classOfBond;
@@ -27,7 +27,8 @@ public class Bond implements Serializable {
         node1 = n1;
         node2 = n2;
         bondPath = new Path();
-        classOfBond = Bond.SINGLE;
+        //classOfBond = Bond.SINGLE;
+        classOfBond = 1;
         startPoint = new Point();
         p2 = new Point();
         p3 = new Point();
@@ -53,12 +54,21 @@ public class Bond implements Serializable {
 
 
     public void setBondType(int a) {
-        if (a == Bond.SINGLE) {
-            classOfBond = Bond.SINGLE;
-        } else if (a == Bond.DOUBLE) {
-            classOfBond = Bond.DOUBLE;
-        } else if (a == Bond.TRIPLE) {
-            classOfBond = Bond.TRIPLE;
+//        if (a == Bond.SINGLE) {
+//            classOfBond = Bond.SINGLE;
+//        } else if (a == Bond.DOUBLE) {
+//            classOfBond = Bond.DOUBLE;
+//        } else if (a == Bond.TRIPLE) {
+//            classOfBond = Bond.TRIPLE;
+//        } else {
+//            return;
+//        }
+        if (a == 1) {
+            classOfBond = 1;
+        } else if (a == 2) {
+            classOfBond = 2;
+        } else if (a == 3) {
+            classOfBond = 3;
         } else {
             return;
         }
