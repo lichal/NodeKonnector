@@ -25,17 +25,21 @@ public class Structure {
         bonds = new ArrayList<Bond>();
         nodes = new ArrayList<Node>();
         this.numNodes = numNodes;
-        createNodes();
-        bondAllNodesToEachOther();
-        randomlyRemoveRandomNumBondsFromStructure();
-        fixAnyOverkonnectedNodes();
-        randomizeBondTypes();
-        displayStringDescriptionForPlayer();
+        if (numNodes >=2) {
+            createNodes();
+            bondAllNodesToEachOther();
+            randomlyRemoveRandomNumBondsFromStructure();
+            fixAnyOverkonnectedNodes();
+            randomizeBondTypes();
+            displayStringDescriptionForPlayer();
 
-        // if the generated structure does NOT work (is not INTACT), then just keep
-        // generating a new one until it works
-        System.out.println("Is Structure INTACT?: " + isStrutureIntact());
-        displayStructureInfoForDebugging();
+            // if the generated structure does NOT work (is not INTACT), then just keep
+            // generating a new one until it works
+            System.out.println("Is Structure INTACT?: " + isStrutureIntact());
+            displayStructureInfoForDebugging();
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     // true if successfully added a unique one

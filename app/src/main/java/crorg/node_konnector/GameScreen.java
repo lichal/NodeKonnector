@@ -63,7 +63,7 @@ public class GameScreen extends AppCompatActivity implements
 
         // intent gets the level selected
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainScreen.LEVEL_MESSAGE);
+        String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
 
         // new game structure
         gameStruct = new Structure(2);
@@ -268,6 +268,30 @@ public class GameScreen extends AppCompatActivity implements
 
 
 
+
+    public void testStructureList() {
+        // when a fragment is touched, send that level integer to the next screen
+        // the next screen will generate a structure
+        // don't know where this goes, but...
+
+        // pass this value from some screen;
+        int levelNumber = 3;
+        ArrayList<Structure> previousStructures = null;    // steal this from local storage/mobile
+        boolean keepGoing = true;
+        mainLoop:
+        while (keepGoing) {
+            Structure candidate = new Structure(levelNumber);
+            if (previousStructures.size() > 0) {
+                for (Structure previous : previousStructures) {
+                    boolean matchFound = Structure.areStructuresSimilarEnough(candidate.getNodes(), candidate.getBonds(), previous.getNodes(), previous.getBonds());
+                    if (matchFound) {
+                        continue mainLoop;
+                    }
+                }
+            }
+            break;
+        }
+    }
 
 
 }

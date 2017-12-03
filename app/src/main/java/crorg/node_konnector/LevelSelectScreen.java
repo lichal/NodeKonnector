@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import crorg.node_konnector.LevelRecyclerView.LevelFragment;
 import crorg.node_konnector.dummy.LevelContent;
 
-public class MainScreen extends AppCompatActivity implements LevelFragment.OnListFragmentInteractionListener {
+public class LevelSelectScreen extends AppCompatActivity implements LevelFragment.OnListFragmentInteractionListener {
     public static final String LEVEL_MESSAGE = "crorg.nodekonnector.LEVELMESSAGE";
 
     // a comment

@@ -21,6 +21,10 @@ public class StartUpScreen extends AppCompatActivity {
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
         pressStart.setAnimation(manageBlinkEffect());
+
+        // this needs to consult the saved file for highest level achieved by the player before it
+
+
     }
 
     /*******************************************************************
@@ -47,13 +51,14 @@ public class StartUpScreen extends AppCompatActivity {
      * @param event the user touch event
      * @return true for touch event occur
      ******************************************************************/
+    // this method needs to consult the highest level achieved by the player in order to generate levels
 
     public boolean onTouchEvent(MotionEvent event){
         switch (event.getAction()){
             // Case touch down
             case MotionEvent.ACTION_DOWN:
                 // Setting a bew intent for screen transition
-                Intent intent = new Intent(this, MainScreen.class);
+                Intent intent = new Intent(this, LevelSelectScreen.class);
                 // Transition to level screen
                 startActivity(intent);
                 // End start up activity
