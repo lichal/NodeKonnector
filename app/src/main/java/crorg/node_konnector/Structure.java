@@ -285,75 +285,6 @@ public class Structure {
         return relativeNumbers2;
     }
 
-//    // shows the SORTED relative number of shapes the ANSWER has
-//    private ArrayList<Integer> getAnswerRelativeShapesCount() {
-//        ArrayList<Integer> relativeNumbers = new ArrayList<Integer>();
-//        for (int i = 0; i < Logic.NUM_TOTAL_SHAPES; i++) {
-//            int count = 0;
-//            for (Node n : nodes) {
-//                //numKonnections += n.getNumberOfKonnections();
-//                if (n.getNumberOfKonnections() == 1 + i) {
-//                    count++;
-//                }
-//            }
-//            if (count > 0) {
-//                relativeNumbers.add(count);
-//            }
-//        }
-//        Collections.sort(relativeNumbers);
-//        return relativeNumbers;
-//    }
-
-
-//    public boolean matchesStructure(ArrayList<Node> userNodes, ArrayList<Bond> userBonds) {
-//        // Compare user shape config to answer shape config...
-//        ArrayList<Integer> userConfigShapes = getUserRelativeShapesCount(userNodes);
-//        ArrayList<Integer> answerConfigShapes = getAnswerRelativeShapesCount();
-//        int size1 = answerConfigShapes.size();
-//        int size2 = userConfigShapes.size();
-//        if (size1 != size2) {
-//            return false;
-//        } else {
-//            for (int i = 0; i < size1; i++) {
-//                if (answerConfigShapes.get(i).intValue() != userConfigShapes.get(i).intValue()) {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        // Now compare bonds...
-//        int userSingles = 0;
-//        int userDoubles = 0;
-//        int userTriples = 0;
-//        int structureSingles = 0;
-//        int structureDoubles = 0;
-//        int structureTriples = 0;
-//        for (Bond b : userBonds) {
-//            if (b.getBondType() == Bond.SINGLE) {
-//                userSingles++;
-//            } else if (b.getBondType() == Bond.DOUBLE) {
-//                userDoubles++;
-//            } else if (b.getBondType() == Bond.TRIPLE) {
-//                userTriples++;
-//            }
-//        }
-//        for (Bond b2 : bonds) {
-//            if (b2.getBondType() == Bond.SINGLE) {
-//                structureSingles++;
-//            } else if (b2.getBondType() == Bond.DOUBLE) {
-//                structureDoubles++;
-//            } else if (b2.getBondType() == Bond.TRIPLE) {
-//                structureTriples++;
-//            }
-//        }
-//        if ((userSingles != structureSingles) || (userDoubles != structureDoubles)
-//                || (userTriples != structureTriples)) {
-//            return false;
-//        }
-//        return true;
-//    }
-
-
 
     // shows the SORTED relative number of shapes the given structure has
     private static ArrayList<Integer> getRelativeShapesCount(ArrayList<Node> nodesList) {
@@ -414,10 +345,6 @@ public class Structure {
         }
         return true;
     }
-
-
-
-
 
 
     public void displayStringDescriptionForPlayer() {
