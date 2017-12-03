@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.support.constraint.solver.widgets.Rectangle;
 import android.util.AttributeSet;
@@ -93,8 +94,7 @@ public class GameCanvas extends View {
 
     private Node movingNode;
 
-    private Rectangle move = new Rectangle();
-    private Rectangle collide = new Rectangle();
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -158,37 +158,51 @@ public class GameCanvas extends View {
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                move.setBounds(movingNode.getPositionX(), movingNode.getPositionY(), movingNode.getWidth(), movingNode.getHeight());
                     for (Node collide : shapeArrayList) {
                         if (movingNode != collide) {
-//                            if (movingNode.getPositionX() >= collide.getPositionX() && movingNode.getPositionX() <= collide.getPositionX() + collide.getWidth()) {
-//                                movingNode.redraw(collide.getPositionX() + (int) (collide.getWidth() * 2), collide.getPositionY() + (int) (collide.getHeight() * 2));
-//                            }
-                            if (movingNode.getPositionY() > collide.getPositionY() && movingNode.getPositionY() < collide.getPositionY() + collide.getHeight()) {
-                                movingNode.redraw(collide.getPositionX() + collide.getWidth() / 2, collide.getPositionY() + (int) (collide.getHeight() * 2));
-                            }
-//                            && x < collide.getPositionX() + collide.getWidth()
-//                            && y > collide.getPositionY()
-//                            && y < collide.getPositionY() + collide.getHeight()) {
-//                        k.redraw(collide.getPositionX() + 200, collide.getPositionY() + 200);
-//                                movingNode = null;
-
+                            System.out.print("collision: " + collided(movingNode, collide));
+                            if(collided(movingNode, collide))
+                                movingNode.redraw(collide.getPositionX() + (int) (collide.getWidth() * 1.5), collide.getPositionY() + (int) (collide.getHeight() / 2));
                         }
                     }
-
                 invalidate();
                 break;
         }
 
         return true;
     }
-//    public boolean collide(final Node other) {
-//        move.setBounds(getX(), getY(), getWidth(), getHeight());
-//        shoot.setBounds(other.getX(), other.getY(),
-//                other.getWidth(), other.getHeight());
-//
-//        return enemy.intersects(shoot);
-//    }
+
+    private boolean intersetctOther(Node dropThis, Node collideOther){
+        int x1 = dropThis.getPositionX();
+        int y1 = dropThis.getPositionY();
+        int width1 = dropThis.getWidth();
+        int height1 = dropThis.getHeight();
+        int x2 = collideOther.getPositionX();
+        int y2 = collideOther.getPositionY();
+        int width2 = collideOther.getWidth();
+        int height2 = collideOther.getHeight();
+        int right1 = x1 + width1;
+        int right2 = x2 + width2;
+        int bottom1 = y1 + height1;
+        int bottom2 = y2 + height2;
+
+        // Check if top-left point is in box
+        if (x2 >= x1 && x2 <= right1 && y2 >= y2 && y2 <= bottom1)
+            return true;
+        // Check if bottom-right point is in box
+        if (right2 >= x1 && right2 <= right1 && bottom2 >= y2 && bottom2 <= bottom1)
+            return true;
+        return false;
+    }
+
+    public Rect move;
+    public Rect collide;
+    public boolean collided(Node dropThis, Node collideOther) {
+        move = new Rect(dropThis.getPositionX(), dropThis.getPositionY(), dropThis.getPositionX() + dropThis.getWidth(), dropThis.getPositionY() + dropThis.getHeight());
+        collide = new Rect(collideOther.getPositionX(), collideOther.getPositionY(), collideOther.getPositionX() + collideOther.getWidth(), collideOther.getPositionY()+collideOther.getHeight());
+
+        return Rect.intersects(move, collide);
+    }
 
     /******************************************************************
      * Getter for the list of shapes on the canvas
