@@ -24,11 +24,11 @@
         android:id="@+id/bondButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="ToggleButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toRightOf="@+id/checkStructure"
+        android:layout_marginLeft="0dp" />
 
     <Button
         android:id="@+id/checkStructure"
@@ -76,23 +76,46 @@
         android:id="@+id/triangleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="11dp"
         android:text="@string/triangleStr"
-        app:layout_constraintBottom_toTopOf="@+id/bondButton"
-        app:layout_constraintLeft_toRightOf="@+id/squareBtn" />
+        app:layout_constraintLeft_toRightOf="@+id/squareBtn"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/doubleButton" />
 
     <Button
         android:id="@+id/hexagonBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/hexagonStr"
-        app:layout_constraintBottom_toTopOf="@+id/bondButton"
         app:layout_constraintLeft_toRightOf="@+id/triangleBtn"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/tripleButton" />
+
+    <ToggleButton
+        android:id="@+id/doubleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton"
+        app:layout_constraintLeft_toRightOf="@+id/bondButton"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp" />
+
+    <ToggleButton
+        android:id="@+id/tripleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/doubleButton"
+        android:layout_marginLeft="8dp" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -35,7 +35,14 @@ public class GameCanvas extends View {
 
     private int numSelect;
 
+    /**  */
     private Paint paint;
+
+    /** Rect for the moving node */
+    private Rect move;
+
+    /** Rect for the node being collide */
+    private Rect collide;
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -160,8 +167,7 @@ public class GameCanvas extends View {
             case MotionEvent.ACTION_UP:
                     for (Node collide : shapeArrayList) {
                         if (movingNode != collide) {
-                            System.out.print("collision: " + collided(movingNode, collide));
-                            if(collided(movingNode, collide))
+                            if(collides(movingNode, collide))
                                 movingNode.redraw(collide.getPositionX() + (int) (collide.getWidth() * 1.5), collide.getPositionY() + (int) (collide.getHeight() / 2));
                         }
                     }
@@ -172,34 +178,21 @@ public class GameCanvas extends View {
         return true;
     }
 
-    private boolean intersetctOther(Node dropThis, Node collideOther){
-        int x1 = dropThis.getPositionX();
-        int y1 = dropThis.getPositionY();
-        int width1 = dropThis.getWidth();
-        int height1 = dropThis.getHeight();
-        int x2 = collideOther.getPositionX();
-        int y2 = collideOther.getPositionY();
-        int width2 = collideOther.getWidth();
-        int height2 = collideOther.getHeight();
-        int right1 = x1 + width1;
-        int right2 = x2 + width2;
-        int bottom1 = y1 + height1;
-        int bottom2 = y2 + height2;
-
-        // Check if top-left point is in box
-        if (x2 >= x1 && x2 <= right1 && y2 >= y2 && y2 <= bottom1)
-            return true;
-        // Check if bottom-right point is in box
-        if (right2 >= x1 && right2 <= right1 && bottom2 >= y2 && bottom2 <= bottom1)
-            return true;
-        return false;
-    }
-
-    public Rect move;
-    public Rect collide;
-    public boolean collided(Node dropThis, Node collideOther) {
-        move = new Rect(dropThis.getPositionX(), dropThis.getPositionY(), dropThis.getPositionX() + dropThis.getWidth(), dropThis.getPositionY() + dropThis.getHeight());
-        collide = new Rect(collideOther.getPositionX(), collideOther.getPositionY(), collideOther.getPositionX() + collideOther.getWidth(), collideOther.getPositionY()+collideOther.getHeight());
+    /******************************************************************
+     * Detect collision, determine if two shape overlap
+     * @param dropThis - the node being drop
+     * @param collideOther - the node being collide
+     * @return boolean if the node collides
+     *****************************************************************/
+    private boolean collides(Node dropThis, Node collideOther) {
+        move = new Rect(dropThis.getPositionX(),
+                dropThis.getPositionY(),
+                dropThis.getPositionX() + dropThis.getWidth(),
+                dropThis.getPositionY() + dropThis.getHeight());
+        collide = new Rect(collideOther.getPositionX(),
+                collideOther.getPositionY(),
+                collideOther.getPositionX() + collideOther.getWidth(),
+                collideOther.getPositionY()+collideOther.getHeight());
 
         return Rect.intersects(move, collide);
     }
