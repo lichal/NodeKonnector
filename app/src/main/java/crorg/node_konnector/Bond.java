@@ -26,6 +26,10 @@ public class Bond {
         node2 = n2;
         bondPath = new Path();
         classOfBond = Bond.SINGLE;
+        startPoint = new Point();
+        p2 = new Point();
+        p3 = new Point();
+        p4 = new Point();
     }
 
 
@@ -73,24 +77,37 @@ public class Bond {
         return false;
     }
 
+    public Path getBondPath(){
+        drawPath(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY());
+        return bondPath;
+    }
 
-    public Path drawSingleBond() {
+    public void drawPath(int startx, int starty, int endx, int endy){
+        bondPath.reset();
+        bondPath.moveTo(startx, starty);
+        bondPath.lineTo(endx, endy);
+        bondPath.lineTo(endx-10, endy);
+        bondPath.lineTo(startx-10, starty);
+        bondPath.lineTo(startx, starty);
+    }
 
-        startPoint = new Point();
+    public void drawSingleBond() {
         startPoint.x = node1.getMidX();
         startPoint.y = node1.getMidY();
 
-        p2 = new Point(node2.getMidX(), node2.getMidY());
-        p3 = new Point(p2.x - 10, p2.y);
-        p4 = new Point(startPoint.x - 10, startPoint.y);
+        p2.x = node2.getMidX();
+        p2.y = node2.getMidY();
+
+        p3.x = p2.x - 10;
+        p3.y = p2.y;
+
+        p4.x = startPoint.x - 10;
+        p4.y = startPoint.y;
 
         bondPath.moveTo(startPoint.x, startPoint.y);
         bondPath.lineTo(p2.x, p2.y);
         bondPath.lineTo(p3.x, p3.y);
         bondPath.lineTo(p4.x, p4.y);
         bondPath.lineTo(startPoint.x, startPoint.y);
-
-        return bondPath;
     }
-
 }

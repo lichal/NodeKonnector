@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -19,6 +20,7 @@ import android.widget.ToggleButton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
@@ -38,6 +40,10 @@ public class GameScreen extends AppCompatActivity implements
 
     private ToggleButton circleButton;
 
+    private Button checkStructure;
+
+    private TextView gameStatus;
+
     private GameCanvas game;
 
     private File userProgress;  // local storage of user progress
@@ -49,6 +55,7 @@ public class GameScreen extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_screen);
 
+        structure = new Structure(3);
         game = (GameCanvas) findViewById(R.id.gameCanvas);
 
         //set the shape Recycler View to horizontal
@@ -59,6 +66,10 @@ public class GameScreen extends AppCompatActivity implements
         bondButton = (ToggleButton) findViewById(R.id.bondButton);
         triangleButton = (ToggleButton) findViewById(R.id.triangleButton);
         circleButton = (ToggleButton) findViewById(R.id.circleButton);
+
+        checkStructure = (Button) findViewById(R.id.checkStructure);
+
+        gameStatus = (TextView) findViewById(R.id.gameStatus);
 
 //        bondButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -78,14 +89,10 @@ public class GameScreen extends AppCompatActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-
-                    //game.setBonding(true);
-
                     game.setBondingMode(true);
                     game.invalidate();
                 }else{
                     game.setBondingMode(false);
-
                     game.invalidate();
                 }
             }
@@ -111,6 +118,21 @@ public class GameScreen extends AppCompatActivity implements
             }
         });
 
+        checkStructure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList <Node> allFriendKonnections = new ArrayList<Node>();
+                if(game.getShapeArrayList().size() > 0) {
+                    int number = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
+                    if(number != game.getShapeArrayList().size()){
+                        gameStatus.setText("Not intact!");
+                    }else{
+                        gameStatus.setText("Intact");
+                    }
+
+                }
+            }
+        });
 
         // setting up local storage for user
         String filename = "userProgress123";
@@ -175,9 +197,9 @@ public class GameScreen extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        // change button
-        TextView fileStuffs = (TextView) findViewById(R.id.fileStuffs);
-        fileStuffs.setText(s);
+//        // change button
+//        TextView fileStuffs = (TextView) findViewById(R.id.fileStuffs);
+//        fileStuffs.setText(s);
     }
 
 

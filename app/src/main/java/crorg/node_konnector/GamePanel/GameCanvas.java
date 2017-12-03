@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.PathShape;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import crorg.node_konnector.Shapes.Hexagon;
 import crorg.node_konnector.Shapes.KonnectorShape;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
+import crorg.node_konnector.Structure;
 
 /**
  * Created by Cheng on 11/27/17.
@@ -42,13 +44,6 @@ public class GameCanvas extends View {
 
     private int numSelect;
 
-    private Path drawBonding;
-
-    private int startx;
-    private int starty;
-    private int touchx;
-    private int touchy;
-
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -63,12 +58,6 @@ public class GameCanvas extends View {
         selectedNode1 = null;
         selectedNode2 = null;
 
-        drawBonding = new Path();
-
-        startx = 0;
-        starty = 0;
-        touchx = 0;
-        touchy = 0;
 
 //        mDrawable = new Circle(new OvalShape(), 200, 10);
 //        // If the color isn't set, the shape uses black as the default.
@@ -87,6 +76,8 @@ public class GameCanvas extends View {
     }
 
     protected void onDraw(Canvas canvas){
+//        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+
         scale = new Scaler(getWidth(), getHeight());
 
         Paint paint = new Paint();
@@ -94,7 +85,7 @@ public class GameCanvas extends View {
         paint.setStrokeWidth(100f);
 
         for(Bond b: bondArrayList){
-            canvas.drawPath(b.drawSingleBond(), paint);
+            canvas.drawPath(b.getBondPath(), paint);
         }
 
         for(Node k: shapeArrayList) {
@@ -105,7 +96,6 @@ public class GameCanvas extends View {
     public void setBondingMode(boolean startBonding){
         this.bondingMode = startBonding;
     }
-
 
     private Node selectedNode1;
     private Node selectedNode2;
@@ -142,8 +132,18 @@ public class GameCanvas extends View {
                     }
                     if(numSelect == 2){
                         bondArrayList.add(new Bond(selectedNode1, selectedNode2));
+                        // add the neighbor to each other
+                        selectedNode1.addNeighborNode(selectedNode2);
+                        selectedNode2.addNeighborNode(selectedNode1);
+
+                        // add number of connection to each node
+                        selectedNode1.incrementKonnections();
+                        selectedNode2.incrementKonnections();
+
+                        // reset the selection to null
                         selectedNode1 = null;
                         selectedNode2 = null;
+
                         numSelect = 0;
                     }
                 }
@@ -160,34 +160,11 @@ public class GameCanvas extends View {
         }
         return true;
     }
-
-    private Path drawBond(int startPointX, int startPointY, int touchX, int touchY){
-        Point startPoint = new Point();
-        startPoint.x = startPointX;
-        startPoint.y = startPointY;
-
-        Point p2, p3, p4;
-
-        p2 = new Point(touchX, touchY);
-        p3 = new Point(p2.x-10, p2.y);
-        p4 = new Point(startPoint.x-10, startPoint.y);
-
-        Path bond = new Path();
-
-        bond.moveTo(startPoint.x, startPoint.y);
-        bond.lineTo(p2.x,p2.y);
-        bond.lineTo(p3.x, p3.y);
-        bond.lineTo(p4.x, p4.y);
-        bond.lineTo(startPoint.x, startPoint.y);
-
-        return bond;
-    }
-
     /******************************************************************
      * Getter for the list of shapes on the canvas
      * @return shapeArrayList - the arraylist holds all shapes
      *****************************************************************/
-    public ArrayList getShapeArrayList(){
+    public ArrayList<Node> getShapeArrayList(){
         return shapeArrayList;
     }
 

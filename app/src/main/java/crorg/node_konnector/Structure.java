@@ -292,13 +292,13 @@ public class Structure {
         int selection = r.nextInt(nodes.size());
         Node theOne = nodes.get(selection);
         ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
-        boolean isEqual = (nodes.size() == countAllNodeRelatives(theOne, allFriendKonnections));
+        boolean isEqual = (nodes.size() == Structure.countAllNodeRelatives(theOne, allFriendKonnections));
         return isEqual;
     }
 
 
     // use this to test if removing a bond is NOT okay!
-    private int countAllNodeRelatives(Node startingNode, ArrayList<Node> allFriendKonnections) {
+    public static int countAllNodeRelatives(Node startingNode, ArrayList<Node> allFriendKonnections) {
         ArrayList<Node> onlyCloseFriends = new ArrayList<Node>();
         if (!allFriendKonnections.contains(startingNode)) {
             allFriendKonnections.add(startingNode);
