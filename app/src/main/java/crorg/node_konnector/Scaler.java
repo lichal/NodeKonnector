@@ -8,7 +8,7 @@ public class Scaler {
     public static int width;
     public static int height;
     public Scaler(int width, int height){
-        this.width = (int) (width *0.1);
-        this.height = (int) (height*0.1);
+        this.width = width;
+        this.height = height;
     }
 }

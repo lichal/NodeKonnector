@@ -1,5 +1,6 @@
 package crorg.node_konnector.Shapes;
 
+import android.graphics.Color;
 import android.graphics.drawable.shapes.Shape;
 
 import crorg.node_konnector.Node;
@@ -14,7 +15,7 @@ public class Square extends Node{
         this.s = s;
         this.positionX = x;
         this.positionY = y;
-        getPaint().setColor(0xff74AC23);
+        getPaint().setColor(Color.BLUE);
         setBounds(x, y, x + width, y + height);
     }
 }

@@ -10,15 +10,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <activity android:name=".StartUpScreen">
+        <activity
+            android:name=".StartUpScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainScreen" />
-        <activity android:name=".GameScreen"></activity>
+
+        <activity
+            android:name=".MainScreen"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".GameScreen"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

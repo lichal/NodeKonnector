@@ -1,5 +1,6 @@
 package crorg.node_konnector.Shapes;
 
+import android.graphics.Color;
 import android.graphics.drawable.shapes.Shape;
 
 import crorg.node_konnector.Node;
