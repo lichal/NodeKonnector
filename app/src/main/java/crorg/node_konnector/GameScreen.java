@@ -15,10 +15,14 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
@@ -56,6 +60,8 @@ public class GameScreen extends AppCompatActivity implements
 
     private Structure gameStruct;    // the logic holding the answer for a given level
 
+    DatabaseReference scoreData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +70,11 @@ public class GameScreen extends AppCompatActivity implements
         // intent gets the level selected
         Intent intent = getIntent();
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
+
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("currentLevel");
+//        myRef.setValue(message);
+
 
         // new game structure
         gameStruct = new Structure(2);
@@ -265,9 +276,6 @@ public class GameScreen extends AppCompatActivity implements
 //        TextView fileStuffs = (TextView) findViewById(R.id.fileStuffs);
 //        fileStuffs.setText(s);
     }
-
-
-
 
     public void testStructureList() {
         // when a fragment is touched, send that level integer to the next screen

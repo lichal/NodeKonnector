@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "398561712056",
+    "firebase_url": "https://nodekonnector.firebaseio.com",
+    "project_id": "nodekonnector",
+    "storage_bucket": "nodekonnector.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398561712056:android:d2d281cfda96d7fa",
+        "android_client_info": {
+          "package_name": "crorg.node_konnector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398561712056-bn4fosaoeqdo5rimggqjp7br3q9o2um0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvcBg_PNXXQXMV8BFCsU22pClhzagckzk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
