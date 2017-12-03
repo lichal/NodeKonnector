@@ -7,8 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.PathShape;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -17,16 +15,8 @@ import android.view.View;
 import java.util.ArrayList;
 
 import crorg.node_konnector.Bond;
-import crorg.node_konnector.Bonds.KonnectorBond;
-import crorg.node_konnector.Bonds.SingleBond;
 import crorg.node_konnector.Node;
 import crorg.node_konnector.Scaler;
-import crorg.node_konnector.Shapes.Circle;
-import crorg.node_konnector.Shapes.Hexagon;
-import crorg.node_konnector.Shapes.KonnectorShape;
-import crorg.node_konnector.Shapes.Square;
-import crorg.node_konnector.Shapes.Triangle;
-import crorg.node_konnector.Structure;
 
 /**
  * Created by Cheng on 11/27/17.
@@ -44,6 +34,8 @@ public class GameCanvas extends View {
 
     private int numSelect;
 
+    private Paint paint;
+
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -58,6 +50,8 @@ public class GameCanvas extends View {
         selectedNode1 = null;
         selectedNode2 = null;
 
+        paint = new Paint();
+        paint.setColor(Color.DKGRAY);
 
 //        mDrawable = new Circle(new OvalShape(), 200, 10);
 //        // If the color isn't set, the shape uses black as the default.
@@ -77,12 +71,7 @@ public class GameCanvas extends View {
 
     protected void onDraw(Canvas canvas){
 //        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-
         scale = new Scaler(getWidth(), getHeight());
-
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStrokeWidth(100f);
 
         for(Bond b: bondArrayList){
             canvas.drawPath(b.getBondPath(), paint);
@@ -144,6 +133,7 @@ public class GameCanvas extends View {
                         selectedNode1 = null;
                         selectedNode2 = null;
 
+                        // reset number of shape selected to 0
                         numSelect = 0;
                     }
                 }
@@ -152,7 +142,16 @@ public class GameCanvas extends View {
                 if(!bondingMode) {
                     for (Node k : shapeArrayList) {
                         if (k.isSelect()) {
-                            k.redraw(x, y);
+                                k.redraw(x, y);
+//                            for (Node collide : shapeArrayList) {
+//                                if(collide == k){
+//                                    break;
+//                                }
+//                                if(x > collide.getPositionX() && x < collide.getPositionX()+collide.getWidth()
+//                                        && y > collide.getPositionY() && y < collide.getPositionY()+collide.getHeight()){
+//                                    k.redraw(collide.getPositionX()+collide.getWidth(), collide.getPositionY()+collide.getHeight());
+//                                }
+//                            }
                         }
                     }
                 }
@@ -160,6 +159,7 @@ public class GameCanvas extends View {
         }
         return true;
     }
+
     /******************************************************************
      * Getter for the list of shapes on the canvas
      * @return shapeArrayList - the arraylist holds all shapes

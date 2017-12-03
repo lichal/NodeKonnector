@@ -39,7 +39,7 @@
         android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toTopOf="@+id/shapeRecyclerView"
         app:layout_constraintLeft_toRightOf="@+id/triangleButton"
-        android:layout_marginLeft="12dp" />
+        android:layout_marginLeft="8dp" />
 
     <ToggleButton
         android:id="@+id/triangleButton"

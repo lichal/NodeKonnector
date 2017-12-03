@@ -57,7 +57,7 @@ public class StartUpScreen extends AppCompatActivity {
                 // Transition to level screen
                 startActivity(intent);
                 // End start up activity
-                finish();
+//                finish();
         }
         return true;
     }
