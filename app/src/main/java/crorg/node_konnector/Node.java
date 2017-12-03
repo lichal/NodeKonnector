@@ -152,7 +152,7 @@ public class Node extends ShapeDrawable{
         int topBound = this.getPositionY();
         int bottomBound = this.getPositionY() + this.getHeight();
 
-        if(xSelect > leftBound && xSelect < rightBound && ySelect > topBound && ySelect < bottomBound){
+        if(xSelect >= leftBound && xSelect <= rightBound && ySelect >= topBound && ySelect <= bottomBound){
             this.select = true;
             return this.select;
         }

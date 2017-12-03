@@ -2,14 +2,12 @@ package crorg.node_konnector;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.PathShape;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
 import crorg.node_konnector.Shapes.Circle;
-import crorg.node_konnector.Shapes.Triangle;
 import crorg.node_konnector.dummy.ShapeContent;
 
 public class GameScreen extends AppCompatActivity implements
@@ -174,7 +171,8 @@ public class GameScreen extends AppCompatActivity implements
                     if(number != game.getShapeArrayList().size()){
                         gameStatus.setText("Not intact!");
                     }else{
-                        boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
+                        //boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
+                        boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), structure.getNodes(), structure.getBonds());
                         if (test){
                             gameStatus.setText("pass level!");
                         }else if (!test){
