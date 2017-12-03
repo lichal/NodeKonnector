@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context="crorg.node_konnector.GameScreen">
 
-    <fragment
-        android:id="@+id/shapeRecyclerView"
-        android:name="crorg.node_konnector.ShapeRecyclerView.ShapeFragment"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginBottom="-2dp" />
-
     <crorg.node_konnector.GamePanel.GameCanvas
         android:id="@+id/gameCanvas"
         android:layout_width="0dp"
@@ -29,58 +18,27 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/bondButton" />
+        app:layout_constraintBottom_toTopOf="@+id/triangleBtn" />
 
     <ToggleButton
         android:id="@+id/bondButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ToggleButton"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/shapeRecyclerView"
-        app:layout_constraintLeft_toRightOf="@+id/triangleButton"
-        android:layout_marginLeft="8dp" />
-
-    <ToggleButton
-        android:id="@+id/triangleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="ToggleButton"
-        app:layout_constraintBottom_toTopOf="@+id/shapeRecyclerView"
-        app:layout_constraintTop_toBottomOf="@+id/gameCanvas"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/checkStructure"
-        android:layout_marginLeft="8dp" />
-
-    <ToggleButton
-        android:id="@+id/circleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="ToggleButton"
-        app:layout_constraintBottom_toBottomOf="@+id/bondButton"
-        app:layout_constraintLeft_toRightOf="@+id/bondButton"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameCanvas"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/checkStructure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/checkStruct"
-        app:layout_constraintBottom_toTopOf="@+id/shapeRecyclerView"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameCanvas"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/gameStatus"
@@ -93,6 +51,48 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/gameCanvas" />
+
+    <Button
+        android:id="@+id/circleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/circleStr"
+        app:layout_constraintBottom_toTopOf="@+id/checkStructure"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/squareBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/squareStr"
+        app:layout_constraintBottom_toTopOf="@+id/checkStructure"
+        app:layout_constraintLeft_toRightOf="@+id/circleBtn" />
+
+    <Button
+        android:id="@+id/triangleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/triangleStr"
+        app:layout_constraintBottom_toTopOf="@+id/bondButton"
+        app:layout_constraintLeft_toRightOf="@+id/squareBtn" />
+
+    <Button
+        android:id="@+id/hexagonBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/hexagonStr"
+        app:layout_constraintBottom_toTopOf="@+id/bondButton"
+        app:layout_constraintLeft_toRightOf="@+id/triangleBtn"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

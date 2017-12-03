@@ -36,9 +36,13 @@ public class GameScreen extends AppCompatActivity implements
 
     private ToggleButton bondButton;
 
-    private ToggleButton triangleButton;
+    private Button triangleButton;
 
-    private ToggleButton circleButton;
+    private Button circleButton;
+
+    private Button squareButton;
+
+    private Button hexagonButton;
 
     private Button checkStructure;
 
@@ -55,19 +59,27 @@ public class GameScreen extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_screen);
 
-        structure = new Structure(3);
+        structure = new Structure(2);
+
+        structure.displayStringDescriptionForPlayer();
         game = (GameCanvas) findViewById(R.id.gameCanvas);
 
         //set the shape Recycler View to horizontal
-        shapeRecyclerView = (RecyclerView)findViewById(R.id.shapeRecyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        shapeRecyclerView.setLayoutManager(layoutManager);
+//        shapeRecyclerView = (RecyclerView)findViewById(R.id.shapeRecyclerView);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+//        shapeRecyclerView.setLayoutManager(layoutManager);
 
         bondButton = (ToggleButton) findViewById(R.id.bondButton);
-        triangleButton = (ToggleButton) findViewById(R.id.triangleButton);
-        circleButton = (ToggleButton) findViewById(R.id.circleButton);
 
         checkStructure = (Button) findViewById(R.id.checkStructure);
+
+        circleButton = (Button) findViewById(R.id.circleBtn);
+
+        squareButton = (Button) findViewById(R.id.squareBtn);
+
+        triangleButton = (Button) findViewById(R.id.triangleBtn);
+
+        hexagonButton = (Button) findViewById(R.id.hexagonBtn);
 
         gameStatus = (TextView) findViewById(R.id.gameStatus);
 
@@ -98,41 +110,82 @@ public class GameScreen extends AppCompatActivity implements
             }
         });
 
-        triangleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//        triangleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(isChecked){
+//                    game.getShapeArrayList().add(new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200));
+//                    game.invalidate();
+//                }
+//            }
+//        });
+//
+//        circleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(isChecked){
+//                    game.getShapeArrayList().add(new Circle(new OvalShape(), 500, 10));
+//                    game.invalidate();
+//                }
+//            }
+//        });
+
+        circleButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    game.getShapeArrayList().add(new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200));
-                    game.invalidate();
-                }
+            public void onClick(View view) {
+                game.getShapeArrayList().add(new Circle(new OvalShape(), 500, 10));
+                game.invalidate();
             }
         });
 
-        circleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        squareButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    game.getShapeArrayList().add(new Circle(new OvalShape(), 500, 10));
-                    game.invalidate();
-                }
+            public void onClick(View view) {
+                game.getShapeArrayList().add(new Circle(new PathShape(drawSquare(), 100, 100), 200, 200));
+                game.invalidate();
             }
         });
+
+        triangleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                game.getShapeArrayList().add(new Circle(new PathShape(drawTriangle(), 100, 100), 400, 200));
+                game.invalidate();
+            }
+        });
+
+        hexagonButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                game.getShapeArrayList().add(new Circle(new PathShape(drawHexagon(), 100, 100), 200, 400));
+                game.invalidate();
+            }
+        });
+
+
 
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ArrayList <Node> allFriendKonnections = new ArrayList<Node>();
                 if(game.getShapeArrayList().size() > 0) {
                     int number = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
                     if(number != game.getShapeArrayList().size()){
                         gameStatus.setText("Not intact!");
                     }else{
-                        gameStatus.setText("Intact");
+                        if (structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList())){
+                            gameStatus.setText("pass level!");
+                        }else if (!structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList())){
+                            gameStatus.setText("failed!");
+                        }
                     }
 
                 }
+
             }
         });
+
 
         // setting up local storage for user
         String filename = "userProgress123";
@@ -161,6 +214,54 @@ public class GameScreen extends AppCompatActivity implements
         path.lineTo(p1.x, p1.y);
 
         return path;
+    }
+
+
+    private Path drawHexagon() {
+        Point midPoint = new Point();
+        midPoint.x = 50;
+        midPoint.y = 50;
+
+        Point p1 = null, p2 = null, p3 = null, p4 = null, p5 = null, p6 = null;
+
+        p1 = new Point(midPoint.x-50, midPoint.y);
+        p2 = new Point(midPoint.x-25, midPoint.y+50);
+        p3 = new Point(midPoint.x+25, midPoint.y+50);
+        p4 = new Point(midPoint.x+50, midPoint.y);
+        p5 = new Point(midPoint.x+25, midPoint.y-50);
+        p6 = new Point(midPoint.x-25, midPoint.y-50);
+
+        Path path = new Path();
+        path.moveTo(p1.x, p1.y);
+        path.lineTo(p2.x, p2.y);
+        path.lineTo(p3.x, p3.y);
+        path.lineTo(p4.x, p4.y);
+        path.lineTo(p5.x, p5.y);
+        path.lineTo(p6.x, p6.y);
+        path.lineTo(p1.x, p1.y);
+
+        return path;
+    }
+
+    private Path drawSquare(){
+        Point p1 = new Point();
+        p1.x = 0;
+        p1.y = 0;
+
+        Point p2, p3, p4;
+
+        p2 = new Point(p1.x+100, p1.y);
+        p3 = new Point(p1.x + 100, p2.y + 100);
+        p4 = new Point(p1.x, p1.y + 100);
+
+        Path rectangle = new Path();
+        rectangle.moveTo(p1.x, p1.y);
+        rectangle.lineTo(p2.x,p2.y);
+        rectangle.lineTo(p3.x, p3.y);
+        rectangle.lineTo(p4.x, p4.y);
+        rectangle.lineTo(p1.x, p1.y);
+
+        return rectangle;
     }
 
     @Override

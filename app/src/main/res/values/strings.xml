@@ -4,6 +4,10 @@
     <string name="faceBookLogin">FaceBook Login</string>
     <string name="levelCaption">Select Level</string>
     <string name="checkStruct">Check</string>
+    <string name="circleStr">CIRCLE</string>
+    <string name="triangleStr">TRIANGLE</string>
+    <string name="squareStr">SQUARE</string>
+    <string name="hexagonStr">HEXAGON</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
