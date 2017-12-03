@@ -82,9 +82,6 @@ public class Node extends ShapeDrawable{
         return neighbors;
     }
 
-
-
-
     public int getConnection(){
         return connection;
     }
