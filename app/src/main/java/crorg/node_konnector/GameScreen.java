@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
 import crorg.node_konnector.Shapes.Circle;
+<<<<<<< HEAD
+=======
+import crorg.node_konnector.Shapes.Hexagon;
+import crorg.node_konnector.Shapes.Square;
+import crorg.node_konnector.Shapes.Triangle;
+>>>>>>> bf3554a3c0280afdd50d99c36c98b56500ee11f8
 import crorg.node_konnector.dummy.ShapeContent;
 
 public class GameScreen extends AppCompatActivity implements
@@ -49,16 +55,24 @@ public class GameScreen extends AppCompatActivity implements
 
     private File userProgress;  // local storage of user progress
 
-    private Structure structure;    // the logic holding the answer for a given level
+    private Structure gameStruct;    // the logic holding the answer for a given level
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_screen);
 
-        structure = new Structure(2);
+        // intent gets the level selected
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(MainScreen.LEVEL_MESSAGE);
 
-        structure.displayStringDescriptionForPlayer();
+        // new game structure
+        gameStruct = new Structure(2);
+
+        // display the game info
+        gameStruct.displayStringDescriptionForPlayer();
+
+        // associate game canvas
         game = (GameCanvas) findViewById(R.id.gameCanvas);
 
         //set the shape Recycler View to horizontal
@@ -66,33 +80,14 @@ public class GameScreen extends AppCompatActivity implements
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 //        shapeRecyclerView.setLayoutManager(layoutManager);
 
+        // associate buttons
         bondButton = (ToggleButton) findViewById(R.id.bondButton);
-
         checkStructure = (Button) findViewById(R.id.checkStructure);
-
         circleButton = (Button) findViewById(R.id.circleBtn);
-
         squareButton = (Button) findViewById(R.id.squareBtn);
-
         triangleButton = (Button) findViewById(R.id.triangleBtn);
-
         hexagonButton = (Button) findViewById(R.id.hexagonBtn);
-
         gameStatus = (TextView) findViewById(R.id.gameStatus);
-
-//        bondButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(bondButton.isChecked()){
-//                    game.setBondingMode(true);
-//                    game.invalidate();
-//                }
-//                else {
-//                    game.setBondingMode(false);
-//                    game.invalidate();
-//                }
-//            }
-//        });
 
         bondButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -107,26 +102,6 @@ public class GameScreen extends AppCompatActivity implements
             }
         });
 
-//        triangleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked){
-//                    game.getShapeArrayList().add(new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200));
-//                    game.invalidate();
-//                }
-//            }
-//        });
-//
-//        circleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked){
-//                    game.getShapeArrayList().add(new Circle(new OvalShape(), 500, 10));
-//                    game.invalidate();
-//                }
-//            }
-//        });
-
         circleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +113,7 @@ public class GameScreen extends AppCompatActivity implements
         squareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                game.getShapeArrayList().add(new Circle(new PathShape(drawSquare(), 100, 100), 200, 200));
+                game.getShapeArrayList().add(new Square(new PathShape(drawSquare(), 100, 100), 200, 200));
                 game.invalidate();
             }
         });
@@ -146,7 +121,7 @@ public class GameScreen extends AppCompatActivity implements
         triangleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                game.getShapeArrayList().add(new Circle(new PathShape(drawTriangle(), 100, 100), 400, 200));
+                game.getShapeArrayList().add(new Triangle(new PathShape(drawTriangle(), 100, 100), 400, 200));
                 game.invalidate();
             }
         });
@@ -154,11 +129,10 @@ public class GameScreen extends AppCompatActivity implements
         hexagonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                game.getShapeArrayList().add(new Circle(new PathShape(drawHexagon(), 100, 100), 200, 400));
+                game.getShapeArrayList().add(new Hexagon(new PathShape(drawHexagon(), 100, 100), 200, 400));
                 game.invalidate();
             }
         });
-
 
 
         checkStructure.setOnClickListener(new View.OnClickListener() {
@@ -171,8 +145,12 @@ public class GameScreen extends AppCompatActivity implements
                     if(number != game.getShapeArrayList().size()){
                         gameStatus.setText("Not intact!");
                     }else{
+<<<<<<< HEAD
                         //boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
                         boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), structure.getNodes(), structure.getBonds());
+=======
+                        boolean test = gameStruct.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
+>>>>>>> bf3554a3c0280afdd50d99c36c98b56500ee11f8
                         if (test){
                             gameStatus.setText("pass level!");
                         }else if (!test){
@@ -184,15 +162,9 @@ public class GameScreen extends AppCompatActivity implements
             }
         });
 
-
         // setting up local storage for user
         String filename = "userProgress123";
         userProgress = new File(getFilesDir(), filename);
-        structure = new Structure(5);
-
-
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(MainScreen.LEVEL_MESSAGE);
     }
 
     public Path drawTriangle() {
@@ -213,7 +185,6 @@ public class GameScreen extends AppCompatActivity implements
 
         return path;
     }
-
 
     private Path drawHexagon() {
         Point midPoint = new Point();
@@ -279,7 +250,6 @@ public class GameScreen extends AppCompatActivity implements
             e.printStackTrace();
         }
     }
-
 
     public void readFromFileThing(View view) {
         FileInputStream inputStream;
