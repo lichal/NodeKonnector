@@ -51,6 +51,10 @@ public class GameCanvas extends View implements Serializable {
     private Node movingNode;
 
     private Paint paint2;
+    private Paint paint3;
+
+    private Paint paint4;
+    private Paint paint5;
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -73,6 +77,17 @@ public class GameCanvas extends View implements Serializable {
         paint.setColor(Color.DKGRAY);
         paint2 = new Paint();
         paint2.setColor(Color.WHITE);
+        paint3 = new Paint();
+
+
+        paint3.setColor(0xffff00ff);
+
+        paint4 = new Paint();
+        paint4.setColor(Color.DKGRAY);
+        paint4.setStrokeWidth(20);
+        paint5 = new Paint();
+        paint5.setStrokeWidth(5);
+        paint5.setColor(Color.WHITE);
     }
 
     protected void onDraw(Canvas canvas){
@@ -80,9 +95,10 @@ public class GameCanvas extends View implements Serializable {
         scale = new Scaler(getWidth(), getHeight());
 
         for(Bond b: bondArrayList){
-            paint.setStrokeWidth(20f);
-            paint2.setStrokeWidth(5f);
-            b.drawPathLine(canvas, paint, paint2);
+            paint.setStrokeWidth(40f);
+            paint2.setStrokeWidth(20f);
+            paint3.setStrokeWidth(10f);
+            b.drawPathLine(canvas, paint, paint2, paint3, paint4, paint5);
 //            canvas.drawPath(b.getBondPath(), paint);
         }
 

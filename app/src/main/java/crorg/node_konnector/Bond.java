@@ -91,23 +91,25 @@ public class Bond implements Serializable {
         return bondPath;
     }
 
-    public void drawPathLine(Canvas canvas, Paint paint, Paint paint2){
-        int startX = node1.getMidX();
-        int startY = node1.getMidY();
-        int endX = node2.getMidX();
-        int endY = node2.getMidY();
 
-        canvas.drawLine(startX, startY, endX, endY, paint);
+    public void drawPathLine(Canvas canvas, Paint paint, Paint paint2, Paint paint3, Paint paint4, Paint paint5){
 
-        double degree = Math.atan2((double) (endY-startY), (double) (endX-startX));
+        if(getBondType() == 3) {
+            canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint);
 
-        int sm = (int)(Math.sin(degree)-10);
+            canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint2);
 
-        int cosm = (int)(Math.cos(degree)-10);
+            canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint3);
+        }
+        else if(getBondType() == 2){
 
-        canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint);
+            canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint4);
 
-        canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint2);
+            canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint5);
+        }
+        else if(getBondType() == 1){
+            canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint3);
+        }
 
     }
 }

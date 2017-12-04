@@ -74,7 +74,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
 
         // new game structure
-        gameStruct = new Structure(2);
+        gameStruct = new Structure(3);
 
         drawShape = new DrawPath();
 
