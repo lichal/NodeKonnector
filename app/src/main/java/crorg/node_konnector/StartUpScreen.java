@@ -36,21 +36,14 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
 
-
-
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
         pressStart.setAnimation(manageBlinkEffect());
         serialLoad = (Button)findViewById(R.id.serialLoad);
         serialSave = (Button)findViewById(R.id.serialSave);
 
-
         // setting up local storage for user
         userProgress = new File(getFilesDir(), "userProgress123");
-
-
-
-
 
         // this needs to consult the saved file for highest level achieved by the player before it
 

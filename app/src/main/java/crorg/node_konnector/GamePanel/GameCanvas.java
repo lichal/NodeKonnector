@@ -34,6 +34,8 @@ public class GameCanvas extends View implements Serializable {
 
     private int numSelect;
 
+    private int typeBond;
+
     /**  */
     private Paint paint;
 
@@ -42,6 +44,11 @@ public class GameCanvas extends View implements Serializable {
 
     /** Rect for the node being collide */
     private Rect collide;
+
+    private Node selectedNode1;
+    private Node selectedNode2;
+
+    private Node movingNode;
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -53,6 +60,7 @@ public class GameCanvas extends View implements Serializable {
         bondingMode = false;
 
         numSelect = 0;
+        typeBond = 0;
 
         selectedNode1 = null;
         selectedNode2 = null;
@@ -61,21 +69,6 @@ public class GameCanvas extends View implements Serializable {
 
         paint = new Paint();
         paint.setColor(Color.DKGRAY);
-
-//        mDrawable = new Circle(new OvalShape(), 200, 10);
-//        // If the color isn't set, the shape uses black as the default.
-//        mDrawable.getPaint().setColor(0xff74AC23);
-//        // If the bounds aren't set, the shape can't be drawn.
-//
-//        mTriangle = new Triangle(new PathShape(drawTriangle(), 100, 100), 200, 200);
-//        mTriangle.getPaint().setColor(0xff74AC23);
-//
-//        mHexagon = new Hexagon(new PathShape(drawHexagon(), 100, 100), 300, 300);
-//        mHexagon.getPaint().setColor(0xff74AC23);
-//
-//        mSquare = new Square(new PathShape(drawSquare(), 100, 100), 200, 300);
-//        mSquare.getPaint().setColor(0xff74AC23);
-
     }
 
     protected void onDraw(Canvas canvas){
@@ -91,16 +84,10 @@ public class GameCanvas extends View implements Serializable {
         }
     }
 
-    public void setBondingMode(boolean startBonding){
+    public void setBondingMode(boolean startBonding, int type){
         this.bondingMode = startBonding;
+        this.typeBond = type;
     }
-
-    private Node selectedNode1;
-    private Node selectedNode2;
-
-    private Node movingNode;
-
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -118,22 +105,23 @@ public class GameCanvas extends View implements Serializable {
                 // bonding mode
                 if(bondingMode) {
                     for (Node k : shapeArrayList) {
+
                         if(k.checkSelect(x, y)) {
+                            if (numSelect == 0) {
+                                selectedNode1 = k;
+                                numSelect++;
+                            }
                             if (numSelect == 1) {
                                 if(selectedNode1 != k) {
                                     selectedNode2 = k;
                                     numSelect++;
                                 }
                             }
-
-                            if (numSelect == 0) {
-                                selectedNode1 = k;
-                                numSelect++;
-                            }
                         }
                     }
                     if(numSelect == 2){
-                        bondArrayList.add(new Bond(selectedNode1, selectedNode2));
+                        Bond temp = new Bond(selectedNode1, selectedNode2);
+                        bondArrayList.add(temp);
                         // add the neighbor to each other
                         selectedNode1.addNeighborNode(selectedNode2);
                         selectedNode2.addNeighborNode(selectedNode1);
@@ -145,13 +133,23 @@ public class GameCanvas extends View implements Serializable {
                         // reset the selection to null
                         selectedNode1 = null;
                         selectedNode2 = null;
+                        switch (typeBond){
+                            case 1:
+                                temp.setBondType(Bond.SINGLE);
+                                break;
+                            case 2:
+                                temp.setBondType(Bond.DOUBLE);
+                                break;
+                            case 3:
+                                temp.setBondType(Bond.TRIPLE);
+                                break;
+                        }
 
                         // reset number of shape selected to 0
                         numSelect = 0;
                     }
                 }
                 invalidate();
-                break;
             case MotionEvent.ACTION_MOVE:
                 if(!bondingMode) {
                     for (Node k : shapeArrayList) {
@@ -165,7 +163,7 @@ public class GameCanvas extends View implements Serializable {
                 break;
             case MotionEvent.ACTION_UP:
                     for (Node collide : shapeArrayList) {
-                        if (movingNode != collide) {
+                        if (movingNode != collide && movingNode!=null) {
                             if(collides(movingNode, collide))
                                 movingNode.redraw(collide.getPositionX() + (int) (collide.getWidth() * 1.5), collide.getPositionY() + (int) (collide.getHeight() / 2));
                         }

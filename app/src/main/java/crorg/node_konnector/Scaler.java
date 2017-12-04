@@ -7,18 +7,10 @@ import java.io.Serializable;
  */
 
 public class Scaler implements Serializable {
-    public int width;
-    public int height;
+    public static int width;
+    public static int height;
     public Scaler(int width, int height){
         this.width = width;
         this.height = height;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
     }
 }

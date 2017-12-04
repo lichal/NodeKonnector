@@ -19,20 +19,6 @@
         app:layout_constraintVertical_bias="0.8" />
 
     <Button
-        android:id="@+id/faceBookLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="-1dp"
-        android:text="@string/faceBookLogin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startUpTxt" />
-
-    <Button
         android:id="@+id/serialSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,5 +41,13 @@
         android:text="LoadSerial"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp" />
 
 </android.support.constraint.ConstraintLayout>

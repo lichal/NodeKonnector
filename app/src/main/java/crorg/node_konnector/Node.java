@@ -30,8 +30,8 @@ public class Node extends ShapeDrawable implements Serializable {
     public Node(Shape s){
         super(s);
         this.s = s;
-        this.width = 100;
-        this.height = 100;
+        this.width = (int)(Scaler.width*0.1);;
+        this.height = (int)(Scaler.width*0.1);;
         numberKonnections = 0;
         neighbors = new ArrayList<Node>();
     }
@@ -165,36 +165,36 @@ public class Node extends ShapeDrawable implements Serializable {
     public void redraw(int x, int y){
         this.positionX = x -width/2;
         this.positionY = y - width/2;
-//        checkScreen(x, y);
+        checkScreen(x, y);
         setBounds(positionX, positionY, positionX + width, positionY + height);
     }
 
-//    private void checkScreen(int x, int y){
-//        if (x < width/2){
-//            positionX = 0;
-//            if (y < height/2) {
-//                positionY = 0;
-//            }
-//            if(y > Scaler.height-height/2){
-//                positionY = Scaler.height - height;
-//            }
-//        }
-//        else if(x > Scaler.width-width/2){
-//            positionX = Scaler.width -width;
-//            if(y < height/2){
-//                positionY = 0;
-//            }
-//            if(y > Scaler.height-height/2){
-//                positionY = Scaler.height-height;
-//            }
-//        }
-//        else if(y < height/2){
-//            positionY=0;
-//        }
-//
-//        else if(y > Scaler.height-height/2) {
-//            positionY = Scaler.height-height;
-//        }
-//    }
+    private void checkScreen(int x, int y){
+        if (x < width/2){
+            positionX = 0;
+            if (y < height/2) {
+                positionY = 0;
+            }
+            if(y > Scaler.height-height/2){
+                positionY = Scaler.height - height;
+            }
+        }
+        else if(x > Scaler.width-width/2){
+            positionX = Scaler.width -width;
+            if(y < height/2){
+                positionY = 0;
+            }
+            if(y > Scaler.height-height/2){
+                positionY = Scaler.height-height;
+            }
+        }
+        else if(y < height/2){
+            positionY=0;
+        }
+
+        else if(y > Scaler.height-height/2) {
+            positionY = Scaler.height-height;
+        }
+    }
 
 }
