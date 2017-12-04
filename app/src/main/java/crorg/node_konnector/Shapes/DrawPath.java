@@ -79,14 +79,11 @@ public class DrawPath extends Path implements Serializable{
         return rectangle;
     }
 
-    public DrawPath drawBond(int startx, int starty, int endx, int endy){
-        DrawPath bondPath = new DrawPath();
-        bondPath.reset();
-        bondPath.moveTo(startx, starty);
-        bondPath.lineTo(endx, endy);
-        bondPath.lineTo(endx-10, endy);
-        bondPath.lineTo(startx-10, starty);
-        bondPath.lineTo(startx, starty);
-        return bondPath;
+    public DrawPath(int startx, int starty, int endx, int endy){
+        moveTo(startx, starty);
+        lineTo(endx, endy);
+        lineTo(endx-10, endy);
+        lineTo(startx-10, starty);
+        lineTo(startx, starty);
     }
 }

@@ -1,5 +1,10 @@
 package crorg.node_konnector;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+
 import java.io.Serializable;
 
 import crorg.node_konnector.Shapes.DrawPath;
@@ -81,10 +86,28 @@ public class Bond implements Serializable {
     }
 
     public DrawPath getBondPath(){
-        bondPath.drawBond(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY());
+        bondPath.reset();
+        bondPath = new DrawPath(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY());
         return bondPath;
     }
 
+    public void drawPathLine(Canvas canvas, Paint paint, Paint paint2){
+        int startX = node1.getMidX();
+        int startY = node1.getMidY();
+        int endX = node2.getMidX();
+        int endY = node2.getMidY();
 
+        canvas.drawLine(startX, startY, endX, endY, paint);
 
+        double degree = Math.atan2((double) (endY-startY), (double) (endX-startX));
+
+        int sm = (int)(Math.sin(degree)-10);
+
+        int cosm = (int)(Math.cos(degree)-10);
+
+        canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint);
+
+        canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint2);
+
+    }
 }

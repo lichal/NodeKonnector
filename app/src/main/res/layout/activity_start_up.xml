@@ -19,20 +19,6 @@
         app:layout_constraintVertical_bias="0.8" />
 
     <Button
-        android:id="@+id/faceBookLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="-1dp"
-        android:text="@string/faceBookLogin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startUpTxt" />
-
-    <Button
         android:id="@+id/serialSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,6 +42,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+<<<<<<< HEAD
     <Button
         android:id="@+id/notificationTest"
         android:layout_width="wrap_content"
@@ -65,5 +52,8 @@
         android:text="Notify"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_editor_absoluteY="449dp" />
+=======
+
+>>>>>>> 314e2f90b026b32ca362a828142e346cdca521dd
 
 </android.support.constraint.ConstraintLayout>

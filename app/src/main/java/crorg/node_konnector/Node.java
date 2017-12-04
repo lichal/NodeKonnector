@@ -30,8 +30,13 @@ public class Node extends ShapeDrawable implements Serializable {
     public Node(Shape s){
         super(s);
         this.s = s;
+
         this.width = (int) (Scaler.height * 0.1);
         this.height = (int) (Scaler.height * 0.1);
+
+        this.width = (int)(Scaler.width*0.1);;
+        this.height = (int)(Scaler.width*0.1);;
+
         numberKonnections = 0;
         neighbors = new ArrayList<Node>();
     }

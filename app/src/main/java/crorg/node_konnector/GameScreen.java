@@ -14,17 +14,14 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
-import crorg.node_konnector.ShapeRecyclerView.ShapeFragment;
 import crorg.node_konnector.Shapes.Circle;
 
 import crorg.node_konnector.Shapes.DrawPath;
@@ -32,15 +29,13 @@ import crorg.node_konnector.Shapes.Hexagon;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
 
-import crorg.node_konnector.dummy.ShapeContent;
+public class GameScreen extends AppCompatActivity implements Serializable {
 
-public class GameScreen extends AppCompatActivity implements
-        ShapeFragment.OnListFragmentInteractionListener, Serializable {
+    private ToggleButton singleButton;
 
-    /* The shape recycler view holds shapes */
-    private RecyclerView shapeRecyclerView;
+    private ToggleButton doubleButton;
 
-    private ToggleButton bondButton;
+    private ToggleButton tripleButton;
 
     private Button triangleButton;
 
@@ -95,7 +90,9 @@ public class GameScreen extends AppCompatActivity implements
 //        shapeRecyclerView.setLayoutManager(layoutManager);
 
         // associate buttons
-        bondButton = (ToggleButton) findViewById(R.id.bondButton);
+        singleButton = (ToggleButton) findViewById(R.id.bondButton);
+        doubleButton = (ToggleButton) findViewById(R.id.doubleButton) ;
+        tripleButton = (ToggleButton) findViewById(R.id.tripleButton);
         checkStructure = (Button) findViewById(R.id.checkStructure);
         circleButton = (Button) findViewById(R.id.circleBtn);
         squareButton = (Button) findViewById(R.id.squareBtn);
@@ -103,14 +100,40 @@ public class GameScreen extends AppCompatActivity implements
         hexagonButton = (Button) findViewById(R.id.hexagonBtn);
         gameStatus = (TextView) findViewById(R.id.gameStatus);
 
-        bondButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    game.setBondingMode(true);
+                    game.setBondingMode(true, 1);
                     game.invalidate();
                 }else{
-                    game.setBondingMode(false);
+                    game.setBondingMode(false, 0);
+                    game.invalidate();
+                }
+            }
+        });
+
+        doubleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    game.setBondingMode(true, 2);
+                    game.invalidate();
+                }else{
+                    game.setBondingMode(false, 0);
+                    game.invalidate();
+                }
+            }
+        });
+
+        tripleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    game.setBondingMode(true, 3);
+                    game.invalidate();
+                }else{
+                    game.setBondingMode(false, 0);
                     game.invalidate();
                 }
             }
@@ -175,11 +198,6 @@ public class GameScreen extends AppCompatActivity implements
         // setting up local storage for user
         String filename = "userProgress123";
         userProgress = new File(getFilesDir(), filename);
-    }
-
-    @Override
-    public void onListFragmentInteraction(ShapeContent.ShapeItem item) {
-
     }
 
     // use these to save the state of the game
