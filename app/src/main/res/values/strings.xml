@@ -8,6 +8,8 @@
     <string name="triangleStr">TRIANGLE</string>
     <string name="squareStr">SQUARE</string>
     <string name="hexagonStr">HEXAGON</string>
+    <string name="numberShapes">NumberShapes</string>
+    <string name="numberBonds">NumberBonds</string>
 
     <string name="facebook_app_id">154147692008854</string>
     <string name="fb_login_protocol_scheme">fb154147692008854</string>
