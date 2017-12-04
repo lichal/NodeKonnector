@@ -56,4 +56,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <Button
+        android:id="@+id/notificationTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:onClick="notifyTest"
+        android:text="Notify"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="449dp" />
+
 </android.support.constraint.ConstraintLayout>

@@ -16,7 +16,7 @@ public class Node extends ShapeDrawable implements Serializable {
     private int numberKonnections;
     private ArrayList<Node> neighbors;
 
-    protected int connection;
+
     protected int positionX;
     protected int positionY;
     protected int height;
@@ -30,8 +30,8 @@ public class Node extends ShapeDrawable implements Serializable {
     public Node(Shape s){
         super(s);
         this.s = s;
-        this.width = 100;
-        this.height = 100;
+        this.width = (int) (Scaler.height * 0.1);
+        this.height = (int) (Scaler.height * 0.1);
         numberKonnections = 0;
         neighbors = new ArrayList<Node>();
     }
@@ -83,9 +83,6 @@ public class Node extends ShapeDrawable implements Serializable {
         return neighbors;
     }
 
-    public int getConnection(){
-        return connection;
-    }
 
     public int getPositionX() {
         return positionX;
@@ -107,25 +104,9 @@ public class Node extends ShapeDrawable implements Serializable {
         return select;
     }
 
-    public boolean isBondingMode() {
-        return bondingMode;
-    }
 
-    public void setBondingMode(boolean bondingMode) {
-        this.bondingMode = bondingMode;
-    }
 
-    public void setConnection(int connection) {
-        this.connection = connection;
-    }
 
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
-    }
 
     public int getMidX() {
         return positionX+width/2;
@@ -135,17 +116,7 @@ public class Node extends ShapeDrawable implements Serializable {
         return positionY+width/2;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setSelect(boolean select){
-        this.select = select;
-    }
 
     public boolean checkSelect(int xSelect, int ySelect) {
         int leftBound = this.getPositionX();
@@ -165,36 +136,36 @@ public class Node extends ShapeDrawable implements Serializable {
     public void redraw(int x, int y){
         this.positionX = x -width/2;
         this.positionY = y - width/2;
-//        checkScreen(x, y);
+        checkScreen(x, y);
         setBounds(positionX, positionY, positionX + width, positionY + height);
     }
 
-//    private void checkScreen(int x, int y){
-//        if (x < width/2){
-//            positionX = 0;
-//            if (y < height/2) {
-//                positionY = 0;
-//            }
-//            if(y > Scaler.height-height/2){
-//                positionY = Scaler.height - height;
-//            }
-//        }
-//        else if(x > Scaler.width-width/2){
-//            positionX = Scaler.width -width;
-//            if(y < height/2){
-//                positionY = 0;
-//            }
-//            if(y > Scaler.height-height/2){
-//                positionY = Scaler.height-height;
-//            }
-//        }
-//        else if(y < height/2){
-//            positionY=0;
-//        }
-//
-//        else if(y > Scaler.height-height/2) {
-//            positionY = Scaler.height-height;
-//        }
-//    }
+    private void checkScreen(int x, int y){
+        if (x < width/2){
+            positionX = 0;
+            if (y < height/2) {
+                positionY = 0;
+            }
+            if(y > Scaler.height-height/2){
+                positionY = Scaler.height - height;
+            }
+        }
+        else if(x > Scaler.width-width/2){
+            positionX = Scaler.width -width;
+            if(y < height/2){
+                positionY = 0;
+            }
+            if(y > Scaler.height-height/2){
+                positionY = Scaler.height-height;
+            }
+        }
+        else if(y < height/2){
+            positionY=0;
+        }
+
+        else if(y > Scaler.height-height/2) {
+            positionY = Scaler.height-height;
+        }
+    }
 
 }
