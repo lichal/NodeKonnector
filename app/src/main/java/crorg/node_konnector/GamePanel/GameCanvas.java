@@ -112,6 +112,11 @@ public class GameCanvas extends View implements Serializable {
         this.typeBond = type;
     }
 
+    public int getShapeWidth(){
+        return (int)(getHeight()*0.1);
+    }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
         int action = event.getAction();
