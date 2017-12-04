@@ -425,6 +425,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), gameStruct.getNodes(), gameStruct.getBonds());
                         if (test){
                             gameStat.setText("Level Passed");
+                            gameStat.setTextColor(Color.WHITE);
+                            gameStat.setTextSize(20f);
                         }else if (!test){
 
                         }
