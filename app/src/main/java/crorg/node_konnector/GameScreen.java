@@ -53,6 +53,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private TextView numShapes;
     private TextView numBonds;
 
+    private TextView gameStat;
+
     private GameCanvas game;
 
     private File userProgress;  // local storage of user progress
@@ -75,6 +77,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
 
         dragType = 0;
+
+        gameStat = (TextView) findViewById(R.id.gameStat);
+        gameStat.setText("Node " + message);
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("currentLevel");
@@ -416,7 +421,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         //boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
                         boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), gameStruct.getNodes(), gameStruct.getBonds());
                         if (test){
-
+                            gameStat.setText("Level Passed");
                         }else if (!test){
 
                         }
