@@ -2,8 +2,6 @@ package crorg.node_konnector;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.PathShape;
 import android.support.v7.app.AppCompatActivity;

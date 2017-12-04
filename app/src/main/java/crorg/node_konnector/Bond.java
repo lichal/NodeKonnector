@@ -1,9 +1,10 @@
 package crorg.node_konnector;
 
-import android.graphics.Path;
 import android.graphics.Point;
 
 import java.io.Serializable;
+
+import crorg.node_konnector.Shapes.DrawPath;
 
 /**
  * Created by Ryan on 2017-11-27.
@@ -17,7 +18,7 @@ public class Bond implements Serializable {
     private Node node2;
     private int classOfBond;
 
-    private Path bondPath;
+    private DrawPath bondPath;
 
     private Point startPoint;
     private Point p2, p3, p4;
@@ -26,7 +27,7 @@ public class Bond implements Serializable {
     public Bond(Node n1, Node n2) {
         node1 = n1;
         node2 = n2;
-        bondPath = new Path();
+        bondPath = new DrawPath();
         //classOfBond = Bond.SINGLE;
         classOfBond = 1;
         startPoint = new Point();
@@ -89,37 +90,11 @@ public class Bond implements Serializable {
         return false;
     }
 
-    public Path getBondPath(){
-        drawPath(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY());
+    public DrawPath getBondPath(){
+        bondPath.drawBond(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY());
         return bondPath;
     }
 
-    public void drawPath(int startx, int starty, int endx, int endy){
-        bondPath.reset();
-        bondPath.moveTo(startx, starty);
-        bondPath.lineTo(endx, endy);
-        bondPath.lineTo(endx-10, endy);
-        bondPath.lineTo(startx-10, starty);
-        bondPath.lineTo(startx, starty);
-    }
 
-    public void drawSingleBond() {
-        startPoint.x = node1.getMidX();
-        startPoint.y = node1.getMidY();
 
-        p2.x = node2.getMidX();
-        p2.y = node2.getMidY();
-
-        p3.x = p2.x - 10;
-        p3.y = p2.y;
-
-        p4.x = startPoint.x - 10;
-        p4.y = startPoint.y;
-
-        bondPath.moveTo(startPoint.x, startPoint.y);
-        bondPath.lineTo(p2.x, p2.y);
-        bondPath.lineTo(p3.x, p3.y);
-        bondPath.lineTo(p4.x, p4.y);
-        bondPath.lineTo(startPoint.x, startPoint.y);
-    }
 }
