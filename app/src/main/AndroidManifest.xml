@@ -3,11 +3,11 @@
     package="crorg.node_konnector">
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-<<<<<<< HEAD
 
-=======
+
+
     <uses-permission android:name="android.permission.INTERNET"/>
->>>>>>> 314e2f90b026b32ca362a828142e346cdca521dd
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,37 +26,27 @@
         </activity>
         <activity
             android:name=".LevelSelectScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".GameScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
 
-<<<<<<< HEAD
+        </activity>
+
+
         <service
             android:name=".NotifyUserOfFriendScoreUpdates"
             android:enabled="true"
-            android:exported="true"></service>
-=======
-        </activity>
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
-
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/app_name" />
-            </intent-filter>
-        </activity>
->>>>>>> 314e2f90b026b32ca362a828142e346cdca521dd
+
+        </service>
+
+
+
+
+
     </application>
 
 </manifest>
