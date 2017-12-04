@@ -32,6 +32,8 @@ import java.util.logging.Level;
 
 import android.app.TaskStackBuilder;
 
+import static android.app.Notification.VISIBILITY_PUBLIC;
+
 
 public class StartUpScreen extends AppCompatActivity implements Serializable {
 
@@ -138,46 +140,36 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
 
 
 
-    public void notifyTest(View view) {
+    public void notifyUserOfSurpassingFriendScore(View view) {
         // The id of the channel.
-        String CHANNEL_ID = "my_channel_01";
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this);
+        String CHANNEL_ID = "nodeKonnector_channel_0156";
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.drawable.ic_stat_name);
+        mBuilder.setContentTitle("HIGH SCORE BEATEN");
+        mBuilder.setContentText("A friend of yours has just BEATEN your high score!");
+        mBuilder.setChannel(CHANNEL_ID);
+        mBuilder.setTicker("NODES!");   // what does this do?
+        mBuilder.setVibrate(new long[]{0, 100, 100, 100, 100, 100, 100, 1500, 1000, 100, 100, 100, 100, 100, 100, 1500});
+        mBuilder.setColor(0xff00ffff);  // color for app name title in notifications drawer
+        mBuilder.setLights(0xffff00ff, 1000, 500);  // sets flashing lights pattern when phone is locked
+        mBuilder.setAutoCancel(true);
+        mBuilder.setPriority(2);
+        mBuilder.setVisibility(VISIBILITY_PUBLIC);
+        //mBuilder.setOngoing(true);  // this makes it impossible to swipe away
 
-                        mBuilder.setSmallIcon(R.drawable.ic_stat_name);
-                        mBuilder.setContentTitle("My notification");
-                        mBuilder.setContentText("Hello World!");
-                    mBuilder.setChannel(CHANNEL_ID);
-// Creates an explicit intent for an Activity in your app
+        // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, GameScreen.class);
 
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your app to the Home screen.
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(LevelSelectScreen.class);
-// Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-// mNotificationId is a unique integer your app uses to identify the
-// notification. For example, to cancel the notification, you can pass its ID
-// number to NotificationManager.cancel().
         int mNotificationId = 456;
         mNotificationManager.notify(mNotificationId, mBuilder.build());
-
-
-
-
     }
 
 

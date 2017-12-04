@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Node-Konnector</string>
+    <string name="app_name">Node Konnector</string>
     <string name="touchStart">PRESS TO START</string>
     <string name="faceBookLogin">FaceBook Login</string>
     <string name="levelCaption">Select Level</string>
@@ -8,6 +8,8 @@
     <string name="triangleStr">TRIANGLE</string>
     <string name="squareStr">SQUARE</string>
     <string name="hexagonStr">HEXAGON</string>
+    <string name="notificationChannelName">Node Konnector Cool</string>
+    <string name="notificationDescription">A friend has just beaten your high score!</string>
 
     <string name="facebook_app_id">154147692008854</string>
     <string name="fb_login_protocol_scheme">fb154147692008854</string>
