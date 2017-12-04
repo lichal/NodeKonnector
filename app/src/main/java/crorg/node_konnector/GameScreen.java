@@ -77,9 +77,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
 
         dragType = 0;
+        int m = Integer.parseInt(message) + 1;
 
         gameStat = (TextView) findViewById(R.id.gameStat);
-        gameStat.setText("Node " + message);
+        gameStat.setText("Node " + (m));
+        gameStat.setTextColor(Color.WHITE);
+        gameStat.setTextSize(20f);
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("currentLevel");
