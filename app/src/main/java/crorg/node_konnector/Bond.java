@@ -1,10 +1,9 @@
 package crorg.node_konnector;
 
-import android.graphics.Point;
-
 import java.io.Serializable;
 
 import crorg.node_konnector.Shapes.DrawPath;
+import crorg.node_konnector.Shapes.MyPoint;
 
 /**
  * Created by Ryan on 2017-11-27.
@@ -20,8 +19,8 @@ public class Bond implements Serializable {
 
     private DrawPath bondPath;
 
-    private Point startPoint;
-    private Point p2, p3, p4;
+    private MyPoint startPoint;
+    private MyPoint p2, p3, p4;
 
 
     public Bond(Node n1, Node n2) {
@@ -30,10 +29,10 @@ public class Bond implements Serializable {
         bondPath = new DrawPath();
         //classOfBond = Bond.SINGLE;
         classOfBond = 1;
-        startPoint = new Point();
-        p2 = new Point();
-        p3 = new Point();
-        p4 = new Point();
+        startPoint = new MyPoint();
+        p2 = new MyPoint();
+        p3 = new MyPoint();
+        p4 = new MyPoint();
     }
 
 
