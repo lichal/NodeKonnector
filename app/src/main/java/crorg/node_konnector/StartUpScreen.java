@@ -1,13 +1,16 @@
 package crorg.node_konnector;
 
+import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -27,14 +30,28 @@ import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
-import java.util.logging.Level;
 
 import android.app.TaskStackBuilder;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 
-public class StartUpScreen extends AppCompatActivity implements Serializable {
+public class StartUpScreen extends AppCompatActivity implements Serializable, FacebookFragment.OnFragmentInteractionListener {
 
     /* The TextView for Press to Start */
     private TextView pressStart;
@@ -42,11 +59,16 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
     private File structureAnswer;  // local storage of user progress for the current Structure object
     private Button serialLoad;
     private Button serialSave;
+    private FirebaseAuth mAuth;
+    public LoginButton loginButton;
+
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
+        mAuth = FirebaseAuth.getInstance();
 
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
@@ -54,19 +76,79 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
         serialLoad = (Button)findViewById(R.id.serialLoad);
         serialSave = (Button)findViewById(R.id.serialSave);
 
+
+
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+//        loginButton.setFragment();
         // setting up local storage for user
         userProgress = new File(getFilesDir(), "userProgress123");
-
         structureAnswer = new File(getFilesDir(), "structureAnswer123");
 
+        callbackManager = CallbackManager.Factory.create();
+        loginButton.setReadPermissions("email", "public_profile");
 
+        // Callback registration
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                        System.out.println("Success login1");
+                    }
 
+                    @Override
+                    public void onCancel() {
+                        System.out.println("Success canceldd");
+                        // App code
+                    }
 
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
 
         // this needs to consult the saved file for highest level achieved by the player before it
-
-
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d("TAG", "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("TAG", "signInWithCredential:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
+                }
+
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Pass the activity result back to the Facebook SDK
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+
+
 
     /*******************************************************************
      * This method performs a blinking animation for press to start text
@@ -79,7 +161,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
         blinkAnimation= new AlphaAnimation(1, 0.2f);
         // blink duration
         blinkAnimation.setDuration(750);
-//        blinkAnimation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
         // Repeat animation infinitely
         blinkAnimation.setRepeatCount(Animation.INFINITE);
         blinkAnimation.setRepeatMode(Animation.REVERSE);
@@ -108,33 +189,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void notifyUserOfSurpassingFriendScore(View view) {
         // The id of the channel.
         String CHANNEL_ID = "nodeKonnector_channel_0156";
@@ -155,7 +209,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, GameScreen.class);
 
-
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(LevelSelectScreen.class);
         stackBuilder.addNextIntent(resultIntent);
@@ -172,14 +225,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
     public void testAngles() {
         
     }
-
-
-
-
-
-
-
-
 
     // this needs to save the user's current progress as well as the current
     // structure answer
@@ -247,23 +292,9 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
             System.out.println("FileInputStream fail: FileNotFoundException");
             System.out.println("Culprit: " + eZ.getMessage());
         }
-
+    }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
