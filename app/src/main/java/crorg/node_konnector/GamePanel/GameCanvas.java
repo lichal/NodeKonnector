@@ -4,12 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
-import android.support.constraint.solver.widgets.Rectangle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -211,69 +208,5 @@ public class GameCanvas extends View implements Serializable {
         return bondArrayList;
     }
 
-    private Path drawTriangle() {
-        Point p1 = new Point();
-        p1.x = 50;
-        p1.y = 0;
 
-        Point p2 = null, p3 = null;
-
-        p2 = new Point(p1.x - 50, p1.y + 100);
-        p3 = new Point(p1.x + 50, p1.y + 100);
-
-        Path path = new Path();
-        path.moveTo(p1.x, p1.y);
-        path.lineTo(p2.x, p2.y);
-        path.lineTo(p3.x, p3.y);
-        path.lineTo(p1.x, p1.y);
-
-        return path;
-    }
-
-    private Path drawHexagon() {
-        Point midPoint = new Point();
-        midPoint.x = 50;
-        midPoint.y = 50;
-
-        Point p1 = null, p2 = null, p3 = null, p4 = null, p5 = null, p6 = null;
-
-        p1 = new Point(midPoint.x-50, midPoint.y);
-        p2 = new Point(midPoint.x-25, midPoint.y+50);
-        p3 = new Point(midPoint.x+25, midPoint.y+50);
-        p4 = new Point(midPoint.x+50, midPoint.y);
-        p5 = new Point(midPoint.x+25, midPoint.y-50);
-        p6 = new Point(midPoint.x-25, midPoint.y-50);
-
-        Path path = new Path();
-        path.moveTo(p1.x, p1.y);
-        path.lineTo(p2.x, p2.y);
-        path.lineTo(p3.x, p3.y);
-        path.lineTo(p4.x, p4.y);
-        path.lineTo(p5.x, p5.y);
-        path.lineTo(p6.x, p6.y);
-        path.lineTo(p1.x, p1.y);
-
-        return path;
-    }
-
-    private Path drawSquare(){
-        Point p1 = new Point();
-        p1.x = 0;
-        p1.y = 0;
-
-        Point p2, p3, p4;
-
-        p2 = new Point(p1.x+100, p1.y);
-        p3 = new Point(p1.x + 100, p2.y + 100);
-        p4 = new Point(p1.x, p1.y + 100);
-
-        Path rectangle = new Path();
-        rectangle.moveTo(p1.x, p1.y);
-        rectangle.lineTo(p2.x,p2.y);
-        rectangle.lineTo(p3.x, p3.y);
-        rectangle.lineTo(p4.x, p4.y);
-        rectangle.lineTo(p1.x, p1.y);
-
-        return rectangle;
-    }
 }
