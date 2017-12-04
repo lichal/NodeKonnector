@@ -1,6 +1,5 @@
 package crorg.node_konnector;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -136,10 +135,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
 
 
 
-
-
-
-
     public void notifyUserOfSurpassingFriendScore(View view) {
         // The id of the channel.
         String CHANNEL_ID = "nodeKonnector_channel_0156";
@@ -147,7 +142,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable {
         mBuilder.setSmallIcon(R.drawable.ic_stat_name);
         mBuilder.setContentTitle("HIGH SCORE BEATEN");
         mBuilder.setContentText("A friend of yours has just BEATEN your high score!");
-        mBuilder.setChannel(CHANNEL_ID);
+//        mBuilder.setChannel(CHANNEL_ID);
         mBuilder.setTicker("NODES!");   // what does this do?
         mBuilder.setVibrate(new long[]{0, 100, 100, 100, 100, 100, 100, 1500, 1000, 100, 100, 100, 100, 100, 100, 1500});
         mBuilder.setColor(0xff00ffff);  // color for app name title in notifications drawer

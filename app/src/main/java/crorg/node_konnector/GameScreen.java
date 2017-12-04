@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,7 +64,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private DrawPath drawShape;
 
-    DatabaseReference scoreData;
+    private FirebaseDatabase database;
+
+    /**  */
+    private DatabaseReference scoreData;
+
+    private DatabaseReference levelData;
 
     private int dragType;
 
@@ -84,9 +90,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         gameStat.setTextColor(Color.WHITE);
         gameStat.setTextSize(20f);
 
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("currentLevel");
-//        myRef.setValue(message);
+        database = FirebaseDatabase.getInstance();
+        levelData = database.getReference("currentLevel");
+        levelData.setValue(message);
+
+        scoreData = database.getReference("currentScore");
+        scoreData.setValue("0");
 
         // new game structure
         gameStruct = new Structure(Integer.parseInt(message)+1);
