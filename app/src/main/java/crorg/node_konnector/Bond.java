@@ -32,7 +32,7 @@ public class Bond implements Serializable {
         node1 = n1;
         node2 = n2;
         bondPath = new DrawPath();
-        //classOfBond = Bond.SINGLE;
+        classOfBond = Bond.SINGLE;
         classOfBond = 1;
         startPoint = new MyPoint();
         p2 = new MyPoint();

@@ -218,24 +218,19 @@ public class Structure implements Serializable {
                     maxAddableKonnections = 2;
                 }
                 int howManyToAdd = r.nextInt(1 + maxAddableKonnections);
-                //if (howManyToAdd == Bond.DOUBLE - 1) {
-                if (howManyToAdd == 1) {
-                    //current.setBondType(Bond.DOUBLE);
-                    current.setBondType(2);
+                if (howManyToAdd == Bond.DOUBLE - 1) {
+                    current.setBondType(Bond.DOUBLE);
                     n1.incrementKonnections();
                     n2.incrementKonnections();
-                //} else if (howManyToAdd == Bond.TRIPLE - 1) {
-                } else if (howManyToAdd == 2) {
-                    //current.setBondType(Bond.TRIPLE);
-                    current.setBondType(3);
+                } else if (howManyToAdd == Bond.TRIPLE - 1) {
+                    current.setBondType(Bond.TRIPLE);
                     n1.incrementKonnections();
                     n1.incrementKonnections();
                     n2.incrementKonnections();
                     n2.incrementKonnections();
                 }
             } else {
-                //current.setBondType(Bond.SINGLE);
-                current.setBondType(1);
+                current.setBondType(Bond.SINGLE);
             }
         }
     }
@@ -267,33 +262,33 @@ public class Structure implements Serializable {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // shows the sorted relative number of shapes the USER currently has drawn
-    private static ArrayList<Integer> getUserRelativeShapesCount(ArrayList<Node> nodesList) {
-        int[] relativeNumbers = {0, 0, 0, 0};
-        for (Node n : nodesList) {
-            if (n instanceof Circle) {
-                relativeNumbers[0]++;
-            }
-            if (n instanceof Square) {
-                relativeNumbers[1]++;
-            }
-            if (n instanceof Triangle) {
-                relativeNumbers[2]++;
-            }
-            if (n instanceof Hexagon) {
-                relativeNumbers[3]++;
-            }
-        }
-        Arrays.sort(relativeNumbers);
-        ArrayList<Integer> relativeNumbers2 = new ArrayList<Integer>();
-        for (int i = 0; i < relativeNumbers.length; i++) {
-            int number = relativeNumbers[i];
-            if (number > 0) {
-                relativeNumbers2.add(number);
-            }
-        }
-        return relativeNumbers2;
-    }
+//    // shows the sorted relative number of shapes the USER currently has drawn
+//    private static ArrayList<Integer> getUserRelativeShapesCount(ArrayList<Node> nodesList) {
+//        int[] relativeNumbers = {0, 0, 0, 0};
+//        for (Node n : nodesList) {
+//            if (n instanceof Circle) {
+//                relativeNumbers[0]++;
+//            }
+//            if (n instanceof Square) {
+//                relativeNumbers[1]++;
+//            }
+//            if (n instanceof Triangle) {
+//                relativeNumbers[2]++;
+//            }
+//            if (n instanceof Hexagon) {
+//                relativeNumbers[3]++;
+//            }
+//        }
+//        Arrays.sort(relativeNumbers);
+//        ArrayList<Integer> relativeNumbers2 = new ArrayList<Integer>();
+//        for (int i = 0; i < relativeNumbers.length; i++) {
+//            int number = relativeNumbers[i];
+//            if (number > 0) {
+//                relativeNumbers2.add(number);
+//            }
+//        }
+//        return relativeNumbers2;
+//    }
 
 
     // shows the SORTED relative number of shapes the given structure has
@@ -340,12 +335,12 @@ public class Structure implements Serializable {
         int structure2Doubles = 0;
         int structure2Triples = 0;
         for (int i = 0; i < size1; i++) {
-            structure1Singles += (bonds1.get(i).getBondType() == 1 ? 1 : 0);
-            structure1Doubles += (bonds1.get(i).getBondType() == 2 ? 1 : 0);
-            structure1Triples += (bonds1.get(i).getBondType() == 3 ? 1 : 0);
-            structure2Singles += (bonds2.get(i).getBondType() == 1 ? 1 : 0);
-            structure2Doubles += (bonds2.get(i).getBondType() == 2 ? 1 : 0);
-            structure2Triples += (bonds2.get(i).getBondType() == 3 ? 1 : 0);
+            structure1Singles += (bonds1.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
+            structure1Doubles += (bonds1.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
+            structure1Triples += (bonds1.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
+            structure2Singles += (bonds2.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
+            structure2Doubles += (bonds2.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
+            structure2Triples += (bonds2.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
         }
 
         // Return result...
@@ -374,11 +369,11 @@ public class Structure implements Serializable {
         int numDoubleBonds = 0;
         int numTripleBonds = 0;
         for (Bond b : bonds) {
-            if (b.getBondType() == 1) {
+            if (b.getBondType() == Bond.SINGLE) {
                 numSingleBonds++;
-            } else if (b.getBondType() == 2) {
+            } else if (b.getBondType() == Bond.DOUBLE) {
                 numDoubleBonds++;
-            } else if (b.getBondType() == 3) {
+            } else if (b.getBondType() == Bond.TRIPLE) {
                 numTripleBonds++;
             }
         }

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="crorg.node_konnector">
+
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+<<<<<<< HEAD
+
+=======
     <uses-permission android:name="android.permission.INTERNET"/>
+>>>>>>> 314e2f90b026b32ca362a828142e346cdca521dd
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         <activity
             android:name=".StartUpScreen"
             android:screenOrientation="portrait">
@@ -20,17 +24,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LevelSelectScreen"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".GameScreen"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"></activity>
 
+<<<<<<< HEAD
+        <service
+            android:name=".NotifyUserOfFriendScoreUpdates"
+            android:enabled="true"
+            android:exported="true"></service>
+=======
         </activity>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
@@ -50,6 +56,7 @@
                 <data android:scheme="@string/app_name" />
             </intent-filter>
         </activity>
+>>>>>>> 314e2f90b026b32ca362a828142e346cdca521dd
     </application>
 
 </manifest>
