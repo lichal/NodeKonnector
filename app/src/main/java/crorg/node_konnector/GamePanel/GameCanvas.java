@@ -36,8 +36,7 @@ public class GameCanvas extends View implements Serializable {
 
     private int typeBond;
 
-    /**  */
-    private Paint paint;
+
 
     /** Rect for the moving node */
     private Rect move;
@@ -50,9 +49,11 @@ public class GameCanvas extends View implements Serializable {
 
     private Node movingNode;
 
+
+    /**  */
+    private Paint paint;
     private Paint paint2;
     private Paint paint3;
-
     private Paint paint4;
     private Paint paint5;
 
@@ -74,24 +75,23 @@ public class GameCanvas extends View implements Serializable {
         movingNode = null;
 
         paint = new Paint();
-        paint.setColor(Color.DKGRAY);
+        paint.setColor(Color.WHITE);
         paint2 = new Paint();
-        paint2.setColor(Color.WHITE);
+        paint2.setColor(Color.DKGRAY);
         paint3 = new Paint();
-
 
         paint3.setColor(0xffff00ff);
 
         paint4 = new Paint();
-        paint4.setColor(Color.DKGRAY);
+        paint4.setColor(Color.WHITE);
         paint4.setStrokeWidth(20);
         paint5 = new Paint();
         paint5.setStrokeWidth(5);
-        paint5.setColor(Color.WHITE);
+        paint5.setColor(Color.DKGRAY);
     }
 
     protected void onDraw(Canvas canvas){
-//        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         scale = new Scaler(getWidth(), getHeight());
 
         for(Bond b: bondArrayList){
@@ -111,6 +111,11 @@ public class GameCanvas extends View implements Serializable {
         this.bondingMode = startBonding;
         this.typeBond = type;
     }
+
+    public int getShapeWidth(){
+        return (int)(getHeight()*0.1);
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event){

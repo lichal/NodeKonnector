@@ -381,6 +381,44 @@ public class Structure implements Serializable {
         System.out.println("# of Single Bonds: " + numSingleBonds + "\n# of Double Bonds: " + numDoubleBonds + "\n# of Triple Bonds: " + numTripleBonds);
     }
 
+    public String printNumShapes(){
+        String message = "";
+
+        ArrayList<Integer> answerShapes = Structure.getRelativeShapesCount(nodes);
+        for (Integer i : answerShapes) {
+            message += "Shape: " + i + "\n";
+        }
+
+        return message;
+    }
+
+    public String printNumBonds(){
+        int numSingleBonds = 0;
+        int numDoubleBonds = 0;
+        int numTripleBonds = 0;
+        String message = "";
+        for (Bond b : bonds) {
+            if (b.getBondType() == Bond.SINGLE) {
+                numSingleBonds++;
+            } else if (b.getBondType() == Bond.DOUBLE) {
+                numDoubleBonds++;
+            } else if (b.getBondType() == Bond.TRIPLE) {
+                numTripleBonds++;
+            }
+        }
+
+            if (numSingleBonds > 0) {
+                message += "Single Bonds: " + numSingleBonds;
+            }
+            if (numDoubleBonds > 0) {
+                message += "\nDouble Bonds: " + numDoubleBonds;
+            }
+            if (numTripleBonds > 0) {
+                message += "\nTriple Bonds: " + numTripleBonds;
+            }
+        return message;
+    }
+
     // pick a random node - if structure is intact, all nodes should be counted
     public boolean isStrutureIntact() {
         Random r = new Random();

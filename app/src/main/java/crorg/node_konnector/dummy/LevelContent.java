@@ -39,7 +39,7 @@ public class LevelContent implements Serializable {
     }
 
     private static LevelItem createDummyItem(int position) {
-        return new LevelItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new LevelItem(String.valueOf(position), (position + 1) + " Nodes", makeDetails(position));
     }
 
     private static String makeDetails(int position) {
