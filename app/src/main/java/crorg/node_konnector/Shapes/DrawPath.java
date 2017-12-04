@@ -1,8 +1,6 @@
 package crorg.node_konnector.Shapes;
 
 import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 
@@ -16,14 +14,14 @@ public class DrawPath extends Path implements Serializable{
         super();
     }
     public DrawPath drawTriangle() {
-        Point p1 = new Point();
+        MyPoint p1 = new MyPoint();
         p1.x = 50;
         p1.y = 0;
 
-        Point p2 = null, p3 = null;
+        MyPoint p2 = null, p3 = null;
 
-        p2 = new Point(p1.x - 50, p1.y + 100);
-        p3 = new Point(p1.x + 50, p1.y + 100);
+        p2 = new MyPoint(p1.x - 50, p1.y + 100);
+        p3 = new MyPoint(p1.x + 50, p1.y + 100);
 
         DrawPath path = new DrawPath();
         path.moveTo(p1.x, p1.y);
@@ -35,18 +33,18 @@ public class DrawPath extends Path implements Serializable{
     }
 
     public DrawPath drawHexagon() {
-        Point midPoint = new Point();
+        MyPoint midPoint = new MyPoint();
         midPoint.x = 50;
         midPoint.y = 50;
 
-        Point p1 = null, p2 = null, p3 = null, p4 = null, p5 = null, p6 = null;
+        MyPoint p1 = null, p2 = null, p3 = null, p4 = null, p5 = null, p6 = null;
 
-        p1 = new Point(midPoint.x-50, midPoint.y);
-        p2 = new Point(midPoint.x-25, midPoint.y+50);
-        p3 = new Point(midPoint.x+25, midPoint.y+50);
-        p4 = new Point(midPoint.x+50, midPoint.y);
-        p5 = new Point(midPoint.x+25, midPoint.y-50);
-        p6 = new Point(midPoint.x-25, midPoint.y-50);
+        p1 = new MyPoint(midPoint.x-50, midPoint.y);
+        p2 = new MyPoint(midPoint.x-25, midPoint.y+50);
+        p3 = new MyPoint(midPoint.x+25, midPoint.y+50);
+        p4 = new MyPoint(midPoint.x+50, midPoint.y);
+        p5 = new MyPoint(midPoint.x+25, midPoint.y-50);
+        p6 = new MyPoint(midPoint.x-25, midPoint.y-50);
 
         DrawPath path = new DrawPath();
         path.moveTo(p1.x, p1.y);
@@ -61,15 +59,15 @@ public class DrawPath extends Path implements Serializable{
     }
 
     public DrawPath drawSquare(){
-        Point p1 = new Point();
+        MyPoint p1 = new MyPoint();
         p1.x = 0;
         p1.y = 0;
 
-        Point p2, p3, p4;
+        MyPoint p2, p3, p4;
 
-        p2 = new Point(p1.x+100, p1.y);
-        p3 = new Point(p1.x + 100, p2.y + 100);
-        p4 = new Point(p1.x, p1.y + 100);
+        p2 = new MyPoint(p1.x+100, p1.y);
+        p3 = new MyPoint(p1.x + 100, p2.y + 100);
+        p4 = new MyPoint(p1.x, p1.y + 100);
 
         DrawPath rectangle = new DrawPath();
         rectangle.moveTo(p1.x, p1.y);
