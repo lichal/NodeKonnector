@@ -69,6 +69,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private int scores;
 
+    private int level;
+
     private DatabaseReference userData;
 
     private FirebaseUser currentUser;
@@ -85,20 +87,16 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
 
         dragType = 0;
-        int m = Integer.parseInt(message) + 1;
+
+        level = Integer.parseInt(message);
 
         gameStat = (TextView) findViewById(R.id.gameStat);
-        gameStat.setText("Node " + (m));
+        gameStat.setText("Node " + (level+1));
         gameStat.setTextColor(Color.WHITE);
         gameStat.setTextSize(20f);
+        scores = 0;
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(isLoggedIn()) {
-            userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
-            userData.child(currentUser.getUid()).child("Score").setValue(scores);
-            userData.child(currentUser.getUid()).child("Level").setValue(Integer.parseInt(message)+1);
-        }
 
         // new game structure
         gameStruct = new Structure(Integer.parseInt(message)+1);
@@ -439,6 +437,13 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                             gameStat.setText("Level Passed");
                             gameStat.setTextColor(Color.WHITE);
                             gameStat.setTextSize(20f);
+
+                            if(isLoggedIn()) {
+                                userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
+                                scores += Math.pow(3, level+1);
+                                userData.child(currentUser.getUid()).child("Score").setValue(scores);
+                                userData.child(currentUser.getUid()).child("Level").setValue(level+1);
+                            }
                         }else if (!test){
 
                         }
