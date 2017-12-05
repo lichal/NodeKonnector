@@ -16,6 +16,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.facebook.AccessToken;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -64,12 +67,11 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private DrawPath drawShape;
 
-    private FirebaseDatabase database;
+    private int scores;
 
-    /**  */
-    private DatabaseReference scoreData;
+    private DatabaseReference userData;
 
-    private DatabaseReference levelData;
+    private FirebaseUser currentUser;
 
     private int dragType;
 
@@ -90,12 +92,13 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         gameStat.setTextColor(Color.WHITE);
         gameStat.setTextSize(20f);
 
-        database = FirebaseDatabase.getInstance();
-        levelData = database.getReference("currentLevel");
-        levelData.setValue(message);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        scoreData = database.getReference("currentScore");
-        scoreData.setValue("0");
+        if(isLoggedIn()) {
+            userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
+            userData.child(currentUser.getUid()).child("Score").setValue(scores);
+            userData.child(currentUser.getUid()).child("Level").setValue(Integer.parseInt(message)+1);
+        }
 
         // new game structure
         gameStruct = new Structure(Integer.parseInt(message)+1);
@@ -509,11 +512,11 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
 
     public ArrayList<Structure> getStorageArrayList() {
-
-
-
-
         return null;
+    }
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
 

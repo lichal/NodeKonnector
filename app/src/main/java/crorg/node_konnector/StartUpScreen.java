@@ -64,6 +64,8 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
     private CallbackManager callbackManager;
 
+    FirebaseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +77,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         pressStart.setAnimation(manageBlinkEffect());
         serialLoad = (Button)findViewById(R.id.serialLoad);
         serialSave = (Button)findViewById(R.id.serialSave);
-
-
-
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
 //        loginButton.setFragment();
@@ -110,14 +109,26 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     }
                 });
 
+
         // this needs to consult the saved file for highest level achieved by the player before it
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(!isLoggedIn()){
+            FirebaseAuth.getInstance().signOut();
+        }else {
+            currentUser = mAuth.getCurrentUser();
+        }
+
 //        updateUI(currentUser);
     }
 
@@ -131,7 +142,11 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("TAG", "signInWithCredential:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
+                    if(!isLoggedIn()){
+                        FirebaseAuth.getInstance().signOut();
+                    }else {
+                        currentUser = mAuth.getCurrentUser();
+                    }
 //                            updateUI(user);
                 }
 
