@@ -140,14 +140,14 @@
         app:layout_constraintBottom_toTopOf="@+id/doubleButton" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/trashBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_delete"
-        app:layout_constraintLeft_toRightOf="@+id/hexagonView"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/doubleButton" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/doubleButton"
+        app:layout_constraintLeft_toRightOf="@+id/hexagonView"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 
 
 </android.support.constraint.ConstraintLayout>

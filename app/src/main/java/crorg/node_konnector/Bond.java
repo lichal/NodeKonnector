@@ -40,7 +40,6 @@ public class Bond implements Serializable {
         p4 = new MyPoint();
     }
 
-
     public void setNode1(Node rep1) {
         node1 = rep1;
     }
@@ -56,7 +55,6 @@ public class Bond implements Serializable {
     public Node getNode2() {
         return node2;
     }
-
 
     public void setBondType(int a) {
         if (a == Bond.SINGLE) {
@@ -90,7 +88,6 @@ public class Bond implements Serializable {
         bondPath = new DrawPath(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY());
         return bondPath;
     }
-
 
     public void drawPathLine(Canvas canvas, Paint paint, Paint paint2, Paint paint3, Paint paint4, Paint paint5){
 

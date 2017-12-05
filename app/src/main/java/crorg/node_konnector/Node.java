@@ -79,6 +79,14 @@ public class Node extends ShapeDrawable implements Serializable {
         }
     }
 
+    public void removeAllNeighborNodes() {
+        for (Node n: neighbors){
+            n.decrementKonnections();
+        }
+        numberKonnections=0;
+        neighbors.clear();
+    }
+
 
     public boolean hasNeighborNode(Node possibleNeighbor) {
         if (neighbors.contains(possibleNeighbor) == true) {

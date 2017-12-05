@@ -122,8 +122,19 @@ public class GameCanvas extends View implements Serializable {
     }
 
     public void deleteCurrent(){
+        Bond temp = null;
         if(currentNode!=null){
+            for(Bond b: bondArrayList){
+                if(b.getNode1() == currentNode || b.getNode2() == currentNode) {
+                    temp = b;
+                    break;
+                }
+            }
+            if(temp != null) {
+                bondArrayList.remove(temp);
+            }
             shapeArrayList.remove(currentNode);
+            currentNode.removeAllNeighborNodes();
             invalidate();
         }
     }
