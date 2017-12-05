@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -44,15 +46,17 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private ToggleButton tripleButton;
 
-    private Button triangleButton;
+    private ImageView triangleImage;
 
-    private Button circleButton;
+    private ImageView circleImage;
 
-    private Button squareButton;
+    private ImageView squareImage;
 
-    private Button hexagonButton;
+    private ImageView hexagonImage;
 
     private Button checkStructure;
+
+    private ImageButton trashButton;
 
     private TextView numShapes;
     private TextView numBonds;
@@ -130,10 +134,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         doubleButton = (ToggleButton) findViewById(R.id.doubleButton) ;
         tripleButton = (ToggleButton) findViewById(R.id.tripleButton);
         checkStructure = (Button) findViewById(R.id.checkStructure);
-        circleButton = (Button) findViewById(R.id.circleBtn);
-        squareButton = (Button) findViewById(R.id.squareBtn);
-        triangleButton = (Button) findViewById(R.id.triangleBtn);
-        hexagonButton = (Button) findViewById(R.id.hexagonBtn);
+        circleImage = (ImageView) findViewById(R.id.circleView);
+        squareImage = (ImageView) findViewById(R.id.squareView);
+        triangleImage = (ImageView) findViewById(R.id.triangleView);
+        hexagonImage = (ImageView) findViewById(R.id.hexagonView);
+
+        trashButton = (ImageButton) findViewById(R.id.trashBtn);
 
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -175,160 +181,45 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         });
 
 
-        circleButton.setOnTouchListener(new View.OnTouchListener() {
+        circleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 1;
-                View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleButton);
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleImage);
                 view.startDrag(data, shadow, null, 0);
                 return true;
             }
         });
-        circleButton.setOnDragListener(new View.OnDragListener(){
 
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                final int action = event.getAction();
-                switch(action) {
-
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        break;
-
-                    case DragEvent.ACTION_DROP:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        return true;
-
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-
-        squareButton.setOnDragListener(new View.OnDragListener(){
-
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                final int action = event.getAction();
-                switch(action) {
-
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        break;
-
-                    case DragEvent.ACTION_DROP:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        return true;
-
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-
-        squareButton.setOnTouchListener(new View.OnTouchListener() {
+        squareImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 2;
-                View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleButton);
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(squareImage);
                 view.startDrag(data, shadow, null, 0);
                 return true;
             }
         });
 
-        triangleButton.setOnDragListener(new View.OnDragListener(){
-
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                final int action = event.getAction();
-                switch(action) {
-
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        break;
-
-                    case DragEvent.ACTION_DROP:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        return true;
-
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-
-        triangleButton.setOnTouchListener(new View.OnTouchListener() {
+        triangleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 3;
-                View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleButton);
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(triangleImage);
                 view.startDrag(data, shadow, null, 0);
                 return true;
             }
         });
 
-        hexagonButton.setOnDragListener(new View.OnDragListener(){
-
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                final int action = event.getAction();
-                switch(action) {
-
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        break;
-
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        break;
-
-                    case DragEvent.ACTION_DROP:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        return true;
-
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-
-        hexagonButton.setOnTouchListener(new View.OnTouchListener() {
+        hexagonImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 4;
-                View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleButton);
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(hexagonImage);
                 view.startDrag(data, shadow, null, 0);
                 return true;
             }
@@ -340,35 +231,29 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                 final int action = event.getAction();
                 int x = (int)event.getX();
                 int y = (int)event.getY();
-
-                int placeX = x - game.getShapeWidth()/2;
-
-                int placeY = y - game.getShapeWidth()/2;
-
+                int midX = x - game.getShapeWidth()/2;
+                int midY = y - game.getShapeWidth()/2;
                 switch(action) {
                     case DragEvent.ACTION_DRAG_STARTED:
                         break;
-
                     case DragEvent.ACTION_DRAG_EXITED:
                         break;
-
                     case DragEvent.ACTION_DRAG_ENTERED:
                         break;
-
                     case DragEvent.ACTION_DROP:
                         if (y < game.getHeight()) {
                             switch (dragType) {
                                 case 1:
-                                    game.getShapeArrayList().add(new Circle(new OvalShape(), placeX, placeY));
+                                    game.getShapeArrayList().add(new Circle(new OvalShape(), midX, midY));
                                     break;
                                 case 2:
-                                    game.getShapeArrayList().add(new Square(new PathShape(drawShape.drawSquare(), 100, 100), placeX, placeY));
+                                    game.getShapeArrayList().add(new Square(new PathShape(drawShape.drawSquare(), 100, 100), midX, midY));
                                     break;
                                 case 3:
-                                    game.getShapeArrayList().add(new Triangle(new PathShape(drawShape.drawTriangle(), 100, 100), placeX, placeY));
+                                    game.getShapeArrayList().add(new Triangle(new PathShape(drawShape.drawTriangle(), 100, 100), midX, midY));
                                     break;
                                 case 4:
-                                    game.getShapeArrayList().add(new Hexagon(new PathShape(drawShape.drawHexagon(), 100, 100), placeX, placeY));
+                                    game.getShapeArrayList().add(new Hexagon(new PathShape(drawShape.drawHexagon(), 100, 100), midX, midY));
                                     break;
                                 default:
                                     break;
@@ -378,7 +263,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         return true;
 
                     case DragEvent.ACTION_DRAG_ENDED:
-
                         return true;
 
                     default:
@@ -388,43 +272,16 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             }
         });
 
-//        circleButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                game.getShapeArrayList().add(new Circle(new OvalShape(), 500, 10));
-//                game.invalidate();
-//            }
-//        });
-//
-//        squareButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                game.getShapeArrayList().add(new Square(new PathShape(drawShape.drawSquare(), 100, 100), 200, 200));
-//                game.invalidate();
-//            }
-//        });
-//
-//        triangleButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                game.getShapeArrayList().add(new Triangle(new PathShape(drawShape.drawTriangle(), 100, 100), 400, 200));
-//                game.invalidate();
-//            }
-//        });
-//
-//        hexagonButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                game.getShapeArrayList().add(new Hexagon(new PathShape(drawShape.drawHexagon(), 100, 100), 200, 400));
-//                game.invalidate();
-//            }
-//        });
-
+        trashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                game.deleteCurrent();
+            }
+        });
 
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 ArrayList <Node> allFriendKonnections = new ArrayList<Node>();
                 if(game.getShapeArrayList().size() > 0) {
                     int number = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
@@ -434,10 +291,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         //boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
                         boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), gameStruct.getNodes(), gameStruct.getBonds());
                         if (test){
-                            gameStat.setText("Level Passed");
+                            gameStat.setText("Congratz!");
                             gameStat.setTextColor(Color.WHITE);
                             gameStat.setTextSize(20f);
-
                             if(isLoggedIn()) {
                                 userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
                                 scores += Math.pow(3, level+1);
@@ -445,7 +301,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                                 userData.child(currentUser.getUid()).child("Level").setValue(level+1);
                             }
                         }else if (!test){
-
+                            gameStat.setText("Fail! Think harder!");
                         }
                     }
                 }

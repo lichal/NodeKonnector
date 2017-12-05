@@ -46,9 +46,8 @@ public class GameCanvas extends View implements Serializable {
 
     private Node selectedNode1;
     private Node selectedNode2;
-
+    private Node currentNode;
     private Node movingNode;
-
 
     /**  */
     private Paint paint;
@@ -99,12 +98,18 @@ public class GameCanvas extends View implements Serializable {
             paint2.setStrokeWidth(20f);
             paint3.setStrokeWidth(10f);
             b.drawPathLine(canvas, paint, paint2, paint3, paint4, paint5);
-//            canvas.drawPath(b.getBondPath(), paint);
         }
 
         for(Node k: shapeArrayList) {
             k.draw(canvas);
+            if(k.isSelect()) {
+                k.drawSelect(canvas);
+            }
         }
+//        if(selectedNode1!=null)
+//            selectedNode1.drawSelect(canvas);
+//        if(selectedNode2!=null)
+//            selectedNode2.drawSelect(canvas);
     }
 
     public void setBondingMode(boolean startBonding, int type){
@@ -116,6 +121,12 @@ public class GameCanvas extends View implements Serializable {
         return (int)(getHeight()*0.1);
     }
 
+    public void deleteCurrent(){
+        if(currentNode!=null){
+            shapeArrayList.remove(currentNode);
+            invalidate();
+        }
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -127,13 +138,14 @@ public class GameCanvas extends View implements Serializable {
             case MotionEvent.ACTION_DOWN:
                 if(!bondingMode) {
                     for (Node k : shapeArrayList) {
-                        k.checkSelect(x, y);
+                        if(k.checkSelect(x, y)){
+                            currentNode = k;
+                        }
                     }
                 }
                 // bonding mode
                 if(bondingMode) {
                     for (Node k : shapeArrayList) {
-
                         if(k.checkSelect(x, y)) {
                             if (numSelect == 0) {
                                 selectedNode1 = k;
@@ -199,7 +211,6 @@ public class GameCanvas extends View implements Serializable {
                 invalidate();
                 break;
         }
-
         return true;
     }
 

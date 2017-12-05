@@ -101,12 +101,14 @@ public class Bond implements Serializable {
 
             canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint3);
         }
+
         else if(getBondType() == 2){
 
             canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint4);
 
             canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint5);
         }
+
         else if(getBondType() == 1){
             canvas.drawLine(node1.getMidX(), node1.getMidY(), node2.getMidX(), node2.getMidY(), paint3);
         }

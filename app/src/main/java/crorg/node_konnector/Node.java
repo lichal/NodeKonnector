@@ -1,10 +1,15 @@
 package crorg.node_konnector;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import crorg.node_konnector.Shapes.DrawPath;
 
 /**
  * Created by Ryan on 2017-11-27.
@@ -22,14 +27,12 @@ public class Node extends ShapeDrawable implements Serializable {
     protected int height;
     protected int width;
     protected boolean select;
-
-    protected boolean bondingMode;
     protected Shape s;
-
 
     public Node(Shape s){
         super(s);
         this.s = s;
+        rectSelect = new DrawPath();
 
         this.width = (int) (Scaler.height * 0.1);
         this.height = (int) (Scaler.height * 0.1);
@@ -109,10 +112,6 @@ public class Node extends ShapeDrawable implements Serializable {
         return select;
     }
 
-
-
-
-
     public int getMidX() {
         return positionX+width/2;
     }
@@ -120,8 +119,6 @@ public class Node extends ShapeDrawable implements Serializable {
     public int getMidY() {
         return positionY+width/2;
     }
-
-
 
     public boolean checkSelect(int xSelect, int ySelect) {
         int leftBound = this.getPositionX();
@@ -136,6 +133,16 @@ public class Node extends ShapeDrawable implements Serializable {
 
         this.select = false;
         return this.select;
+    }
+    private DrawPath rectSelect;
+    public void drawSelect(Canvas canvas){
+        Paint p = new Paint();
+        p.setColor(Color.WHITE);
+        p.setStrokeWidth(5);
+        canvas.drawLine(getPositionX(), getPositionY(), getPositionX() + getWidth(), getPositionY(), p);
+        canvas.drawLine(getPositionX(), getPositionY(), getPositionX(), getPositionY() + getHeight(), p);
+        canvas.drawLine(getPositionX() + getWidth(), getPositionY(), getPositionX() + getWidth(), getPositionY() + getHeight(), p);
+        canvas.drawLine(getPositionX(), getPositionY() + getHeight(), getPositionX()+ getWidth(), getPositionY() + getHeight(), p);
     }
 
     public void redraw(int x, int y){
