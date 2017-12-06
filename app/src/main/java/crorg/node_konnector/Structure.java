@@ -317,6 +317,23 @@ public class Structure implements Serializable {
         ArrayList<Integer> relativeShapesCount2 = Structure.getRelativeShapesCount(nodes2);
         int size1 = relativeShapesCount1.size();
         int size2 = relativeShapesCount2.size();
+
+
+        // just for diagnostics...
+        System.out.println("relativeShapeCount1 list size: " + size1);
+        for (Integer i : relativeShapesCount1) {
+            System.out.println("#shapes: " + i.intValue());
+        }
+        System.out.println("relativeShapeCount2 list size: " + size2);
+        for (Integer i : relativeShapesCount2) {
+            System.out.println("#shapes: " + i.intValue());
+        }
+
+
+
+
+
+
         if (size1 != size2) {
             return false;
         } else {

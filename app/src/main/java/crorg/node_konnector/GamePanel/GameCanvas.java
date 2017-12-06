@@ -122,6 +122,8 @@ public class GameCanvas extends View implements Serializable {
     }
 
     public void deleteCurrent(){
+        // case 1:  delete a node - remove all bonds konnected to it, decrement konnections for other nodes
+        // delete what?  a bond? a node?
         Bond temp = null;
         if(currentNode!=null){
             for(Bond b: bondArrayList){
@@ -134,7 +136,7 @@ public class GameCanvas extends View implements Serializable {
                 bondArrayList.remove(temp);
             }
             shapeArrayList.remove(currentNode);
-            currentNode.removeAllNeighborNodes();
+            //currentNode.removeAllNeighborNodes();     // NO! - Konnections are only counted for a SINGLE node, not for the structure as a whole
             invalidate();
         }
     }
@@ -171,30 +173,51 @@ public class GameCanvas extends View implements Serializable {
                         }
                     }
                     if(numSelect == 2){
+                        // remove all previous bonds between these two nodes FIRST...
+                        for (Bond b : bondArrayList) {
+                            Node one = b.getNode1();
+                            Node two = b.getNode2();
+                            if (((selectedNode1 == one) || (selectedNode1 == two))
+                                    && ((selectedNode2 == one) || (selectedNode2 == two))) {
+                                bondArrayList.remove(b);
+                            }
+                        }
+
+                        // NOW add bonds...
                         Bond temp = new Bond(selectedNode1, selectedNode2);
                         bondArrayList.add(temp);
-                        // add the neighbor to each other
+
+                        // add the neighbor to each other, set bond type, increment konnections
                         selectedNode1.addNeighborNode(selectedNode2);
                         selectedNode2.addNeighborNode(selectedNode1);
-
-                        // add number of connection to each node
-                        selectedNode1.incrementKonnections();
-                        selectedNode2.incrementKonnections();
+                        switch (typeBond){
+                            case 1:
+                                temp.setBondType(Bond.SINGLE);
+                                selectedNode1.incrementKonnections();
+                                selectedNode2.incrementKonnections();
+                                break;
+                            case 2:
+                                temp.setBondType(Bond.DOUBLE);
+                                selectedNode1.incrementKonnections();
+                                selectedNode2.incrementKonnections();
+                                selectedNode1.incrementKonnections();
+                                selectedNode2.incrementKonnections();
+                                break;
+                            case 3:
+                                temp.setBondType(Bond.TRIPLE);
+                                selectedNode1.incrementKonnections();
+                                selectedNode2.incrementKonnections();
+                                selectedNode1.incrementKonnections();
+                                selectedNode2.incrementKonnections();
+                                selectedNode1.incrementKonnections();
+                                selectedNode2.incrementKonnections();
+                                break;
+                        }
 
                         // reset the selection to null
                         selectedNode1 = null;
                         selectedNode2 = null;
-                        switch (typeBond){
-                            case 1:
-                                temp.setBondType(Bond.SINGLE);
-                                break;
-                            case 2:
-                                temp.setBondType(Bond.DOUBLE);
-                                break;
-                            case 3:
-                                temp.setBondType(Bond.TRIPLE);
-                                break;
-                        }
+
 
                         // reset number of shape selected to 0
                         numSelect = 0;

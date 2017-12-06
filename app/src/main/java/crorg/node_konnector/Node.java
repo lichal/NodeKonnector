@@ -89,10 +89,7 @@ public class Node extends ShapeDrawable implements Serializable {
 
 
     public boolean hasNeighborNode(Node possibleNeighbor) {
-        if (neighbors.contains(possibleNeighbor) == true) {
-            return true;
-        }
-        return false;
+        return neighbors.contains(possibleNeighbor);
     }
 
     public ArrayList<Node> getNeighbors() {
