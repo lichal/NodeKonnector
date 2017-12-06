@@ -311,29 +311,12 @@ public class Structure implements Serializable {
 
     // two structures are logically "similar enough" if they have (1) same number of nodes, (2) same relative amounts of shapes,
     // (3) same number of single, double, triple bonds
-    public static boolean areStructuresSimilarEnough(ArrayList<Node> nodes1, ArrayList<Bond> bonds1, ArrayList<Node> nodes2, ArrayList<Bond> bonds2) {
+    public static boolean areShapeConfigsSimilar(ArrayList<Node> nodes1, ArrayList<Node> nodes2) {
         // Compare shapes configs...
         ArrayList<Integer> relativeShapesCount1 = Structure.getRelativeShapesCount(nodes1);
         ArrayList<Integer> relativeShapesCount2 = Structure.getRelativeShapesCount(nodes2);
         int size1 = relativeShapesCount1.size();
         int size2 = relativeShapesCount2.size();
-
-
-        // just for diagnostics...
-        System.out.println("relativeShapeCount1 list size: " + size1);
-        for (Integer i : relativeShapesCount1) {
-            System.out.println("#shapes: " + i.intValue());
-        }
-        System.out.println("relativeShapeCount2 list size: " + size2);
-        for (Integer i : relativeShapesCount2) {
-            System.out.println("#shapes: " + i.intValue());
-        }
-
-
-
-
-
-
         if (size1 != size2) {
             return false;
         } else {
@@ -343,33 +326,38 @@ public class Structure implements Serializable {
                 }
             }
         }
-
-        // Now compare bonds...
-//        int structure1Singles = 0;
-//        int structure1Doubles = 0;
-//        int structure1Triples = 0;
-//        int structure2Singles = 0;
-//        int structure2Doubles = 0;
-//        int structure2Triples = 0;
-//        int sizeBonds1 = bonds1.size();
-//        int sizeBonds2 = bonds2.size();
-//        for (int i = 0; i < sizeBonds1; i++) {
-//            structure1Singles += (bonds1.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
-//            structure1Doubles += (bonds1.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
-//            structure1Triples += (bonds1.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
-//        }
-//        for (int i = 0; i < sizeBonds2; i++) {
-//            structure2Singles += (bonds2.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
-//            structure2Doubles += (bonds2.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
-//            structure2Triples += (bonds2.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
-//        }
-//        // Return result...
-//        if ((structure1Singles != structure2Singles) || (structure1Doubles != structure2Doubles)
-//                || (structure1Triples != structure2Triples)) {
-//            return false;
-//        }
         return true;
     }
+
+    public static boolean areBondsSimilar(ArrayList<Bond> bonds1, ArrayList<Bond> bonds2) {
+        int structure1Singles = 0;
+        int structure1Doubles = 0;
+        int structure1Triples = 0;
+        int structure2Singles = 0;
+        int structure2Doubles = 0;
+        int structure2Triples = 0;
+        int sizeBonds1 = bonds1.size();
+        int sizeBonds2 = bonds2.size();
+        for (int i = 0; i < sizeBonds1; i++) {
+            structure1Singles += (bonds1.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
+            structure1Doubles += (bonds1.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
+            structure1Triples += (bonds1.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
+        }
+        for (int i = 0; i < sizeBonds2; i++) {
+            structure2Singles += (bonds2.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
+            structure2Doubles += (bonds2.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
+            structure2Triples += (bonds2.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
+        }
+        // Return result...
+        if ((structure1Singles != structure2Singles) || (structure1Doubles != structure2Doubles)
+                || (structure1Triples != structure2Triples)) {
+            return false;
+        }
+        return true;
+    }
+
+
+
 
 
     public static boolean checkAllCircleKonnections(ArrayList<Node> playerNodes) {

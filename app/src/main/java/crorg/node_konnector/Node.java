@@ -80,6 +80,10 @@ public class Node extends ShapeDrawable implements Serializable {
     }
 
     public void removeAllNeighborNodes() {
+        // removes this node's konnection to all others
+        // removes other neighbor konnections to it
+
+
         for (Node n: neighbors){
             n.decrementKonnections();
         }

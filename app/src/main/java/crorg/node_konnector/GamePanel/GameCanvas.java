@@ -121,13 +121,35 @@ public class GameCanvas extends View implements Serializable {
         return (int)(getHeight()*0.1);
     }
 
-    public void deleteCurrent(){
-        // case 1:  delete a node - remove all bonds konnected to it, decrement konnections for other nodes
-        // delete what?  a bond? a node?
+    // we should separate these - deleting a node for one button, deleting a bond for another (deleting a bond means selecting the two nodes to delete it from, then hitting the button
+    public void deleteSelectedNode(){
+        // case 1:  delete a node = remove all bonds konnected to it, decrement konnections (make SURE if it's a triple bond, etc. that you get rid of THREE konnections for BOTH nodes!) for other nodes
         Bond temp = null;
+        Node one = null;
+        Node two = null;
         if(currentNode!=null){
             for(Bond b: bondArrayList){
-                if(b.getNode1() == currentNode || b.getNode2() == currentNode) {
+                if ((b.getNode1() == currentNode) || (b.getNode2() == currentNode)) {
+                    one = (b.getNode1() == currentNode) ? currentNode : b.getNode2();
+                    two = (b.getNode1() == currentNode) ? currentNode : b.getNode2();
+                    one.removeNeighborNode(two);
+                    two.removeNeighborNode(one);
+                    if (b.getBondType() == Bond.SINGLE) {
+                        one.decrementKonnections();
+                        two.decrementKonnections();
+                    } else if (b.getBondType() == Bond.DOUBLE) {
+                        one.decrementKonnections();
+                        two.decrementKonnections();
+                        one.decrementKonnections();
+                        two.decrementKonnections();
+                    } else if (b.getBondType() == Bond.TRIPLE) {
+                        one.decrementKonnections();
+                        two.decrementKonnections();
+                        one.decrementKonnections();
+                        two.decrementKonnections();
+                        one.decrementKonnections();
+                        two.decrementKonnections();
+                    }
                     temp = b;
                     break;
                 }
@@ -136,6 +158,13 @@ public class GameCanvas extends View implements Serializable {
                 bondArrayList.remove(temp);
             }
             shapeArrayList.remove(currentNode);
+            // must ALSO any bonds konnecting it...
+
+
+
+
+
+
             //currentNode.removeAllNeighborNodes();     // NO! - Konnections are only counted for a SINGLE node, not for the structure as a whole
             invalidate();
         }

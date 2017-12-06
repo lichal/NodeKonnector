@@ -17,7 +17,7 @@ public class LogicTest {
     public void testIfStructuresAreSimilar() throws Exception {
         Structure s1 = new Structure(2);
         Structure s2 = new Structure(2);
-        boolean areSimilar = Structure.areStructuresSimilarEnough(s1.getNodes(), s1.getBonds(), s2.getNodes(), s2.getBonds());
+        boolean areSimilar = Structure.areShapeConfigsSimilar(s1.getNodes(), s1.getBonds(), s2.getNodes(), s2.getBonds());
         System.out.println("Are similar enough?: " + areSimilar);
     }
 

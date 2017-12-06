@@ -275,7 +275,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         trashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                game.deleteCurrent();
+                game.deleteSelectedNode();
             }
         });
 
@@ -293,44 +293,55 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         if (numPlayerKonnectedNodes == answerStructure.getNodes().size()) {
                             // Right number of bonds?...
                             if (game.getBondArrayList().size() == answerStructure.getBonds().size()) {
-                                // Does the player's structure match the answer?
-                                // check All Konnections...
-                                if (Structure.checkAllCircleKonnections(game.getShapeArrayList())) {
-                                    if (Structure.checkAllSquareKonnections(game.getShapeArrayList())) {
-                                        if (Structure.checkAllTriangleKonnections(game.getShapeArrayList())) {
-                                            if (Structure.checkAllHexagonKonnections(game.getShapeArrayList())) {
-                                                if (Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), answerStructure.getNodes(), answerStructure.getBonds())) {
-                                                    gameStat.setText("Congratz!");
-                                                    //gameStat.setTextSize(20f);
-                                                    if(isLoggedIn()) {
-                                                        userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
-                                                        scores += Math.pow(3, level);
-                                                        userData.child(currentUser.getUid()).child("Score").setValue(scores);
-                                                        userData.child(currentUser.getUid()).child("Level").setValue(level);
+                                // Now check the BOND configs...
+                                if (Structure.areBondsSimilar(game.getBondArrayList(), answerStructure.getBonds())) {
+                                    // check All Konnections...
+                                    if (Structure.checkAllCircleKonnections(game.getShapeArrayList())) {
+                                        if (Structure.checkAllSquareKonnections(game.getShapeArrayList())) {
+                                            if (Structure.checkAllTriangleKonnections(game.getShapeArrayList())) {
+                                                if (Structure.checkAllHexagonKonnections(game.getShapeArrayList())) {
+                                                    if (Structure.areShapeConfigsSimilar(game.getShapeArrayList(), answerStructure.getNodes())) {
+                                                        gameStat.setText("Congratz!");
+                                                        // WE NEED To seT the LOCAL COPY OF THEIR SCORE ALSO
+                                                        if(isLoggedIn()) {
+                                                            // WE NEED to compare firebase's values with local values - if they don't match,
+                                                            // set both to the HIGHER of the two.  THEN up the score and level as below...
+                                                            userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
+                                                            scores += Math.pow(3, level);
+                                                            userData.child(currentUser.getUid()).child("Score").setValue(scores);
+                                                            userData.child(currentUser.getUid()).child("Level").setValue(level);
+                                                            // update level and score LOCALLY also...
+                                                        } else {
+                                                            scores += Math.pow(3, level);
+                                                            // up their current level...
+                                                            // SAVE this stuff LOCaLlY so that when they open the app again, the data remains
+                                                        }
+                                                    } else {
+                                                        gameStat.setText("Oops! Shape AMOUNTS don't match!");
                                                     }
                                                 } else {
-                                                    gameStat.setText("WRONG ANSWER!");
+                                                    gameStat.setText("HEXAGONS must have exactly 4 Konnections!");
                                                 }
                                             } else {
-                                                gameStat.setText("HEXAGONS must have exactly 4 Konnections!");
+                                                gameStat.setText("TRIANGLES must have exactly 3 Konnections!");
                                             }
                                         } else {
-                                            gameStat.setText("TRIANGLES must have exactly 3 Konnections!");
+                                            gameStat.setText("SQUARES must have exactly 2 Konnections!");
                                         }
                                     } else {
-                                        gameStat.setText("SQUARES must have exactly 2 Konnections!");
+                                        gameStat.setText("CIRCLES must have exactly 1 Konnection!");
                                     }
                                 } else {
-                                    gameStat.setText("CIRCLES must have exactly 1 Konnection!");
+                                    gameStat.setText("Oops! Bond TYPES don't match!");
                                 }
                             } else {
-                                gameStat.setText("Oops! Look at your BONDS!");
+                                gameStat.setText("Oops! Wrong number of BONDS!");
                             }
                         } else {
                             gameStat.setText("WRONG number of Nodes!");
                         }
                     }else{
-                        gameStat.setText("Structure is BROKEN!");
+                        gameStat.setText("Oops! All nodes must be Konnected to the SAME structure!");
                     }
                 }
 
@@ -378,29 +389,29 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 //        fileStuffs.setText(s);
     }
 
-    public void testStructureList() {
-        // when a fragment is touched, send that level integer to the next screen
-        // the next screen will generate a structure
-        // don't know where this goes, but...
-
-        // pass this value from some screen;
-        int levelNumber = 3;
-        ArrayList<Structure> previousStructures = null;    // steal this from local storage/mobile
-        boolean keepGoing = true;
-        mainLoop:
-        while (keepGoing) {
-            Structure candidate = new Structure(levelNumber);
-            if (previousStructures.size() > 0) {
-                for (Structure previous : previousStructures) {
-                    boolean matchFound = Structure.areStructuresSimilarEnough(candidate.getNodes(), candidate.getBonds(), previous.getNodes(), previous.getBonds());
-                    if (matchFound) {
-                        continue mainLoop;
-                    }
-                }
-            }
-            break;
-        }
-    }
+//    public void testStructureList() {
+//        // when a fragment is touched, send that level integer to the next screen
+//        // the next screen will generate a structure
+//        // don't know where this goes, but...
+//
+//        // pass this value from some screen;
+//        int levelNumber = 3;
+//        ArrayList<Structure> previousStructures = null;    // steal this from local storage/mobile
+//        boolean keepGoing = true;
+//        mainLoop:
+//        while (keepGoing) {
+//            Structure candidate = new Structure(levelNumber);
+//            if (previousStructures.size() > 0) {
+//                for (Structure previous : previousStructures) {
+//                    boolean matchFound = Structure.areShapeConfigsSimilar(candidate.getNodes(), candidate.getBonds(), previous.getNodes(), previous.getBonds());
+//                    if (matchFound) {
+//                        continue mainLoop;
+//                    }
+//                }
+//            }
+//            break;
+//        }
+//    }
 
 
     public ArrayList<Structure> getStorageArrayList() {
