@@ -96,7 +96,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         gameStat = (TextView) findViewById(R.id.gameStat);
         gameStat.setText("Total Nodes:  " + level);
-        gameStat.setTextColor(Color.WHITE);
+        gameStat.setTextColor(Color.rgb(255,165,00));
         gameStat.setTextSize(20f);
         scores = 0;
 
@@ -279,6 +279,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             }
         });
 
+
+        // also need to verify number of konnections...
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -289,28 +291,40 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     if(numPlayerKonnectedNodes == game.getShapeArrayList().size()){
                         // does the player's number of nodes match the answer num of nodes?
                         if (numPlayerKonnectedNodes == answerStructure.getNodes().size()) {
-                            // Does the player's structure match the answer?
-                            if (Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), answerStructure.getNodes(), answerStructure.getBonds())) {
-                                gameStat.setText("Congratz!");
-                                gameStat.setTextColor(Color.WHITE);
-                                gameStat.setTextSize(20f);
-                                if(isLoggedIn()) {
-                                    userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
-                                    scores += Math.pow(3, level);
-                                    userData.child(currentUser.getUid()).child("Score").setValue(scores);
-                                    userData.child(currentUser.getUid()).child("Level").setValue(level);
-
-
-
-
-
-
-
-
-
+                            // Right number of bonds?...
+                            if (game.getBondArrayList().size() == answerStructure.getBonds().size()) {
+                                // Does the player's structure match the answer?
+                                // check All Konnections...
+                                if (Structure.checkAllCircleKonnections(game.getShapeArrayList())) {
+                                    if (Structure.checkAllSquareKonnections(game.getShapeArrayList())) {
+                                        if (Structure.checkAllTriangleKonnections(game.getShapeArrayList())) {
+                                            if (Structure.checkAllHexagonKonnections(game.getShapeArrayList())) {
+                                                if (Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), answerStructure.getNodes(), answerStructure.getBonds())) {
+                                                    gameStat.setText("Congratz!");
+                                                    //gameStat.setTextSize(20f);
+                                                    if(isLoggedIn()) {
+                                                        userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
+                                                        scores += Math.pow(3, level);
+                                                        userData.child(currentUser.getUid()).child("Score").setValue(scores);
+                                                        userData.child(currentUser.getUid()).child("Level").setValue(level);
+                                                    }
+                                                } else {
+                                                    gameStat.setText("WRONG ANSWER!");
+                                                }
+                                            } else {
+                                                gameStat.setText("HEXAGONS must have exactly 4 Konnections!");
+                                            }
+                                        } else {
+                                            gameStat.setText("TRIANGLES must have exactly 3 Konnections!");
+                                        }
+                                    } else {
+                                        gameStat.setText("SQUARES must have exactly 2 Konnections!");
+                                    }
+                                } else {
+                                    gameStat.setText("CIRCLES must have exactly 1 Konnection!");
                                 }
                             } else {
-                                gameStat.setText("Fail! Think harder!");
+                                gameStat.setText("Oops! Look at your BONDS!");
                             }
                         } else {
                             gameStat.setText("WRONG number of Nodes!");
@@ -327,6 +341,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         String filename = "userProgress123";
         userProgress = new File(getFilesDir(), filename);
     }
+
+
+
 
     // use these to save the state of the game
     public void writeToFile(View view) {

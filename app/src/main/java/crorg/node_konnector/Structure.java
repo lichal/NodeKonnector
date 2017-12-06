@@ -328,25 +328,73 @@ public class Structure implements Serializable {
         }
 
         // Now compare bonds...
-        int structure1Singles = 0;
-        int structure1Doubles = 0;
-        int structure1Triples = 0;
-        int structure2Singles = 0;
-        int structure2Doubles = 0;
-        int structure2Triples = 0;
-        for (int i = 0; i < size1; i++) {
-            structure1Singles += (bonds1.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
-            structure1Doubles += (bonds1.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
-            structure1Triples += (bonds1.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
-            structure2Singles += (bonds2.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
-            structure2Doubles += (bonds2.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
-            structure2Triples += (bonds2.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
-        }
+//        int structure1Singles = 0;
+//        int structure1Doubles = 0;
+//        int structure1Triples = 0;
+//        int structure2Singles = 0;
+//        int structure2Doubles = 0;
+//        int structure2Triples = 0;
+//        int sizeBonds1 = bonds1.size();
+//        int sizeBonds2 = bonds2.size();
+//        for (int i = 0; i < sizeBonds1; i++) {
+//            structure1Singles += (bonds1.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
+//            structure1Doubles += (bonds1.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
+//            structure1Triples += (bonds1.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
+//        }
+//        for (int i = 0; i < sizeBonds2; i++) {
+//            structure2Singles += (bonds2.get(i).getBondType() == Bond.SINGLE ? 1 : 0);
+//            structure2Doubles += (bonds2.get(i).getBondType() == Bond.DOUBLE ? 1 : 0);
+//            structure2Triples += (bonds2.get(i).getBondType() == Bond.TRIPLE ? 1 : 0);
+//        }
+//        // Return result...
+//        if ((structure1Singles != structure2Singles) || (structure1Doubles != structure2Doubles)
+//                || (structure1Triples != structure2Triples)) {
+//            return false;
+//        }
+        return true;
+    }
 
-        // Return result...
-        if ((structure1Singles != structure2Singles) || (structure1Doubles != structure2Doubles)
-                || (structure1Triples != structure2Triples)) {
-            return false;
+
+    public static boolean checkAllCircleKonnections(ArrayList<Node> playerNodes) {
+        for (Node n : playerNodes) {
+            if (n instanceof Circle) {
+                if (n.getNumberOfKonnections() != 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkAllSquareKonnections(ArrayList<Node> playerNodes) {
+        for (Node n : playerNodes) {
+            if (n instanceof Square) {
+                if (n.getNumberOfKonnections() != 2) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkAllTriangleKonnections(ArrayList<Node> playerNodes) {
+        for (Node n : playerNodes) {
+            if (n instanceof Triangle) {
+                if (n.getNumberOfKonnections() != 3) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkAllHexagonKonnections(ArrayList<Node> playerNodes) {
+        for (Node n : playerNodes) {
+            if (n instanceof Hexagon) {
+                if (n.getNumberOfKonnections() != 4) {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -410,15 +458,15 @@ public class Structure implements Serializable {
             }
         }
 
-            if (numSingleBonds > 0) {
-                message += "Single Bonds: " + numSingleBonds;
-            }
-            if (numDoubleBonds > 0) {
-                message += "\nDouble Bonds: " + numDoubleBonds;
-            }
-            if (numTripleBonds > 0) {
-                message += "\nTriple Bonds: " + numTripleBonds;
-            }
+        if (numSingleBonds > 0) {
+            message += "# Of Single Bonds:  " + numSingleBonds;
+        }
+        if (numDoubleBonds > 0) {
+            message += "\n# Of Double Bonds:  " + numDoubleBonds;
+        }
+        if (numTripleBonds > 0) {
+            message += "\n# Of Triple Bonds:  " + numTripleBonds;
+        }
         return message;
     }
 
