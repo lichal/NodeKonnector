@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import crorg.node_konnector.Bond;
 import crorg.node_konnector.Node;
@@ -125,15 +126,24 @@ public class GameCanvas extends View implements Serializable {
     public void deleteSelectedNode(){
         // case 1:  delete a node = remove all bonds konnected to it, decrement konnections (make SURE if it's a triple bond, etc. that you get rid of THREE konnections for BOTH nodes!) for other nodes
         Bond temp = null;
+        Bond temp2 = null;
+        Bond temp3 = null;
+        Bond temp4 = null;
+
         Node one = null;
         Node two = null;
+
         if(currentNode!=null){
+            ArrayList<Bond> tempBondToDelete = new ArrayList<Bond>();
+
             for(Bond b: bondArrayList){
                 if ((b.getNode1() == currentNode) || (b.getNode2() == currentNode)) {
-                    one = (b.getNode1() == currentNode) ? currentNode : b.getNode2();
-                    two = (b.getNode1() == currentNode) ? currentNode : b.getNode2();
-                    one.removeNeighborNode(two);
+                    one = b.getNode1();
+//                    (b.getNode1() == currentNode) ? currentNode : b.getNode2();
+                    two = b.getNode2();
+//                    (b.getNode1() == currentNode) ? currentNode : b.getNode2();
                     two.removeNeighborNode(one);
+                    one.removeNeighborNode(two);
                     if (b.getBondType() == Bond.SINGLE) {
                         one.decrementKonnections();
                         two.decrementKonnections();
@@ -150,22 +160,27 @@ public class GameCanvas extends View implements Serializable {
                         one.decrementKonnections();
                         two.decrementKonnections();
                     }
-                    temp = b;
-                    break;
+                    if(b!=null)
+                        tempBondToDelete.add(b);
+                    for(Node neighbors: shapeArrayList){
+                        if(neighbors!=currentNode)
+                            neighbors.removeNeighborNode(currentNode);
+                    }
                 }
             }
-            if(temp != null) {
-                bondArrayList.remove(temp);
+
+
+            for(Bond delete:tempBondToDelete){
+                bondArrayList.remove(delete);
             }
+            tempBondToDelete.clear();
+
             shapeArrayList.remove(currentNode);
+            selectedNode1=null;
+            selectedNode2=null;
             // must ALSO any bonds konnecting it...
 
-
-
-
-
-
-            //currentNode.removeAllNeighborNodes();     // NO! - Konnections are only counted for a SINGLE node, not for the structure as a whole
+//            currentNode.removeAllNeighborNodes();     // NO! - Konnections are only counted for a SINGLE node, not for the structure as a whole
             invalidate();
         }
     }

@@ -382,7 +382,7 @@ public class Structure implements Serializable {
         return true;
     }
 
-    public static boolean checkAllTriangleKonnections(ArrayList<Node> playerNodes) {
+    public static boolean checkAllTriangleKonnections(ArrayList<Node> playerNodes){
         for (Node n : playerNodes) {
             if (n instanceof Triangle) {
                 if (n.getNumberOfKonnections() != 3) {
