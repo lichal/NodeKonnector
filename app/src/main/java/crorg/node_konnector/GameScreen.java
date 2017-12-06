@@ -67,7 +67,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private File userProgress;  // local storage of user progress
 
-    private Structure gameStruct;    // the logic holding the answer for a given level
+    private Structure answerStructure;    // the logic holding the answer for a given level
 
     private DrawPath drawShape;
 
@@ -92,10 +92,10 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         dragType = 0;
 
-        level = Integer.parseInt(message);
+        level = 1 + Integer.parseInt(message);
 
         gameStat = (TextView) findViewById(R.id.gameStat);
-        gameStat.setText("Node " + (level+1));
+        gameStat.setText("Total Nodes:  " + level);
         gameStat.setTextColor(Color.WHITE);
         gameStat.setTextSize(20f);
         scores = 0;
@@ -103,24 +103,24 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // new game structure
-        gameStruct = new Structure(Integer.parseInt(message)+1);
+        answerStructure = new Structure(Integer.parseInt(message)+1);
 
         // draw shape holds different shape to be show on canvas
         drawShape = new DrawPath();
 
         // display the game info
-        gameStruct.displayStringDescriptionForPlayer();
+        answerStructure.displayStringDescriptionForPlayer();
 
         // associate game canvas
         game = (GameCanvas) findViewById(R.id.gameCanvas);
 
         numBonds = (TextView) findViewById(R.id.numBonds);
-        numBonds.setText(gameStruct.printNumBonds());
+        numBonds.setText(answerStructure.printNumBonds());
         numBonds.setTextColor(Color.WHITE);
         numBonds.setTextSize(20f);
 
         numShapes = (TextView) findViewById(R.id.numShapes);
-        numShapes.setText(gameStruct.printNumShapes());
+        numShapes.setText(answerStructure.printNumShapes());
         numShapes.setTextColor(Color.WHITE);
         numShapes.setTextSize(20f);
 
@@ -284,25 +284,39 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 ArrayList <Node> allFriendKonnections = new ArrayList<Node>();
                 if(game.getShapeArrayList().size() > 0) {
-                    int number = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
-                    if(number != game.getShapeArrayList().size()){
+                    int numPlayerKonnectedNodes = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
+                    // Is the player's structure intact?
+                    if(numPlayerKonnectedNodes == game.getShapeArrayList().size()){
+                        // does the player's number of nodes match the answer num of nodes?
+                        if (numPlayerKonnectedNodes == answerStructure.getNodes().size()) {
+                            // Does the player's structure match the answer?
+                            if (Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), answerStructure.getNodes(), answerStructure.getBonds())) {
+                                gameStat.setText("Congratz!");
+                                gameStat.setTextColor(Color.WHITE);
+                                gameStat.setTextSize(20f);
+                                if(isLoggedIn()) {
+                                    userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
+                                    scores += Math.pow(3, level);
+                                    userData.child(currentUser.getUid()).child("Score").setValue(scores);
+                                    userData.child(currentUser.getUid()).child("Level").setValue(level);
 
-                    }else{
-                        //boolean test = structure.matchesStructure(game.getShapeArrayList(), game.getBondArrayList());
-                        boolean test = Structure.areStructuresSimilarEnough(game.getShapeArrayList(), game.getBondArrayList(), gameStruct.getNodes(), gameStruct.getBonds());
-                        if (test){
-                            gameStat.setText("Congratz!");
-                            gameStat.setTextColor(Color.WHITE);
-                            gameStat.setTextSize(20f);
-                            if(isLoggedIn()) {
-                                userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
-                                scores += Math.pow(3, level+1);
-                                userData.child(currentUser.getUid()).child("Score").setValue(scores);
-                                userData.child(currentUser.getUid()).child("Level").setValue(level+1);
+
+
+
+
+
+
+
+
+                                }
+                            } else {
+                                gameStat.setText("Fail! Think harder!");
                             }
-                        }else if (!test){
-                            gameStat.setText("Fail! Think harder!");
+                        } else {
+                            gameStat.setText("WRONG number of Nodes!");
                         }
+                    }else{
+                        gameStat.setText("Structure is BROKEN!");
                     }
                 }
 

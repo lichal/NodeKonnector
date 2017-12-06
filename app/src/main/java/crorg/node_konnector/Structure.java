@@ -32,12 +32,12 @@ public class Structure implements Serializable {
             randomlyRemoveRandomNumBondsFromStructure();
             fixAnyOverkonnectedNodes();
             randomizeBondTypes();
-            displayStringDescriptionForPlayer();
+            //displayStringDescriptionForPlayer();
 
             // if the generated structure does NOT work (is not INTACT), then just keep
             // generating a new one until it works
             System.out.println("Is Structure INTACT?: " + isStrutureIntact());
-            displayStructureInfoForDebugging();
+            //displayStructureInfoForDebugging();
         } else {
             throw new IllegalArgumentException();
         }
@@ -297,7 +297,7 @@ public class Structure implements Serializable {
         for (int i = 0; i < Logic.NUM_TOTAL_SHAPES; i++) {
             int count = 0;
             for (Node n : nodesList) {
-                if (n.getNumberOfKonnections() == 1 + i) {
+                if (n.getNumberOfKonnections() == (1 + i)) {
                     count++;
                 }
             }
@@ -383,12 +383,15 @@ public class Structure implements Serializable {
 
     public String printNumShapes(){
         String message = "";
-
         ArrayList<Integer> answerShapes = Structure.getRelativeShapesCount(nodes);
-        for (Integer i : answerShapes) {
-            message += "Shape: " + i + "\n";
+        for (int i = 0; i < answerShapes.size(); i++) {
+            String type = "";
+            type += (i == 0) ? "'A'" : "";
+            type += (i == 1) ? "'B'" : "";
+            type += (i == 2) ? "'C'" : "";
+            type += (i == 3) ? "'D'" : "";
+            message += "# Of Shape " + type + ":  " + String.valueOf(answerShapes.get(i).intValue()) + "\n";
         }
-
         return message;
     }
 
