@@ -90,6 +90,11 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private File userNodes_FILE;
     private File answerStructure_FILE;
 
+    // primitive data only
+    private File userScore_FILE;
+    private File userLevel_FILE;
+
+
     private int lastLevelPlayed;
 
     private DatabaseReference userData;
@@ -105,7 +110,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         //Log.v("MESSAGE#45689", "Before content view...");
         setContentView(R.layout.activity_game_screen);
-        Log.v("MESSAGE#45689", "AFTER content view");
+        //Log.v("MESSAGE#45689", "AFTER content view");
 
 
         // intent gets the level selected
@@ -153,39 +158,55 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         userBonds_FILE = new File(getFilesDir(), uBondsFile);
         userNodes_FILE = new File(getFilesDir(), uNodesFile);
         answerStructure_FILE = new File(getFilesDir(), answerStructureFile);
+        userScore_FILE = new File(getFilesDir(), "userScore_File");
+        userLevel_FILE = new File(getFilesDir(), "userLevel_File");
+
         userBonds_LIST = null;
         userNodes_LIST = null;
         answerStructure = null;
-        readFromFileSerial();
+        //readFromFileSerial();
+        answerStructure = new Structure(level);
+
+
+
+        // TEMPORARILY delete these...
+        //userBonds_FILE.delete();
+        //userNodes_FILE.delete();
+        //answerStructure_FILE.delete();
 
         // IF everything checks out, then load info locally from file...
 
-        if (userBonds_LIST != null) {
-            if (userNodes_LIST != null) {
-                if (answerStructure != null) {
-                    if (level == answerStructure.getNodes().size()) {
-                        Log.v("MESSAGE#45689", "DATA FROM FILES LOADED... recreating structure...");
-                        game.setNodesArrayList(userNodes_LIST);
-                        Log.v("MESSAGE#45689", "after set node");
-                        game.setBondArrayList(userBonds_LIST);
-                        Log.v("MESSAGE#45689", "after set bond");
-                        game.invalidate();
-                        Log.v("MESSAGE#45689", "after repaint");
-                    } else {
-                        Log.v("MESSAGE#45689", "level not the same as answer");
-                        Log.v("MESSAGE#45689", "Creating new structure...");
-                        // new game structure
-                        answerStructure = new Structure(level);
-                    }
-                } else {
-                    Log.v("MESSAGE#45689", "answer structure is null!");
-                }
-            } else {
-                Log.v("MESSAGE#45689", "nodes list is null!");
-            }
-        } else {
-            Log.v("MESSAGE#45689", "bonds list is null!");
-        }
+//        if (userBonds_LIST != null) {
+//            if (userNodes_LIST != null) {
+//                if (answerStructure != null) {
+//                    if (level == answerStructure.getNodes().size()) {
+//                        Log.v("MESSAGE#45689", "DATA FROM FILES LOADED... recreating structure...");
+//                        game.setNodesArrayList(userNodes_LIST);
+//                        Log.v("MESSAGE#45689", "after set node");
+//                        game.setBondArrayList(userBonds_LIST);
+//                        Log.v("MESSAGE#45689", "after set bond");
+//                        game.invalidate();
+//                        Log.v("MESSAGE#45689", "after repaint");
+//                    } else {
+//                        Log.v("MESSAGE#45689", "level not the same as answer");
+//                        Log.v("MESSAGE#45689", "Creating new structure...");
+//                        answerStructure = new Structure(level);
+//                    }
+//                } else {
+//                    Log.v("MESSAGE#45689", "answer structure is null!");
+//                    Log.v("MESSAGE#45689", "Creating new structure...");
+//                    answerStructure = new Structure(level);
+//                }
+//            } else {
+//                Log.v("MESSAGE#45689", "nodes list is null!");
+//                Log.v("MESSAGE#45689", "Creating new structure...");
+//                answerStructure = new Structure(level);
+//            }
+//        } else {
+//            Log.v("MESSAGE#45689", "bonds list is null!");
+//            Log.v("MESSAGE#45689", "Creating new structure...");
+//            answerStructure = new Structure(level);
+//        }
 
 
 
@@ -246,17 +267,17 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         tripleButton.setText("Triple");
 
 
-        game.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-//                if(game.getChangeState()){
-                    writeToFileSerial();
-//                }
-                //game.setIsDrawingUpdated(true);
-                //return false;
-                return false;
-            }
-        });
+//        game.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+////                if(game.getChangeState()){
+//                    //writeToFileSerial();
+////                }
+//                //game.setIsDrawingUpdated(true);
+//                //return false;
+//                return false;
+//            }
+//        });
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -442,7 +463,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 game.deleteSelectedNode();
-                writeToFileSerial();
             }
         });
 
@@ -524,19 +544,54 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
 
     // use these to save the state of the game
-    public void writeToFile(View view) {
+    public void nonSerialWriteToFile(View view) {
         String textToDisplay = "hello, boyo!";
         FileOutputStream outputStream;
+
+        // save user score...
         try {
-            outputStream = openFileOutput(userBonds_FILE.getName(), Context.MODE_PRIVATE);
-            outputStream.write(textToDisplay.getBytes());
+            outputStream = openFileOutput(userScore_FILE.getName(), Context.MODE_PRIVATE);
+            outputStream.write(scores);
             outputStream.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // save user level
+        try {
+            outputStream = openFileOutput(userLevel_FILE.getName(), Context.MODE_PRIVATE);
+            outputStream.write(level);
+            outputStream.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
+    //
     // use these to save the current state of the level...
     public void writeToFileSerial() {
         // write player bonds to file...
@@ -678,7 +733,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             answerStructure = (Structure) ois.readObject();
             ois.close();
             fis.close();
-            Log.v("MESSAGE#45689", "Answer structure from file loaded successfully!");
+            Log.v("MESSAGE#45689", "Answer structure from file loaded successfully! Details: " + answerStructure.printNumBonds());
+
         } catch (FileNotFoundException ff) {
             Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
         } catch (SecurityException ff) {
@@ -703,17 +759,59 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     }
 
 
-    public void readFromFileThing(View view) {
+    public void nonSerialReadFromFile(View view) {
         FileInputStream inputStream;
-        String s = "";
+//        String s = "";
+//        try {
+//            inputStream = openFileInput(userBonds_FILE.getName());
+//            int nextByte = 0;
+//            while (nextByte != -1) {
+//                nextByte = inputStream.read();
+//                s += (char) nextByte;
+//            }
+//            inputStream.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        // get user level
         try {
-            inputStream = openFileInput(userBonds_FILE.getName());
-            int nextByte = 0;
-            while (nextByte != -1) {
-                nextByte = inputStream.read();
-                s += (char) nextByte;
-            }
+            inputStream = openFileInput(userLevel_FILE.getName());
+            level = inputStream.read();
             inputStream.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // get user scores
+        try {
+            inputStream = openFileInput(userScore_FILE.getName());
+            scores = inputStream.read();
+            inputStream.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
