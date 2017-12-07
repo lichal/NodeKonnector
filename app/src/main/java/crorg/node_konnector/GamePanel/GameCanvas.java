@@ -68,7 +68,7 @@ public class GameCanvas extends View implements Serializable {
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        Log.v("MESSAGE#45689", "After super method in game canvas...");
+        //Log.v("MESSAGE#45689", "After super method in game canvas...");
 
         shapeArrayList = new ArrayList<Node>();
 
@@ -104,7 +104,7 @@ public class GameCanvas extends View implements Serializable {
         paint5.setStrokeWidth(5);
         paint5.setColor(Color.DKGRAY);
 
-        Log.v("MESSAGE#45689", "Game canvas: LOADED...");
+        //Log.v("MESSAGE#45689", "Game canvas: LOADED...");
 
     }
 
@@ -150,7 +150,9 @@ public class GameCanvas extends View implements Serializable {
     }
 
     public void setNodesArrayList(ArrayList<Node> newNodes) {
+        Log.v("MESSAGE#45689", "Assigning file nodes to user current nodes...");
         shapeArrayList = newNodes;
+        Log.v("MESSAGE#45689", "... Success. Nodes assigned!");
     }
 
 

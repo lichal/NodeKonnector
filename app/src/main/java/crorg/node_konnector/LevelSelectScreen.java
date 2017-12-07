@@ -43,9 +43,9 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     public void onListFragmentInteraction(LevelContent.LevelItem item) {
         Intent intent = new Intent(this, GameScreen.class);
         intent.putExtra(LEVEL_MESSAGE, item.id);
-        Log.v("MESSAGE#45689", "BEFORE sending intent...ItemID: " + item.id);
+        //Log.v("MESSAGE#45689", "BEFORE sending intent...ItemID: " + item.id);
         startActivity(intent);
-        Log.v("MESSAGE#45689", "AFER sending intent...");
+        //Log.v("MESSAGE#45689", "AFER sending intent...");
     }
 
 

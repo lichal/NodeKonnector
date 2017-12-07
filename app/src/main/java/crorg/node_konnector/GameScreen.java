@@ -37,7 +37,9 @@ import java.io.InvalidClassException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
@@ -101,9 +103,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v("MESSAGE#45689", "Before content view...");
+        //Log.v("MESSAGE#45689", "Before content view...");
         setContentView(R.layout.activity_game_screen);
-        Log.v("MESSAGE#45689", "AFTER content view");
+        //Log.v("MESSAGE#45689", "AFTER content view");
 
 
         // intent gets the level selected
@@ -158,21 +160,40 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         // IF everything checks out, then load info locally from file...
 
-        if ((userBonds_LIST != null) && (userNodes_LIST != null)
-                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
-            Log.v("MESSAGE#45689", "load");
-            game.setNodesArrayList(userNodes_LIST);
-            Log.v("MESSAGE#45689", "after set node");
-            game.setBondArrayList(userBonds_LIST);
-            Log.v("MESSAGE#45689", "after set bond");
-            game.invalidate();
-            Log.v("MESSAGE#45689", "after repaint");
-
+        if (userBonds_LIST != null) {
+            if (userNodes_LIST != null) {
+                if (answerStructure != null) {
+                    if (level == answerStructure.getNodes().size()) {
+                        Log.v("MESSAGE#45689", "DATA FROM FILES LOADED... recreating structure...");
+                        game.setNodesArrayList(userNodes_LIST);
+                        Log.v("MESSAGE#45689", "after set node");
+                        game.setBondArrayList(userBonds_LIST);
+                        Log.v("MESSAGE#45689", "after set bond");
+                        game.invalidate();
+                        Log.v("MESSAGE#45689", "after repaint");
+                    } else {
+                        Log.v("MESSAGE#45689", "level not the same as answer");
+                        Log.v("MESSAGE#45689", "Creating new structure...");
+                        // new game structure
+                        answerStructure = new Structure(level);
+                    }
+                } else {
+                    Log.v("MESSAGE#45689", "answer structure is null!");
+                }
+            } else {
+                Log.v("MESSAGE#45689", "nodes list is null!");
+            }
         } else {
-            Log.v("MESSAGE#45689", "new structure");
-            // new game structure
-            answerStructure = new Structure(level);
+            Log.v("MESSAGE#45689", "bonds list is null!");
         }
+
+
+
+
+
+
+
+
 
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
@@ -597,6 +618,25 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             userNodes_LIST = (ArrayList<Node>) ois.readObject();
             ois.close();
             fis.close();
+            Log.v("MESSAGE#45689", "User nodes loaded successfully!");
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (StreamCorruptedException ff) {
+            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
+        } catch (ClassNotFoundException ff) {
+            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
+        } catch (OptionalDataException ff) {
+            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -608,6 +648,25 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             userBonds_LIST = (ArrayList<Bond>) ois.readObject();
             ois.close();
             fis.close();
+            Log.v("MESSAGE#45689", "User bonds loaded successfully!");
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (StreamCorruptedException ff) {
+            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
+        } catch (ClassNotFoundException ff) {
+            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
+        } catch (OptionalDataException ff) {
+            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -619,6 +678,25 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             answerStructure = (Structure) ois.readObject();
             ois.close();
             fis.close();
+            Log.v("MESSAGE#45689", "Answer structure from file loaded successfully!");
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (StreamCorruptedException ff) {
+            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
+        } catch (ClassNotFoundException ff) {
+            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
+        } catch (OptionalDataException ff) {
+            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
