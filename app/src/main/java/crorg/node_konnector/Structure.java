@@ -1,11 +1,13 @@
 package crorg.node_konnector;
 
 import android.graphics.Color;
+import android.support.v7.app.NotificationCompat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Random;
 
 import crorg.node_konnector.Shapes.Circle;
@@ -262,33 +264,7 @@ public class Structure implements Serializable {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//    // shows the sorted relative number of shapes the USER currently has drawn
-//    private static ArrayList<Integer> getUserRelativeShapesCount(ArrayList<Node> nodesList) {
-//        int[] relativeNumbers = {0, 0, 0, 0};
-//        for (Node n : nodesList) {
-//            if (n instanceof Circle) {
-//                relativeNumbers[0]++;
-//            }
-//            if (n instanceof Square) {
-//                relativeNumbers[1]++;
-//            }
-//            if (n instanceof Triangle) {
-//                relativeNumbers[2]++;
-//            }
-//            if (n instanceof Hexagon) {
-//                relativeNumbers[3]++;
-//            }
-//        }
-//        Arrays.sort(relativeNumbers);
-//        ArrayList<Integer> relativeNumbers2 = new ArrayList<Integer>();
-//        for (int i = 0; i < relativeNumbers.length; i++) {
-//            int number = relativeNumbers[i];
-//            if (number > 0) {
-//                relativeNumbers2.add(number);
-//            }
-//        }
-//        return relativeNumbers2;
-//    }
+
 
 
     // shows the SORTED relative number of shapes the given structure has
@@ -403,6 +379,72 @@ public class Structure implements Serializable {
         }
         return true;
     }
+
+
+    public static String printShapeType(Node node) {
+        String s = "";
+        s += (node instanceof Circle) ? "Circle" : "";
+        s += (node instanceof Square) ? "Square" : "";
+        s += (node instanceof Triangle) ? "Triangle" : "";
+        s += (node instanceof Hexagon) ? "Hexagon" : "";
+        return s;
+    }
+
+
+
+    public static void deleteGivenNode(Node nodeToRemove, ArrayList<Bond> playerBonds, ArrayList<Node> playerNodes, Node currentNode, Node selectedNode1, Node selectedNode2) {
+        ArrayList<Bond> bondsToRemove = new ArrayList<Bond>();
+        System.out.println("Got into delete method!");
+        for (Bond b : playerBonds) {
+            System.out.println("Here is a bond!");
+            String nodeToRemoveType = "NodeToRemoveType= " + Structure.printShapeType(nodeToRemove);
+            String selectedNode1Type = "SelectedNode1Type= " + Structure.printShapeType(selectedNode1);
+            String selectedNode2Type = "SelectedNode2Type= " + Structure.printShapeType(selectedNode2);
+            String currentNodeType = "CurrentNodeType= " + Structure.printShapeType(currentNode);
+            System.out.print(nodeToRemoveType + "\t" + currentNodeType + "\t" + selectedNode1Type + "\t" + selectedNode2Type);
+
+
+            if ((b.getNode1() == nodeToRemove) || (b.getNode2() == nodeToRemove)) {
+                bondsToRemove.add(b);
+                System.out.println("Found a bond to remove!");
+                Node one = b.getNode1();
+                Node two = b.getNode2();
+
+                // remove neighbors, update the konnections
+                one.removeNeighborNode(two);
+                two.removeNeighborNode(one);
+                if (b.getBondType() == Bond.SINGLE) {
+                    one.decrementKonnections();
+                    two.decrementKonnections();
+                } else if (b.getBondType() == Bond.DOUBLE) {
+                    one.decrementKonnections();
+                    two.decrementKonnections();
+                    one.decrementKonnections();
+                    two.decrementKonnections();
+                } else if (b.getBondType() == Bond.TRIPLE) {
+                    one.decrementKonnections();
+                    two.decrementKonnections();
+                    one.decrementKonnections();
+                    two.decrementKonnections();
+                    one.decrementKonnections();
+                    two.decrementKonnections();
+                } else {
+                }
+                //if(b != null)
+                 //   bondsToRemove.add(b);
+            }
+        }
+
+        // Now remove bond from player list and node from shapes list
+        for (Bond removeBonds : bondsToRemove) {
+            playerBonds.remove(removeBonds);
+            System.out.println("removing a bond!");
+        }
+        playerNodes.remove(nodeToRemove);
+        bondsToRemove.clear();
+    }
+
+
 
 
     public void displayStringDescriptionForPlayer() {

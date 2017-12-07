@@ -18,6 +18,7 @@ import java.util.Iterator;
 import crorg.node_konnector.Bond;
 import crorg.node_konnector.Node;
 import crorg.node_konnector.Scaler;
+import crorg.node_konnector.Structure;
 
 /**
  * Created by Cheng on 11/27/17.
@@ -122,67 +123,89 @@ public class GameCanvas extends View implements Serializable {
         return (int)(getHeight()*0.1);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     // we should separate these - deleting a node for one button, deleting a bond for another (deleting a bond means selecting the two nodes to delete it from, then hitting the button
     public void deleteSelectedNode(){
-        // case 1:  delete a node = remove all bonds konnected to it, decrement konnections (make SURE if it's a triple bond, etc. that you get rid of THREE konnections for BOTH nodes!) for other nodes
-        Bond temp = null;
-        Bond temp2 = null;
-        Bond temp3 = null;
-        Bond temp4 = null;
-
-        Node one = null;
-        Node two = null;
-
-        if(currentNode!=null){
-            ArrayList<Bond> tempBondToDelete = new ArrayList<Bond>();
-
-            for(Bond b: bondArrayList){
-                if ((b.getNode1() == currentNode) || (b.getNode2() == currentNode)) {
-                    one = b.getNode1();
-//                    (b.getNode1() == currentNode) ? currentNode : b.getNode2();
-                    two = b.getNode2();
-//                    (b.getNode1() == currentNode) ? currentNode : b.getNode2();
-                    two.removeNeighborNode(one);
-                    one.removeNeighborNode(two);
-                    if (b.getBondType() == Bond.SINGLE) {
-                        one.decrementKonnections();
-                        two.decrementKonnections();
-                    } else if (b.getBondType() == Bond.DOUBLE) {
-                        one.decrementKonnections();
-                        two.decrementKonnections();
-                        one.decrementKonnections();
-                        two.decrementKonnections();
-                    } else if (b.getBondType() == Bond.TRIPLE) {
-                        one.decrementKonnections();
-                        two.decrementKonnections();
-                        one.decrementKonnections();
-                        two.decrementKonnections();
-                        one.decrementKonnections();
-                        two.decrementKonnections();
-                    }
-                    if(b!=null)
-                        tempBondToDelete.add(b);
-                    for(Node neighbors: shapeArrayList){
-                        if(neighbors!=currentNode)
-                            neighbors.removeNeighborNode(currentNode);
-                    }
-                }
-            }
-
-
-            for(Bond delete:tempBondToDelete){
-                bondArrayList.remove(delete);
-            }
-            tempBondToDelete.clear();
-
-            shapeArrayList.remove(currentNode);
-            selectedNode1=null;
-            selectedNode2=null;
-            // must ALSO any bonds konnecting it...
-
-//            currentNode.removeAllNeighborNodes();     // NO! - Konnections are only counted for a SINGLE node, not for the structure as a whole
+        if (currentNode != null) {
+            Structure.deleteGivenNode(currentNode, bondArrayList, shapeArrayList, currentNode, selectedNode1, selectedNode2);
+            selectedNode1 = null;
+            selectedNode2 = null;
+            currentNode = null;
             invalidate();
         }
+
+
+
+//        // case 1:  delete a node = remove all bonds konnected to it, decrement konnections (make SURE if it's a triple bond, etc. that you get rid of THREE konnections for BOTH nodes!) for other nodes
+//        Bond temp = null;
+//        Bond temp2 = null;
+//        Bond temp3 = null;
+//        Bond temp4 = null;
+//
+//        Node one = null;
+//        Node two = null;
+//
+//        if(currentNode!=null){
+//            ArrayList<Bond> tempBondToDelete = new ArrayList<Bond>();
+//
+//            for(Bond b: bondArrayList){
+//                if ((b.getNode1() == currentNode) || (b.getNode2() == currentNode)) {
+//                    one = b.getNode1();
+////                    (b.getNode1() == currentNode) ? currentNode : b.getNode2();
+//                    two = b.getNode2();
+////                    (b.getNode1() == currentNode) ? currentNode : b.getNode2();
+//                    two.removeNeighborNode(one);
+//                    one.removeNeighborNode(two);
+//                    if (b.getBondType() == Bond.SINGLE) {
+//                        one.decrementKonnections();
+//                        two.decrementKonnections();
+//                    } else if (b.getBondType() == Bond.DOUBLE) {
+//                        one.decrementKonnections();
+//                        two.decrementKonnections();
+//                        one.decrementKonnections();
+//                        two.decrementKonnections();
+//                    } else if (b.getBondType() == Bond.TRIPLE) {
+//                        one.decrementKonnections();
+//                        two.decrementKonnections();
+//                        one.decrementKonnections();
+//                        two.decrementKonnections();
+//                        one.decrementKonnections();
+//                        two.decrementKonnections();
+//                    }
+//                    if(b!=null)
+//                        tempBondToDelete.add(b);
+//                    for(Node neighbors: shapeArrayList){
+//                        if(neighbors!=currentNode)
+//                            neighbors.removeNeighborNode(currentNode);
+//                    }
+//                }
+//            }
+//
+//
+//            for(Bond delete:tempBondToDelete){
+//                bondArrayList.remove(delete);
+//            }
+//            tempBondToDelete.clear();
+//
+//            shapeArrayList.remove(currentNode);
+//            selectedNode1=null;
+//            selectedNode2=null;
+//            // must ALSO any bonds konnecting it...
+//
+////            currentNode.removeAllNeighborNodes();     // NO! - Konnections are only counted for a SINGLE node, not for the structure as a whole
+//            invalidate();
+//        }
     }
 
     @Override
@@ -193,10 +216,24 @@ public class GameCanvas extends View implements Serializable {
 
         switch (action){
             case MotionEvent.ACTION_DOWN:
+                currentNode = null;
+                selectedNode1 = null;
+                selectedNode2 = null;
+
+
+                for (Node k : shapeArrayList) {
+                    if(k.checkSelect(x, y)){
+                        currentNode = k;
+                        break;
+                    }
+                }
+
+
                 if(!bondingMode) {
                     for (Node k : shapeArrayList) {
                         if(k.checkSelect(x, y)){
                             currentNode = k;
+                            break;
                         }
                     }
                 }
@@ -206,11 +243,13 @@ public class GameCanvas extends View implements Serializable {
                         if(k.checkSelect(x, y)) {
                             if (numSelect == 0) {
                                 selectedNode1 = k;
+                                currentNode = k;
                                 numSelect++;
                             }
                             if (numSelect == 1) {
                                 if(selectedNode1 != k) {
                                     selectedNode2 = k;
+                                    currentNode = k;
                                     numSelect++;
                                 }
                             }

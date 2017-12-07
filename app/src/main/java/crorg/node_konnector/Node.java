@@ -60,6 +60,9 @@ public class Node extends ShapeDrawable implements Serializable {
 
     public void decrementKonnections() {
         numberKonnections--;
+        if (numberKonnections <= 0) {
+            numberKonnections = 0;
+        }
     }
 
     public int getNumberOfKonnections() {
