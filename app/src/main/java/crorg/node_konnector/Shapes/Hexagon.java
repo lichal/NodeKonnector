@@ -5,7 +5,6 @@ import android.graphics.drawable.shapes.Shape;
 
 import java.io.Serializable;
 
-import crorg.node_konnector.MyShape;
 import crorg.node_konnector.Node;
 
 /**
@@ -14,7 +13,7 @@ import crorg.node_konnector.Node;
 
 public class Hexagon extends Node implements Serializable{
 
-    public Hexagon(MyShape s, int x, int y){
+    public Hexagon(Shape s, int x, int y){
         super(s);
         this.s = s;
         this.positionX = x;
