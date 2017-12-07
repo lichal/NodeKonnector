@@ -425,8 +425,6 @@ public class Structure implements Serializable {
                     two.decrementKonnections();
                 } else {
                 }
-                //if(b != null)
-                 //   bondsToRemove.add(b);
             }
         }
 
@@ -435,6 +433,7 @@ public class Structure implements Serializable {
             playerBonds.remove(removeBonds);
             System.out.println("removing a bond!");
         }
+        nodeToRemove.setSelect(false);
         playerNodes.remove(nodeToRemove);
         bondsToRemove.clear();
     }

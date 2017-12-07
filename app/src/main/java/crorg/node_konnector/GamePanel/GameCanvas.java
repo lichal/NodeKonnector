@@ -15,6 +15,7 @@ import android.view.View;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Observable;
 
 import crorg.node_konnector.Bond;
 import crorg.node_konnector.Node;
@@ -25,7 +26,7 @@ import crorg.node_konnector.Structure;
  * Created by Cheng on 11/27/17.
  */
 
-public class GameCanvas extends View implements Serializable {
+public class GameCanvas extends View implements Serializable, Observable {
 
     private Scaler scale;
 
@@ -113,10 +114,6 @@ public class GameCanvas extends View implements Serializable {
                 k.drawSelect(canvas);
             }
         }
-//        if(firstSelectedShapeToBondWith!=null)
-//            firstSelectedShapeToBondWith.drawSelect(canvas);
-//        if(selectedNode2!=null)
-//            selectedNode2.drawSelect(canvas);
     }
 
     public void setBondingMode(boolean startBonding, int type){
@@ -131,7 +128,13 @@ public class GameCanvas extends View implements Serializable {
 
 
 
+    public void setBondArrayList(ArrayList<Bond> newBonds) {
+        bondArrayList = newBonds;
+    }
 
+    public void setNodesArrayList(ArrayList<Node> newNodes) {
+        shapeArrayList = newNodes;
+    }
 
 
 
@@ -144,9 +147,9 @@ public class GameCanvas extends View implements Serializable {
     public void deleteSelectedNode(){
         if (currentNode != null) {
             Structure.deleteGivenNode(currentNode, bondArrayList, shapeArrayList, currentNode, firstSelectedShapeToBondWith, selectedNode2);
-            firstSelectedShapeToBondWith = null;
-            selectedNode2 = null;
-            currentNode = null;
+            //firstSelectedShapeToBondWith = null;
+            //selectedNode2 = null;
+            //currentNode = null;
             invalidate();
         }
     }
@@ -236,7 +239,7 @@ public class GameCanvas extends View implements Serializable {
                                 }
                                 // Make sure you deselect first node selected and turn off bonding mode...
                                 firstSelectedShapeToBondWith = null;
-                                bondingMode = false;
+                                bondingMode = false;    // this doesn't quite work - how to send message to GameScreen to reactivate buttons?
                             }
                         }
                     }
