@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.io.Serializable;
@@ -93,8 +94,9 @@ public class StartUpCanvas extends View implements Serializable {
                     rotateHeight = -(width);
                     rotateRate=0;
                 }
+                Log.d("TAG", "Got HERE!");
                 // ask for the view to be redrawn
-                invalidate();
+                //invalidate();
             }
         };
         tmr.schedule(task, 0, 10);

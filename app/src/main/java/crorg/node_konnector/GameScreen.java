@@ -155,8 +155,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         userBonds_LIST = null;
         userNodes_LIST = null;
         answerStructure = null;
-        readFromFileSerial();
-
+        //readFromFileSerial();
+//
         // IF everything checks out, then load info locally from file...
         if ((userBonds_LIST != null) && (userNodes_LIST != null)
                 && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
