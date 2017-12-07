@@ -41,6 +41,7 @@ import crorg.node_konnector.Shapes.Circle;
 
 import crorg.node_konnector.Shapes.DrawPath;
 import crorg.node_konnector.Shapes.Hexagon;
+import crorg.node_konnector.Shapes.MyOvalShape;
 import crorg.node_konnector.Shapes.MyPathShape;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
@@ -377,7 +378,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         if (y < game.getHeight()) {
                             switch (dragType) {
                                 case 1:
-                                    game.getShapeArrayList().add(new Circle(new OvalShape(), midX, midY));
+                                    game.getShapeArrayList().add(new Circle(new MyOvalShape(), midX, midY));
                                     break;
                                 case 2:
                                     game.getShapeArrayList().add(new Square(new MyPathShape(drawShape.drawSquare(), 100, 100), midX, midY));
