@@ -28,9 +28,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class FacebookFragment extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBERz
-    private LoginButton loginButton;
-
 
     public FacebookFragment() {
         // Required empty public constructor
@@ -40,22 +37,11 @@ public class FacebookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_facebook, container, false);
 
-//        loginButton = (LoginButton) view.findViewById(R.id.login_button);
-//        // If using in a fragment
-//        loginButton.setFragment(this);
-        // Other app specific specialization
-//        loginButton.setReadPermissions("email", "public_profile");
-
-
         return view;
     }
-
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-
-
 
 }

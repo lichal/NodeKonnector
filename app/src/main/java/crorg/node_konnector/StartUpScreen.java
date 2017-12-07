@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -79,7 +80,10 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         serialSave = (Button)findViewById(R.id.serialSave);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-//        loginButton.setFragment();
+
+        pressStart.setTextColor(Color.LTGRAY);
+        pressStart.setTextSize(15f);
+
         // setting up local storage for user
         userProgress = new File(getFilesDir(), "userProgress123");
         structureAnswer = new File(getFilesDir(), "structureAnswer123");
@@ -96,13 +100,11 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                         handleFacebookAccessToken(loginResult.getAccessToken());
                         System.out.println("Success login1");
                     }
-
                     @Override
                     public void onCancel() {
                         System.out.println("Success canceldd");
                         // App code
                     }
-
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
