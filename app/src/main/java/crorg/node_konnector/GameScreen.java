@@ -35,8 +35,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+
 
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.Shapes.Circle;
@@ -72,13 +71,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private TextView gameStat;
 
     private GameCanvas game;
-
-    private File userBonds_FILE;  // local storage of user progress
-
-    private File userNodes_FILE;  // local storage of user progress
-
-    private Structure answerStructure;    // the logic holding the answer for a given level
-
     private DrawPath drawShape;
 
     private int scores;
@@ -86,9 +78,10 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private int level;
 
     private ArrayList<Bond> userBonds_LIST;
-
     private ArrayList<Node> userNodes_LIST;
-
+    private Structure answerStructure;    // the logic holding the answer for a given level
+    private File userBonds_FILE;
+    private File userNodes_FILE;
     private File answerStructure_FILE;
 
     private int lastLevelPlayed;
@@ -106,66 +99,68 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w("TAG", "MESSAGE#45689 = Before content view...");
         setContentView(R.layout.activity_game_screen);
+        Log.w("TAG", "MESSAGE#45689 = ...AFTER content view");
+
 
         // intent gets the level selected
         Intent intent = getIntent();
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
         scores = 0;
 
-        database = FirebaseDatabase.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(isLoggedIn()) {
+            database = FirebaseDatabase.getInstance();
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        userData = database.getReference("USERS_TABLE");
-        myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                int value = dataSnapshot.getValue(Integer.class);
-                scores = value;
-                Log.d("TAG", "Score is: " + value);
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("TAG", "Failed to read value.", error.toException());
-            }
-        });
+            userData = database.getReference("USERS_TABLE");
+            myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
 
+            // Read from the database
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    int value = dataSnapshot.getValue(Integer.class);
+                    scores = value;
+                    Log.d("TAG", "Score is: " + value);
+                }
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("TAG", "Failed to read value.", error.toException());
+                }
+            });
+        }
 
         dragType = 0;
-
-
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
         level = 1 + Integer.parseInt(message);
         // VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
         // setting up local storage for user's progres on a given level...
-        String uBondsFile = "userProgressBonds123";
-        String uNodesFile = "userProgressNodes123";
-        String answerStructureFile = "answerStructure123";
-
+        final String uBondsFile = "userProgressBonds123";
+        final String uNodesFile = "userProgressNodes123";
+        final String answerStructureFile = "answerStructure123";
         userBonds_FILE = new File(getFilesDir(), uBondsFile);
         userNodes_FILE = new File(getFilesDir(), uNodesFile);
         answerStructure_FILE = new File(getFilesDir(), answerStructureFile);
         userBonds_LIST = null;
         userNodes_LIST = null;
         answerStructure = null;
-        //readFromFileSerial();
-//
+        readFromFileSerial();
+
         // IF everything checks out, then load info locally from file...
-        if ((userBonds_LIST != null) && (userNodes_LIST != null)
-                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
-            game.setNodesArrayList(userNodes_LIST);
-            game.setBondArrayList(userBonds_LIST);
-        } else {
+//        if ((userBonds_LIST != null) && (userNodes_LIST != null)
+//                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
+//            game.setNodesArrayList(userNodes_LIST);
+//            game.setBondArrayList(userBonds_LIST);
+//        } else {
             // new game structure
             answerStructure = new Structure(level);
-        }
+       // }
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
@@ -433,6 +428,13 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                                                 if (Structure.checkAllHexagonKonnections(game.getShapeArrayList())) {
                                                     if (Structure.areShapeConfigsSimilar(game.getShapeArrayList(), answerStructure.getNodes())) {
                                                         gameStat.setText("Congratz!");
+
+                                                        // if passed, delete local files...
+                                                        answerStructure_FILE.delete();
+                                                        userBonds_FILE.delete();
+                                                        userNodes_FILE.delete();
+
+
                                                         // WE NEED To seT the LOCAL COPY OF THEIR SCORE ALSO
                                                         if(isLoggedIn()) {
                                                             // WE NEED to compare firebase's values with local values - if they don't match,
@@ -511,16 +513,25 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         // write player nodes to file...
         try {
-            FileOutputStream fos = openFileOutput(userBonds_FILE.getName(), Context.MODE_PRIVATE);
+            FileOutputStream fos = openFileOutput(userNodes_FILE.getName(), Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(game.getBondArrayList());
+            oos.writeObject(game.getShapeArrayList());
             fos.close();
             oos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
+        // write answer to file
+        try {
+            FileOutputStream fos = openFileOutput(answerStructure_FILE.getName(), Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(answerStructure);
+            fos.close();
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -530,7 +541,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     public void readFromFileSerial() {
         // get user nodes...
         try {
-            FileInputStream fis = openFileInput(userBonds_FILE.getName());
+            FileInputStream fis = openFileInput(userNodes_FILE.getName());
             ObjectInputStream ois = new ObjectInputStream(fis);
             userNodes_LIST = (ArrayList<Node>) ois.readObject();
             ois.close();
@@ -541,7 +552,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         // get user bonds...
         try {
-            FileInputStream fis = openFileInput(userNodes_FILE.getName());
+            FileInputStream fis = openFileInput(userBonds_FILE.getName());
             ObjectInputStream ois = new ObjectInputStream(fis);
             userBonds_LIST = (ArrayList<Bond>) ois.readObject();
             ois.close();

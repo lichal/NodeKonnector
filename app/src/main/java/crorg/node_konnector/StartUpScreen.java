@@ -1,6 +1,5 @@
 package crorg.node_konnector;
 
-import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -31,6 +30,8 @@ import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.TaskStackBuilder;
 
@@ -43,7 +44,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -166,6 +166,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 }
             });
         }
+
 
     }
 

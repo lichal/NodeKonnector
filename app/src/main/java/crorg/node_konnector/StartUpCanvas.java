@@ -34,9 +34,12 @@ public class StartUpCanvas extends View implements Serializable {
     private Random rand;
     private int move;
 
+
     public StartUpCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         tmr = new Timer();
+
+
 
         rand = new Random();
         move = 0;
@@ -85,21 +88,26 @@ public class StartUpCanvas extends View implements Serializable {
 //        };
 //        tmr.schedule(task,0,10);
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                // update the y coordinate in c
-                rotateRate++;
-                if(rotateRate>=360){
-                    rotateHeight = -(width);
-                    rotateRate=0;
-                }
-                Log.d("TAG", "Got HERE!");
-                // ask for the view to be redrawn
-                //invalidate();
-            }
-        };
-        tmr.schedule(task, 0, 10);
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                // update the y coordinate in c
+//                rotateRate++;
+//                if(rotateRate>=360){
+//                    rotateHeight = -(width);
+//                    rotateRate=0;
+//                }
+//                Log.d("TAG", "Got HERE!");
+//                // ask for the view to be redrawn
+//                //invalidate();
+//
+//            }
+//        };
+//        tmr.schedule(task, 0, 10);
+    }
+
+    public void setRotateRate(int rate){
+        this.rotateRate = rate;
     }
 
 
@@ -120,7 +128,7 @@ public class StartUpCanvas extends View implements Serializable {
         int sqrY = getHeight()/2+width/2+2*width;
 
         // rotate the canvas
-        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
+//        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
         canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2);
 
         Paint doubleBond1 = new Paint();
