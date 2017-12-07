@@ -383,10 +383,12 @@ public class Structure implements Serializable {
 
     public static String printShapeType(Node node) {
         String s = "";
-        s += (node instanceof Circle) ? "Circle" : "";
-        s += (node instanceof Square) ? "Square" : "";
-        s += (node instanceof Triangle) ? "Triangle" : "";
-        s += (node instanceof Hexagon) ? "Hexagon" : "";
+        if (node != null) {
+            s += (node instanceof Circle) ? "Circle" : "";
+            s += (node instanceof Square) ? "Square" : "";
+            s += (node instanceof Triangle) ? "Triangle" : "";
+            s += (node instanceof Hexagon) ? "Hexagon" : "";
+        }
         return s;
     }
 
@@ -397,13 +399,6 @@ public class Structure implements Serializable {
         System.out.println("Got into delete method!");
         for (Bond b : playerBonds) {
             System.out.println("Here is a bond!");
-            String nodeToRemoveType = "NodeToRemoveType= " + Structure.printShapeType(nodeToRemove);
-            String selectedNode1Type = "SelectedNode1Type= " + Structure.printShapeType(selectedNode1);
-            String selectedNode2Type = "SelectedNode2Type= " + Structure.printShapeType(selectedNode2);
-            String currentNodeType = "CurrentNodeType= " + Structure.printShapeType(currentNode);
-            System.out.print(nodeToRemoveType + "\t" + currentNodeType + "\t" + selectedNode1Type + "\t" + selectedNode2Type);
-
-
             if ((b.getNode1() == nodeToRemove) || (b.getNode2() == nodeToRemove)) {
                 bondsToRemove.add(b);
                 System.out.println("Found a bond to remove!");

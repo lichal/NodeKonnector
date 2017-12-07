@@ -53,8 +53,8 @@ public class StartUpCanvas extends View implements Serializable {
             public void run() {
                 // update rotation
                 rotateRate++;
-                if(rotateRate>=360){
-                    int i = rand.nextInt(3)+1;
+                if (rotateRate >= 360) {
+                    int i = rand.nextInt(3) + 1;
                     rotateHeight = -(width);
 //                    switch (i){
 //                        case 0:
@@ -74,16 +74,22 @@ public class StartUpCanvas extends View implements Serializable {
 //                            move = 0;
 //                            break;
 //                    }
-                    rotateRate=0;
-                    if(move == 3)
-                        move = 0;
+                    if (rotateRate >= 359) {
+                        rotateRate = 0;
+                        if (move == 3)
+                            move = 0;
+                    }
+                    // ask for the view to be redrawn
+                    invalidate();
                 }
-                // ask for the view to be redrawn
-                invalidate();
             }
+
         };
-        tmr.schedule(task, 0, 10);
+
+        tmr.schedule(task,0,10);
+//        tmr.schedule(task, 0, 30);
     }
+
 
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);

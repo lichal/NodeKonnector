@@ -156,6 +156,10 @@ public class Node extends ShapeDrawable implements Serializable {
         canvas.drawLine(getPositionX(), getPositionY() + getHeight(), getPositionX()+ getWidth(), getPositionY() + getHeight(), p);
     }
 
+    public void setSelect(boolean select){
+        this.select = select;
+    }
+
     public void redraw(int x, int y){
         this.positionX = x -width/2;
         this.positionY = y - width/2;
