@@ -8,6 +8,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.PathShape;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,8 +22,11 @@ import android.widget.ToggleButton;
 import com.facebook.AccessToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,8 +82,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private DatabaseReference userData;
 
     private FirebaseUser currentUser;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     private int dragType;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +97,30 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         // intent gets the level selected
         Intent intent = getIntent();
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
+        scores = 0;
+
+        database = FirebaseDatabase.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        userData = database.getReference("USERS_TABLE");
+        myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                int value = dataSnapshot.getValue(Integer.class);
+                scores = value;
+                Log.d("TAG", "Score is: " + value);
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
 
         dragType = 0;
 
@@ -98,9 +130,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         gameStat.setText("Total Nodes:  " + level);
         gameStat.setTextColor(Color.rgb(255,165,00));
         gameStat.setTextSize(20f);
-        scores = 0;
-
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // new game structure
         answerStructure = new Structure(Integer.parseInt(message)+1);
@@ -306,7 +335,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                                                         if(isLoggedIn()) {
                                                             // WE NEED to compare firebase's values with local values - if they don't match,
                                                             // set both to the HIGHER of the two.  THEN up the score and level as below...
-                                                            userData = FirebaseDatabase.getInstance().getReference("USERS_TABLE");
                                                             scores += Math.pow(3, level);
                                                             userData.child(currentUser.getUid()).child("Score").setValue(scores);
                                                             userData.child(currentUser.getUid()).child("Level").setValue(level);

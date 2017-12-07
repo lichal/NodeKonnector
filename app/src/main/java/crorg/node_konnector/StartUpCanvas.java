@@ -17,8 +17,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.R.attr.angle;
-
 /**
  * Created by d on 12/6/17.
  */
@@ -29,49 +27,62 @@ public class StartUpCanvas extends View implements Serializable {
     private Drawable square;
     private Drawable triangle;
     private Drawable hexagon;
-    private int initX;
-    private int initY;
     private int width;
-    private int height;
-    private Random rand;
-
-    private ArrayList<Drawable> drawableArrayList;
     private float rotateRate;
+    private int rotateHeight;
+    private Random rand;
+    private int move;
 
     public StartUpCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         tmr = new Timer();
 
-        rotateRate = 0f;
-
         rand = new Random();
+        move = 0;
+        width = 0;
 
-        initX = 0;
-        initY = 0;
-        drawableArrayList = new ArrayList<Drawable>();
+        rotateRate = 0f;
+        rotateHeight = 0;
         circle = getResources().getDrawable(R.drawable.circle);
         square = getResources().getDrawable(R.drawable.square);
         triangle = getResources().getDrawable(R.drawable.triangle);
         hexagon = getResources().getDrawable(R.drawable.hexagon);
 
-        drawableArrayList.add(circle);
-        drawableArrayList.add(square);
-        drawableArrayList.add(triangle);
-        drawableArrayList.add(hexagon);
-
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                // update the y coordinate in c
+                // update rotation
                 rotateRate++;
                 if(rotateRate>=360){
+                    int i = rand.nextInt(3)+1;
+                    rotateHeight = -(width);
+//                    switch (i){
+//                        case 0:
+//                            rotateHeight = width;
+//                            move++;
+//                            break;
+//                        case 1:
+//                            rotateHeight = -(width);
+//                            move++;
+//                            break;
+//                        case 2:
+//                            rotateHeight = 2*width;
+//                            move++;
+//                            break;
+//                        case 3:
+//                            rotateHeight = 3*width;
+//                            move = 0;
+//                            break;
+//                    }
                     rotateRate=0;
+                    if(move == 3)
+                        move = 0;
                 }
                 // ask for the view to be redrawn
                 invalidate();
             }
         };
-        tmr.schedule(task, 0, 30);
+        tmr.schedule(task, 0, 10);
     }
 
     protected void onDraw(Canvas canvas) {
@@ -91,7 +102,7 @@ public class StartUpCanvas extends View implements Serializable {
         int sqrY = getHeight()/2+width/2+2*width;
 
         // rotate the canvas
-        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2);
+        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
 
         Paint doubleBond1 = new Paint();
         Paint doubleBond2 = new Paint();
@@ -126,18 +137,5 @@ public class StartUpCanvas extends View implements Serializable {
 
         square.setBounds(sqrX, sqrY, sqrX+width, sqrY+width);
         square.draw(canvas);
-    }
-
-    private Drawable getRotateDrawable(final Drawable d, final float angle) {
-        final Drawable[] arD = { d };
-        return new LayerDrawable(arD) {
-            @Override
-            public void draw(final Canvas canvas) {
-                canvas.save();
-                canvas.rotate(angle, d.getBounds().width() / 2, d.getBounds().height() / 2);
-                super.draw(canvas);
-                canvas.restore();
-            }
-        };
     }
 }

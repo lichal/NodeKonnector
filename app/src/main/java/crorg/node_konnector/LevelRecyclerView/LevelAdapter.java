@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import crorg.node_konnector.LevelRecyclerView.LevelFragment.OnListFragmentInteractionListener;
@@ -22,10 +23,16 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
 
     private final List<LevelItem> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private int level;
 
     public LevelAdapter(List<LevelItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        level = 1;
+    }
+
+    public void setLevel(int level){
+        this.level = level;
     }
 
     @Override
@@ -40,6 +47,8 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
+        if(position <= level)
+            holder.mlock.setVisibility(View.INVISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +71,13 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageView mlock;
         public LevelItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mlock = (ImageView) view.findViewById(R.id.lock);
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
         }
