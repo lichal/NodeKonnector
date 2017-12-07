@@ -27,9 +27,9 @@ public class Node extends ShapeDrawable implements Serializable {
     protected int height;
     protected int width;
     protected boolean select;
-    protected Shape s;
+    protected MyShape s;
 
-    public Node(Shape s){
+    public Node(MyShape s){
         super(s);
         this.s = s;
         rectSelect = new DrawPath();
