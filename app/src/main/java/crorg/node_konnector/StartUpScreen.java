@@ -48,11 +48,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 
 public class StartUpScreen extends AppCompatActivity implements Serializable, FacebookFragment.OnFragmentInteractionListener {
+    public static final String LEVEL_NOW = "crorg.nodekonnector.LEVELNOW";
 
     /* The TextView for Press to Start */
     private TextView pressStart;
@@ -65,13 +71,26 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
     private CallbackManager callbackManager;
 
-    FirebaseUser currentUser;
+    /** Firebase user */
+    private FirebaseUser currentUser;
+    private FirebaseDatabase database;
+    private DatabaseReference myLevel;
+
+    private int currentLevel;
+    private int currentScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
+
+        currentLevel = 1;
+        currentScore = 0;
+
+        // firebase authentication
         mAuth = FirebaseAuth.getInstance();
+        // instantiate firebase database
+        database = FirebaseDatabase.getInstance();
 
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
@@ -79,8 +98,10 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         serialLoad = (Button)findViewById(R.id.serialLoad);
         serialSave = (Button)findViewById(R.id.serialSave);
 
+        // facebook login button
         loginButton = (LoginButton) findViewById(R.id.login_button);
 
+        // set the color of press start text
         pressStart.setTextColor(Color.LTGRAY);
         pressStart.setTextSize(15f);
 
@@ -88,7 +109,10 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         userProgress = new File(getFilesDir(), "userProgress123");
         structureAnswer = new File(getFilesDir(), "structureAnswer123");
 
+        // call back manager for face book
         callbackManager = CallbackManager.Factory.create();
+
+        // ask for the email and public profile permissions
         loginButton.setReadPermissions("email", "public_profile");
 
         // Callback registration
@@ -102,7 +126,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     }
                     @Override
                     public void onCancel() {
-                        System.out.println("Success canceldd");
+                        System.out.println("Success cancel");
                         // App code
                     }
                     @Override
@@ -111,8 +135,37 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     }
                 });
 
+        if(isLoggedIn()) {
+            currentUser = mAuth.getCurrentUser();
+            myLevel = database.getReference("USERS_TABLE");
 
-        // this needs to consult the saved file for highest level achieved by the player before it
+            // retreive level information from firebase
+            myLevel.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
+                        int value = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
+                        currentLevel = value;
+                        Log.d("TAG", "Level is: " + value);
+                    } else{
+                        myLevel.child(currentUser.getUid()).child("Level").setValue(currentLevel);
+                    }
+                    if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
+                        int value = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
+                        Log.d("TAG", "Score is: " + value);
+                    } else{
+                        myLevel.child(currentUser.getUid()).child("Score").setValue(currentScore);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("TAG", "Failed to read value.", error.toException());
+                }
+            });
+        }
+
     }
 
     public boolean isLoggedIn() {
@@ -198,6 +251,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
             case MotionEvent.ACTION_DOWN:
                 // Setting a bew intent for screen transition
                 Intent intent = new Intent(this, LevelSelectScreen.class);
+                intent.putExtra(LEVEL_NOW, currentLevel);
                 // Transition to level screen
                 startActivity(intent);
                 // End start up activity
