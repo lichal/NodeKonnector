@@ -383,10 +383,12 @@ public class Structure implements Serializable {
 
     public static String printShapeType(Node node) {
         String s = "";
-        s += (node instanceof Circle) ? "Circle" : "";
-        s += (node instanceof Square) ? "Square" : "";
-        s += (node instanceof Triangle) ? "Triangle" : "";
-        s += (node instanceof Hexagon) ? "Hexagon" : "";
+        if (node != null) {
+            s += (node instanceof Circle) ? "Circle" : "";
+            s += (node instanceof Square) ? "Square" : "";
+            s += (node instanceof Triangle) ? "Triangle" : "";
+            s += (node instanceof Hexagon) ? "Hexagon" : "";
+        }
         return s;
     }
 

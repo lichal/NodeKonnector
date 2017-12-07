@@ -141,16 +141,38 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         trashButton = (ImageButton) findViewById(R.id.trashBtn);
 
+
+        singleButton.setText("Single");
+        doubleButton.setText("Double");
+        tripleButton.setText("Triple");
+
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     game.setBondingMode(true, 1);
+                    doubleButton.setEnabled(false);
+                    tripleButton.setEnabled(false);
+                    circleImage.setEnabled(false);
+                    squareImage.setEnabled(false);
+                    triangleImage.setEnabled(false);
+                    hexagonImage.setEnabled(false);
+                    trashButton.setEnabled(false);
                     game.invalidate();
                 }else{
                     game.setBondingMode(false, 0);
+                    doubleButton.setEnabled(true);
+                    tripleButton.setEnabled(true);
+                    circleImage.setEnabled(true);
+                    squareImage.setEnabled(true);
+                    triangleImage.setEnabled(true);
+                    hexagonImage.setEnabled(true);
+                    trashButton.setEnabled(true);
                     game.invalidate();
                 }
+                singleButton.setText("Single");
+                doubleButton.setText("Double");
+                tripleButton.setText("Triple");
             }
         });
 
@@ -159,11 +181,28 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     game.setBondingMode(true, 2);
+                    singleButton.setEnabled(false);
+                    tripleButton.setEnabled(false);
+                    circleImage.setEnabled(false);
+                    squareImage.setEnabled(false);
+                    triangleImage.setEnabled(false);
+                    hexagonImage.setEnabled(false);
+                    trashButton.setEnabled(false);
                     game.invalidate();
                 }else{
                     game.setBondingMode(false, 0);
+                    singleButton.setEnabled(true);
+                    tripleButton.setEnabled(true);
+                    circleImage.setEnabled(true);
+                    squareImage.setEnabled(true);
+                    triangleImage.setEnabled(true);
+                    hexagonImage.setEnabled(true);
+                    trashButton.setEnabled(true);
                     game.invalidate();
                 }
+                singleButton.setText("Single");
+                doubleButton.setText("Double");
+                tripleButton.setText("Triple");
             }
         });
 
@@ -172,11 +211,28 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     game.setBondingMode(true, 3);
+                    singleButton.setEnabled(false);
+                    doubleButton.setEnabled(false);
+                    circleImage.setEnabled(false);
+                    squareImage.setEnabled(false);
+                    triangleImage.setEnabled(false);
+                    hexagonImage.setEnabled(false);
+                    trashButton.setEnabled(false);
                     game.invalidate();
                 }else{
                     game.setBondingMode(false, 0);
+                    singleButton.setEnabled(true);
+                    doubleButton.setEnabled(true);
+                    circleImage.setEnabled(true);
+                    squareImage.setEnabled(true);
+                    triangleImage.setEnabled(true);
+                    hexagonImage.setEnabled(true);
+                    trashButton.setEnabled(true);
                     game.invalidate();
                 }
+                singleButton.setText("Single");
+                doubleButton.setText("Double");
+                tripleButton.setText("Triple");
             }
         });
 
