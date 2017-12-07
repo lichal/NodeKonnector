@@ -105,7 +105,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         //Log.v("MESSAGE#45689", "Before content view...");
         setContentView(R.layout.activity_game_screen);
-        //Log.v("MESSAGE#45689", "AFTER content view");
+        Log.v("MESSAGE#45689", "AFTER content view");
 
 
         // intent gets the level selected
