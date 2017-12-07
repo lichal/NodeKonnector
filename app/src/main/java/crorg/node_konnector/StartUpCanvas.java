@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.io.Serializable;
@@ -33,9 +34,12 @@ public class StartUpCanvas extends View implements Serializable {
     private Random rand;
     private int move;
 
+
     public StartUpCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         tmr = new Timer();
+
+
 
         rand = new Random();
         move = 0;
@@ -93,18 +97,28 @@ public class StartUpCanvas extends View implements Serializable {
 //                    rotateHeight = -(width);
 //                    rotateRate=0;
 //                }
+
 //                // ask for the view to be redrawn
 //                invalidate();
 //            }
 //        };
 //
 //        tmr.schedule(task, 0, 10);
+
+//                Log.d("TAG", "Got HERE!");
+//                // ask for the view to be redrawn
+//                //invalidate();
+//
+//            }
+//        };
+//        tmr.schedule(task, 0, 10);
     }
 
-    public void setRotateRate(int rotateRate){
-        this.rotateRate = rotateRate;
-        invalidate();
+    public void setRotateRate(int rate){
+        this.rotateRate = rate;
+
     }
+
 
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
@@ -123,7 +137,10 @@ public class StartUpCanvas extends View implements Serializable {
         int sqrY = getHeight()/2+width/2+2*width;
 
         // rotate the canvas
-        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
+//        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
+
+
+        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2);
 
         Paint doubleBond1 = new Paint();
         Paint doubleBond2 = new Paint();
