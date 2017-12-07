@@ -97,6 +97,14 @@ public class StartUpCanvas extends View implements Serializable {
 //                    rotateHeight = -(width);
 //                    rotateRate=0;
 //                }
+
+//                // ask for the view to be redrawn
+//                invalidate();
+//            }
+//        };
+//
+//        tmr.schedule(task, 0, 10);
+
 //                Log.d("TAG", "Got HERE!");
 //                // ask for the view to be redrawn
 //                //invalidate();
@@ -108,6 +116,7 @@ public class StartUpCanvas extends View implements Serializable {
 
     public void setRotateRate(int rate){
         this.rotateRate = rate;
+
     }
 
 
@@ -129,6 +138,8 @@ public class StartUpCanvas extends View implements Serializable {
 
         // rotate the canvas
 //        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
+
+
         canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2);
 
         Paint doubleBond1 = new Paint();

@@ -177,6 +177,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
     @Override
     public void onStart() {
+
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
 
@@ -291,12 +292,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int mNotificationId = 456;
         mNotificationManager.notify(mNotificationId, mBuilder.build());
-    }
-
-
-
-    public void testAngles() {
-        
     }
 
     // this needs to save the user's current progress as well as the current

@@ -36,7 +36,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.Shapes.Circle;
 
@@ -62,6 +61,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private ImageView hexagonImage;
 
     private Button checkStructure;
+    private int level;
 
     private ImageButton trashButton;
 
@@ -74,8 +74,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private DrawPath drawShape;
 
     private int scores;
-
-    private int level;
 
     private ArrayList<Bond> userBonds_LIST;
     private ArrayList<Node> userNodes_LIST;
@@ -94,8 +92,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private int dragType;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,13 +102,14 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         // intent gets the level selected
         Intent intent = getIntent();
-        String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
         scores = 0;
+        String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
+        level = 0;
 
-        if(isLoggedIn()) {
+
+        if (isLoggedIn()) {
             database = FirebaseDatabase.getInstance();
             currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
 
             userData = database.getReference("USERS_TABLE");
             myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
@@ -127,6 +124,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     scores = value;
                     Log.v("TAG", "Score is: " + value);
                 }
+
                 @Override
                 public void onCancelled(DatabaseError error) {
                     // Failed to read value
@@ -136,11 +134,13 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         }
 
         dragType = 0;
+
+
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
         level = 1 + Integer.parseInt(message);
-        // VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
-        // setting up local storage for user's progres on a given level...
+// VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
+// setting up local storage for user's progres on a given level...
         final String uBondsFile = "userProgressBonds123";
         final String uNodesFile = "userProgressNodes123";
         final String answerStructureFile = "answerStructure123";
@@ -153,6 +153,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         readFromFileSerial();
 
         // IF everything checks out, then load info locally from file...
+
         if ((userBonds_LIST != null) && (userNodes_LIST != null)
                 && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
             game.setNodesArrayList(userNodes_LIST);
@@ -161,18 +162,23 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             // new game structure
             answerStructure = new Structure(level);
         }
+
+//        if ((userBonds_LIST != null) && (userNodes_LIST != null)
+//                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
+//            game.setNodesArrayList(userNodes_LIST);
+//            game.setBondArrayList(userBonds_LIST);
+//        } else {
+        // new game structure
+        answerStructure = new Structure(level);
+        // }
+
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-
-
-
-
         gameStat = (TextView) findViewById(R.id.gameStat);
         gameStat.setText("Total Nodes:  " + level);
-        gameStat.setTextColor(Color.rgb(255,165,00));
+        gameStat.setTextColor(Color.rgb(255, 165, 00));
         gameStat.setTextSize(20f);
-
 
 
         // draw shape holds different shape to be show on canvas
@@ -201,7 +207,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         // associate buttons
         singleButton = (ToggleButton) findViewById(R.id.bondButton);
-        doubleButton = (ToggleButton) findViewById(R.id.doubleButton) ;
+        doubleButton = (ToggleButton) findViewById(R.id.doubleButton);
         tripleButton = (ToggleButton) findViewById(R.id.tripleButton);
         checkStructure = (Button) findViewById(R.id.checkStructure);
         circleImage = (ImageView) findViewById(R.id.circleView);
@@ -219,7 +225,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     game.setBondingMode(true, 1);
                     doubleButton.setEnabled(false);
                     tripleButton.setEnabled(false);
@@ -229,7 +235,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     hexagonImage.setEnabled(false);
                     trashButton.setEnabled(false);
                     game.invalidate();
-                }else{
+                } else {
                     game.setBondingMode(false, 0);
                     doubleButton.setEnabled(true);
                     tripleButton.setEnabled(true);
@@ -249,7 +255,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         doubleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     game.setBondingMode(true, 2);
                     singleButton.setEnabled(false);
                     tripleButton.setEnabled(false);
@@ -259,7 +265,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     hexagonImage.setEnabled(false);
                     trashButton.setEnabled(false);
                     game.invalidate();
-                }else{
+                } else {
                     game.setBondingMode(false, 0);
                     singleButton.setEnabled(true);
                     tripleButton.setEnabled(true);
@@ -279,7 +285,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         tripleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     game.setBondingMode(true, 3);
                     singleButton.setEnabled(false);
                     doubleButton.setEnabled(false);
@@ -289,7 +295,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     hexagonImage.setEnabled(false);
                     trashButton.setEnabled(false);
                     game.invalidate();
-                }else{
+                } else {
                     game.setBondingMode(false, 0);
                     singleButton.setEnabled(true);
                     doubleButton.setEnabled(true);
@@ -351,15 +357,15 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             }
         });
 
-        game.setOnDragListener(new View.OnDragListener(){
+        game.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 final int action = event.getAction();
-                int x = (int)event.getX();
-                int y = (int)event.getY();
-                int midX = x - game.getShapeWidth()/2;
-                int midY = y - game.getShapeWidth()/2;
-                switch(action) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                int midX = x - game.getShapeWidth() / 2;
+                int midY = y - game.getShapeWidth() / 2;
+                switch (action) {
                     case DragEvent.ACTION_DRAG_STARTED:
                         break;
                     case DragEvent.ACTION_DRAG_EXITED:
@@ -410,11 +416,11 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList <Node> allFriendKonnections = new ArrayList<Node>();
-                if(game.getShapeArrayList().size() > 0) {
+                ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
+                if (game.getShapeArrayList().size() > 0) {
                     int numPlayerKonnectedNodes = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
                     // Is the player's structure intact?
-                    if(numPlayerKonnectedNodes == game.getShapeArrayList().size()){
+                    if (numPlayerKonnectedNodes == game.getShapeArrayList().size()) {
                         // does the player's number of nodes match the answer num of nodes?
                         if (numPlayerKonnectedNodes == answerStructure.getNodes().size()) {
                             // Right number of bonds?...
@@ -436,7 +442,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
 
                                                         // WE NEED To seT the LOCAL COPY OF THEIR SCORE ALSO
-                                                        if(isLoggedIn()) {
+                                                        if (isLoggedIn()) {
                                                             // WE NEED to compare firebase's values with local values - if they don't match,
                                                             // set both to the HIGHER of the two.  THEN up the score and level as below...
                                                             scores += Math.pow(3, level);
@@ -472,7 +478,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                         } else {
                             gameStat.setText("WRONG number of Nodes!");
                         }
-                    }else{
+                    } else {
                         gameStat.setText("Oops! All nodes must be Konnected to the SAME structure!");
                     }
                 }
@@ -480,8 +486,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             }
         });
     }
-
-
 
 
     // use these to save the state of the game
@@ -534,9 +538,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         }
     }
 
-
-
-
     // use these to save the current state of the level...
     public void readFromFileSerial() {
         // get user nodes...
@@ -574,7 +575,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     }
 
 
-
     public void readFromFileThing(View view) {
         FileInputStream inputStream;
         String s = "";
@@ -590,10 +590,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             e.printStackTrace();
         }
     }
-
-
-
-
 
 
 //    public void testStructureList() {
@@ -624,6 +620,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     public ArrayList<Structure> getStorageArrayList() {
         return null;
     }
+
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
