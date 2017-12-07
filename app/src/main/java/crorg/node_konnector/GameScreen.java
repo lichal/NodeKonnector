@@ -85,13 +85,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     private int level;
 
-    //private Structure userSavedStructure;
-
     private ArrayList<Bond> userBonds_LIST;
 
     private ArrayList<Node> userNodes_LIST;
-
-    //private Structure answerStructureFromFile;
 
     private File answerStructure_FILE;
 
@@ -141,16 +137,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         });
 
 
-
-
-
-
-
-
-
         dragType = 0;
-
-
 
 
         ////////////////////////////////////////////////////////////////////////
