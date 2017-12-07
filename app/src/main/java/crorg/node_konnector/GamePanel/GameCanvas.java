@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -66,6 +67,8 @@ public class GameCanvas extends View implements Serializable {
         bondArrayList = new ArrayList<Bond>();
 
         bondingMode = false;
+
+        currentNode = null;
 
         numSelect = 0;
         typeBond = 0;
@@ -214,19 +217,55 @@ public class GameCanvas extends View implements Serializable {
         int x = (int)event.getX();
         int y = (int)event.getY();
 
+
+
+
+
+
+
         switch (action){
             case MotionEvent.ACTION_DOWN:
-                currentNode = null;
-                selectedNode1 = null;
-                selectedNode2 = null;
-
-
+                // user selects empty space
+                // user selects a shape
+                int numberOfCurrents = 0;
                 for (Node k : shapeArrayList) {
                     if(k.checkSelect(x, y)){
                         currentNode = k;
-                        break;
+                        numberOfCurrents = 1;
                     }
                 }
+
+                if (numberOfCurrents == 1) {
+                    // do everything else
+                } else {
+                    selectedNode2 = null;
+                    selectedNode1 = null;
+                    currentNode = null;
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if(currentNode!=null)
+                    currentNode.setSelect(false);
+                currentNode = null;
+                selectedNode1 = null;
+                selectedNode2 = null;
+//                for (Node k : shapeArrayList) {
+//                    if(k.checkSelect(x, y)){
+//                        currentNode = k;
+//                        break;
+//                    }
+//                }
 
 
                 if(!bondingMode) {
@@ -241,18 +280,19 @@ public class GameCanvas extends View implements Serializable {
                 if(bondingMode) {
                     for (Node k : shapeArrayList) {
                         if(k.checkSelect(x, y)) {
-                            if (numSelect == 0) {
-                                selectedNode1 = k;
-                                currentNode = k;
-                                numSelect++;
-                            }
                             if (numSelect == 1) {
                                 if(selectedNode1 != k) {
                                     selectedNode2 = k;
-                                    currentNode = k;
+//                                    currentNode = k;
                                     numSelect++;
                                 }
                             }
+                            if (numSelect == 0) {
+                                selectedNode1 = k;
+//                                currentNode = k;
+                                numSelect++;
+                            }
+
                         }
                     }
                     if(numSelect == 2){
@@ -306,6 +346,15 @@ public class GameCanvas extends View implements Serializable {
                         numSelect = 0;
                     }
                 }
+
+
+                // print results
+                String selectedNode1Type = "SelectedNode1Type= " + Structure.printShapeType(selectedNode1);
+                String selectedNode2Type = "SelectedNode2Type= " + Structure.printShapeType(selectedNode2);
+                String currentNodeType = "CurrentNodeType= " + Structure.printShapeType(currentNode);
+                Log.d("TAG",currentNodeType + "\t" + selectedNode1Type + "\t" + selectedNode2Type);
+
+
                 invalidate();
             case MotionEvent.ACTION_MOVE:
                 if(!bondingMode) {

@@ -64,14 +64,14 @@ public class StartUpCanvas extends View implements Serializable {
             public void run() {
                 // update the y coordinate in c
                 rotateRate++;
-                if(rotateRate>=360){
+                if(rotateRate>=359){
                     rotateRate=0;
                 }
                 // ask for the view to be redrawn
                 invalidate();
             }
         };
-        tmr.schedule(task, 0, 30);
+//        tmr.schedule(task, 0, 30);
     }
 
     protected void onDraw(Canvas canvas) {
