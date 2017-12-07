@@ -48,46 +48,56 @@ public class StartUpCanvas extends View implements Serializable {
         triangle = getResources().getDrawable(R.drawable.triangle);
         hexagon = getResources().getDrawable(R.drawable.hexagon);
 
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                // update rotation
+//                rotateRate++;
+//                if (rotateRate >= 360) {
+//                    int i = rand.nextInt(3) + 1;
+//                    rotateHeight = -(width);
+////                    switch (i){
+////                        case 0:
+////                            rotateHeight = width;
+////                            move++;
+////                            break;
+////                        case 1:
+////                            rotateHeight = -(width);
+////                            move++;
+////                            break;
+////                        case 2:
+////                            rotateHeight = 2*width;
+////                            move++;
+////                            break;
+////                        case 3:
+////                            rotateHeight = 3*width;
+////                            move = 0;
+////                            break;
+////                    }
+//                    if (rotateRate >= 359) {
+//                        rotateRate = 0;
+//                    }
+//                    // ask for the view to be redrawn
+//                    invalidate();
+//                }
+//            }
+//        };
+//        tmr.schedule(task,0,10);
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                // update rotation
+                // update the y coordinate in c
                 rotateRate++;
-                if (rotateRate >= 360) {
-                    int i = rand.nextInt(3) + 1;
+                if(rotateRate>=360){
                     rotateHeight = -(width);
-//                    switch (i){
-//                        case 0:
-//                            rotateHeight = width;
-//                            move++;
-//                            break;
-//                        case 1:
-//                            rotateHeight = -(width);
-//                            move++;
-//                            break;
-//                        case 2:
-//                            rotateHeight = 2*width;
-//                            move++;
-//                            break;
-//                        case 3:
-//                            rotateHeight = 3*width;
-//                            move = 0;
-//                            break;
-//                    }
-                    if (rotateRate >= 359) {
-                        rotateRate = 0;
-                        if (move == 3)
-                            move = 0;
-                    }
-                    // ask for the view to be redrawn
-                    invalidate();
+                    rotateRate=0;
                 }
+                // ask for the view to be redrawn
+                invalidate();
             }
-
         };
-
-        tmr.schedule(task,0,10);
-//        tmr.schedule(task, 0, 30);
+        tmr.schedule(task, 0, 10);
     }
 
 
@@ -109,6 +119,7 @@ public class StartUpCanvas extends View implements Serializable {
 
         // rotate the canvas
         canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
+        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2);
 
         Paint doubleBond1 = new Paint();
         Paint doubleBond2 = new Paint();

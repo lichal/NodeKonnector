@@ -26,7 +26,7 @@ import crorg.node_konnector.Structure;
  * Created by Cheng on 11/27/17.
  */
 
-public class GameCanvas extends View implements Serializable, Observable {
+public class GameCanvas extends View implements Serializable {
 
     private Scaler scale;
 
