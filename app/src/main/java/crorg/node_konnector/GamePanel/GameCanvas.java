@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Observable;
 
 import crorg.node_konnector.Bond;
+import crorg.node_konnector.GameScreen;
 import crorg.node_konnector.Node;
 import crorg.node_konnector.Scaler;
 import crorg.node_konnector.Structure;
@@ -26,7 +27,7 @@ import crorg.node_konnector.Structure;
  * Created by Cheng on 11/27/17.
  */
 
-public class GameCanvas extends View implements Serializable, Observable {
+public class GameCanvas extends View implements Serializable {
 
     private Scaler scale;
 
@@ -40,7 +41,7 @@ public class GameCanvas extends View implements Serializable, Observable {
 
     private int typeBond;
 
-
+    private GameScreen gameScreen;
 
     /** Rect for the moving node */
     private Rect move;
@@ -60,7 +61,7 @@ public class GameCanvas extends View implements Serializable, Observable {
     private Paint paint4;
     private Paint paint5;
 
-    public GameCanvas(Context context, @Nullable AttributeSet attrs) {
+    public GameCanvas(Context context, @Nullable AttributeSet attrs, GameScreen gameScreen) {
         super(context, attrs);
 
         shapeArrayList = new ArrayList<Node>();

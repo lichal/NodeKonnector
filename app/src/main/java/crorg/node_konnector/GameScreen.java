@@ -46,7 +46,7 @@ import crorg.node_konnector.Shapes.Hexagon;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
 
-public class GameScreen extends AppCompatActivity implements Serializable, Observer {
+public class GameScreen extends AppCompatActivity implements Serializable {
 
     private ToggleButton singleButton;
 
@@ -537,9 +537,7 @@ public class GameScreen extends AppCompatActivity implements Serializable, Obser
     }
 
 
-    public void update(Observable observable, Object object) {
 
-    }
 
     // use these to save the current state of the level...
     public void readFromFileSerial() {
