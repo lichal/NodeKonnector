@@ -99,9 +99,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.w("TAG", "MESSAGE#45689 = Before content view...");
+        Log.v("MESSAGE#45689", "Before content view...");
         setContentView(R.layout.activity_game_screen);
-        Log.w("TAG", "MESSAGE#45689 = ...AFTER content view");
+        Log.v("MESSAGE#45689", "AFTER content view");
 
 
         // intent gets the level selected
@@ -125,12 +125,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     // whenever data at this location is updated.
                     int value = dataSnapshot.getValue(Integer.class);
                     scores = value;
-                    Log.d("TAG", "Score is: " + value);
+                    Log.v("TAG", "Score is: " + value);
                 }
                 @Override
                 public void onCancelled(DatabaseError error) {
                     // Failed to read value
-                    Log.w("TAG", "Failed to read value.", error.toException());
+                    Log.v("TAG", "Failed to read value.", error.toException());
                 }
             });
         }
@@ -153,14 +153,14 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         readFromFileSerial();
 
         // IF everything checks out, then load info locally from file...
-//        if ((userBonds_LIST != null) && (userNodes_LIST != null)
-//                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
-//            game.setNodesArrayList(userNodes_LIST);
-//            game.setBondArrayList(userBonds_LIST);
-//        } else {
+        if ((userBonds_LIST != null) && (userNodes_LIST != null)
+                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
+            game.setNodesArrayList(userNodes_LIST);
+            game.setBondArrayList(userBonds_LIST);
+        } else {
             // new game structure
             answerStructure = new Structure(level);
-       // }
+        }
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 

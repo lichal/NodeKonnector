@@ -61,10 +61,10 @@ public class GameCanvas extends View implements Serializable {
     private Paint paint4;
     private Paint paint5;
 
-    public GameCanvas(Context context, @Nullable AttributeSet attrs, GameScreen gameScreen) {
+    public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        Log.d("TAG", "MESSAGE#45689 = After super method in game canvas...");
+        Log.v("MESSAGE#45689", "After super method in game canvas...");
 
         shapeArrayList = new ArrayList<Node>();
 
@@ -99,7 +99,7 @@ public class GameCanvas extends View implements Serializable {
         paint5.setStrokeWidth(5);
         paint5.setColor(Color.DKGRAY);
 
-        Log.d("TAG", "MESSAGE#45689 = Game canvas: LOADED...");
+        Log.v("MESSAGE#45689", "Game canvas: LOADED...");
     }
 
     protected void onDraw(Canvas canvas){
