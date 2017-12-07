@@ -35,8 +35,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
 import crorg.node_konnector.Shapes.Circle;
@@ -46,7 +44,7 @@ import crorg.node_konnector.Shapes.Hexagon;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
 
-public class GameScreen extends AppCompatActivity implements Serializable, Observer {
+public class GameScreen extends AppCompatActivity implements Serializable {
 
     private ToggleButton singleButton;
 
@@ -101,8 +99,6 @@ public class GameScreen extends AppCompatActivity implements Serializable, Obser
 
     private int dragType;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,35 +106,37 @@ public class GameScreen extends AppCompatActivity implements Serializable, Obser
 
         // intent gets the level selected
         Intent intent = getIntent();
-        String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
         scores = 0;
+        String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
 
-        database = FirebaseDatabase.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        userData = database.getReference("USERS_TABLE");
-        myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
+        if(isLoggedIn()) {
+            database = FirebaseDatabase.getInstance();
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                int value = dataSnapshot.getValue(Integer.class);
-                scores = value;
-                Log.d("TAG", "Score is: " + value);
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("TAG", "Failed to read value.", error.toException());
-            }
-        });
+            userData = database.getReference("USERS_TABLE");
+            myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
 
+            // Read from the database
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    int value = dataSnapshot.getValue(Integer.class);
+                    scores = value;
+                    Log.d("TAG", "Score is: " + value);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("TAG", "Failed to read value.", error.toException());
+                }
+            });
+        }
 
         dragType = 0;
-
 
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
@@ -168,10 +166,6 @@ public class GameScreen extends AppCompatActivity implements Serializable, Obser
         }
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
-
-
-
-
 
         gameStat = (TextView) findViewById(R.id.gameStat);
         gameStat.setText("Total Nodes:  " + level);
@@ -520,11 +514,6 @@ public class GameScreen extends AppCompatActivity implements Serializable, Obser
             e.printStackTrace();
         }
 
-
-    }
-
-
-    public void update(Observable observable, Object object) {
 
     }
 

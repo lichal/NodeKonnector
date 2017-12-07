@@ -84,22 +84,27 @@ public class StartUpCanvas extends View implements Serializable {
 //        };
 //        tmr.schedule(task,0,10);
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                // update the y coordinate in c
-                rotateRate++;
-                if(rotateRate>=360){
-                    rotateHeight = -(width);
-                    rotateRate=0;
-                }
-                // ask for the view to be redrawn
-                invalidate();
-            }
-        };
-        tmr.schedule(task, 0, 10);
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                // update the y coordinate in c
+//                rotateRate++;
+//                if(rotateRate>=360){
+//                    rotateHeight = -(width);
+//                    rotateRate=0;
+//                }
+//                // ask for the view to be redrawn
+//                invalidate();
+//            }
+//        };
+//
+//        tmr.schedule(task, 0, 10);
     }
 
+    public void setRotateRate(int rotateRate){
+        this.rotateRate = rotateRate;
+        invalidate();
+    }
 
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
@@ -119,7 +124,6 @@ public class StartUpCanvas extends View implements Serializable {
 
         // rotate the canvas
         canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);
-        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2);
 
         Paint doubleBond1 = new Paint();
         Paint doubleBond2 = new Paint();
