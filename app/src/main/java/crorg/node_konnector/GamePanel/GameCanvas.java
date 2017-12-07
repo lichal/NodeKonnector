@@ -66,13 +66,15 @@ public class GameCanvas extends View implements Serializable {
 
         bondArrayList = new ArrayList<Bond>();
 
-        bondingMode = false;
 
-        currentNode = null;
+
+
 
         numSelect = 0;
         typeBond = 0;
 
+        bondingMode = false;
+        currentNode = null;
         selectedNode1 = null;
         selectedNode2 = null;
 
@@ -225,41 +227,101 @@ public class GameCanvas extends View implements Serializable {
 
         switch (action){
             case MotionEvent.ACTION_DOWN:
-                // user selects empty space
-                // user selects a shape
-                int numberOfCurrents = 0;
-                for (Node k : shapeArrayList) {
-                    if(k.checkSelect(x, y)){
-                        currentNode = k;
-                        numberOfCurrents = 1;
+                if (!bondingMode) {
+                    int numberOfCurrents = 0;
+                    for (Node k : shapeArrayList) {
+                        if(k.checkSelect(x, y)){
+                            currentNode = k;
+                            numberOfCurrents = 1;
+                            break;
+                        }
+                    }
+
+                    if (numberOfCurrents == 1) {
+
+
+
+
+                        // do everything else
+                    } else { // user touched empty screen
+                        selectedNode2 = null;
+                        selectedNode1 = null;
+                        currentNode = null;
+                    }
+                } else {
+                    // do bonding stuff here...
+                    currentNode = null;
+                    for (Node k : shapeArrayList) {
+                        if(k.checkSelect(x, y)) {
+                            if (numSelect == 0) {
+                                selectedNode1 = k;
+                                numSelect = 1;
+                                break;
+                            } else if (numSelect == 1) {
+                                if(selectedNode1 != k) {
+                                    selectedNode2 = k;
+                                    numSelect = 2;
+                                    // do stuff immediately
+                                    // remove all previous bonds between these two nodes FIRST...
+                                    for (Bond b : bondArrayList) {
+                                        Node one = b.getNode1();
+                                        Node two = b.getNode2();
+                                        if (((selectedNode1 == one) || (selectedNode1 == two))
+                                                && ((selectedNode2 == one) || (selectedNode2 == two))) {
+                                            bondArrayList.remove(b);
+                                        }
+                                    }
+
+                                    // NOW add bonds...
+                                    Bond temp = new Bond(selectedNode1, selectedNode2);
+                                    bondArrayList.add(temp);
+
+                                    // add the neighbor to each other, set bond type, increment konnections
+                                    selectedNode1.addNeighborNode(selectedNode2);
+                                    selectedNode2.addNeighborNode(selectedNode1);
+                                    switch (typeBond){
+                                        case 1:
+                                            temp.setBondType(Bond.SINGLE);
+                                            selectedNode1.incrementKonnections();
+                                            selectedNode2.incrementKonnections();
+                                            break;
+                                        case 2:
+                                            temp.setBondType(Bond.DOUBLE);
+                                            selectedNode1.incrementKonnections();
+                                            selectedNode2.incrementKonnections();
+                                            selectedNode1.incrementKonnections();
+                                            selectedNode2.incrementKonnections();
+                                            break;
+                                        case 3:
+                                            temp.setBondType(Bond.TRIPLE);
+                                            selectedNode1.incrementKonnections();
+                                            selectedNode2.incrementKonnections();
+                                            selectedNode1.incrementKonnections();
+                                            selectedNode2.incrementKonnections();
+                                            selectedNode1.incrementKonnections();
+                                            selectedNode2.incrementKonnections();
+                                            break;
+                                    }
+                                    // reset the selection to null
+                                    selectedNode1 = null;
+                                    selectedNode2 = null;
+
+                                    // reset number of shape selected to 0
+                                    numSelect = 0;
+                                    break;
+                                }
+                            } else {
+                            }
+                        }
                     }
                 }
 
-                if (numberOfCurrents == 1) {
-                    // do everything else
-                } else {
-                    selectedNode2 = null;
-                    selectedNode1 = null;
-                    currentNode = null;
-                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-                if(currentNode!=null)
-                    currentNode.setSelect(false);
-                currentNode = null;
-                selectedNode1 = null;
-                selectedNode2 = null;
+//                if(currentNode!=null)
+//                    currentNode.setSelect(false);
+//                currentNode = null;
+//                selectedNode1 = null;
+//                selectedNode2 = null;
 //                for (Node k : shapeArrayList) {
 //                    if(k.checkSelect(x, y)){
 //                        currentNode = k;
@@ -267,94 +329,11 @@ public class GameCanvas extends View implements Serializable {
 //                    }
 //                }
 
-
-                if(!bondingMode) {
-                    for (Node k : shapeArrayList) {
-                        if(k.checkSelect(x, y)){
-                            currentNode = k;
-                            break;
-                        }
-                    }
-                }
-                // bonding mode
-                if(bondingMode) {
-                    for (Node k : shapeArrayList) {
-                        if(k.checkSelect(x, y)) {
-                            if (numSelect == 1) {
-                                if(selectedNode1 != k) {
-                                    selectedNode2 = k;
-//                                    currentNode = k;
-                                    numSelect++;
-                                }
-                            }
-                            if (numSelect == 0) {
-                                selectedNode1 = k;
-//                                currentNode = k;
-                                numSelect++;
-                            }
-
-                        }
-                    }
-                    if(numSelect == 2){
-                        // remove all previous bonds between these two nodes FIRST...
-                        for (Bond b : bondArrayList) {
-                            Node one = b.getNode1();
-                            Node two = b.getNode2();
-                            if (((selectedNode1 == one) || (selectedNode1 == two))
-                                    && ((selectedNode2 == one) || (selectedNode2 == two))) {
-                                bondArrayList.remove(b);
-                            }
-                        }
-
-                        // NOW add bonds...
-                        Bond temp = new Bond(selectedNode1, selectedNode2);
-                        bondArrayList.add(temp);
-
-                        // add the neighbor to each other, set bond type, increment konnections
-                        selectedNode1.addNeighborNode(selectedNode2);
-                        selectedNode2.addNeighborNode(selectedNode1);
-                        switch (typeBond){
-                            case 1:
-                                temp.setBondType(Bond.SINGLE);
-                                selectedNode1.incrementKonnections();
-                                selectedNode2.incrementKonnections();
-                                break;
-                            case 2:
-                                temp.setBondType(Bond.DOUBLE);
-                                selectedNode1.incrementKonnections();
-                                selectedNode2.incrementKonnections();
-                                selectedNode1.incrementKonnections();
-                                selectedNode2.incrementKonnections();
-                                break;
-                            case 3:
-                                temp.setBondType(Bond.TRIPLE);
-                                selectedNode1.incrementKonnections();
-                                selectedNode2.incrementKonnections();
-                                selectedNode1.incrementKonnections();
-                                selectedNode2.incrementKonnections();
-                                selectedNode1.incrementKonnections();
-                                selectedNode2.incrementKonnections();
-                                break;
-                        }
-
-                        // reset the selection to null
-                        selectedNode1 = null;
-                        selectedNode2 = null;
-
-
-                        // reset number of shape selected to 0
-                        numSelect = 0;
-                    }
-                }
-
-
                 // print results
                 String selectedNode1Type = "SelectedNode1Type= " + Structure.printShapeType(selectedNode1);
                 String selectedNode2Type = "SelectedNode2Type= " + Structure.printShapeType(selectedNode2);
                 String currentNodeType = "CurrentNodeType= " + Structure.printShapeType(currentNode);
                 Log.d("TAG",currentNodeType + "\t" + selectedNode1Type + "\t" + selectedNode2Type);
-
-
                 invalidate();
             case MotionEvent.ACTION_MOVE:
                 if(!bondingMode) {
