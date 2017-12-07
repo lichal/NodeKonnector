@@ -41,6 +41,8 @@ public class GameCanvas extends View implements Serializable {
 
     private int typeBond;
 
+    private boolean isDrawingUpdated;
+
     //private GameScreen gameScreen;
 
     /** Rect for the moving node */
@@ -61,6 +63,8 @@ public class GameCanvas extends View implements Serializable {
     private Paint paint4;
     private Paint paint5;
 
+    private GameScreen gameScreen;
+
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -70,7 +74,8 @@ public class GameCanvas extends View implements Serializable {
 
         bondArrayList = new ArrayList<Bond>();
 
-
+        isDrawingUpdated = false;
+        //this.gameScreen = gameScreen;
 
 
 
@@ -100,6 +105,7 @@ public class GameCanvas extends View implements Serializable {
         paint5.setColor(Color.DKGRAY);
 
         Log.v("MESSAGE#45689", "Game canvas: LOADED...");
+
     }
 
     protected void onDraw(Canvas canvas){
@@ -119,7 +125,13 @@ public class GameCanvas extends View implements Serializable {
                 k.drawSelect(canvas);
             }
         }
+        isDrawingUpdated = true;
     }
+
+   // public boolean setIsDrawingUpdated(boolean bool) {
+       // isDrawingUpdated = bool;
+    //}
+
 
     public void setBondingMode(boolean startBonding, int type){
         this.bondingMode = startBonding;
@@ -166,6 +178,7 @@ public class GameCanvas extends View implements Serializable {
         int y = (int)event.getY();
         switch (action){
             case MotionEvent.ACTION_DOWN:
+
                 // NOT IN BONDING MODE....
                 if (!bondingMode) {
                     boolean wasAShapeTouched = false;

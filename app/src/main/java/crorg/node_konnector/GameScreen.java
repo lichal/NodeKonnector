@@ -30,7 +30,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -134,8 +138,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         }
 
         dragType = 0;
-
-
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
         level = 1 + Integer.parseInt(message);
@@ -156,21 +158,19 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         if ((userBonds_LIST != null) && (userNodes_LIST != null)
                 && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
+            Log.v("MESSAGE#45689", "load");
             game.setNodesArrayList(userNodes_LIST);
+            Log.v("MESSAGE#45689", "after set node");
             game.setBondArrayList(userBonds_LIST);
+            Log.v("MESSAGE#45689", "after set bond");
+            game.invalidate();
+            Log.v("MESSAGE#45689", "after repaint");
+
         } else {
+            Log.v("MESSAGE#45689", "new structure");
             // new game structure
             answerStructure = new Structure(level);
         }
-
-//        if ((userBonds_LIST != null) && (userNodes_LIST != null)
-//                && (answerStructure != null) && (level == answerStructure.getNodes().size())) {
-//            game.setNodesArrayList(userNodes_LIST);
-//            game.setBondArrayList(userBonds_LIST);
-//        } else {
-        // new game structure
-        answerStructure = new Structure(level);
-        // }
 
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
@@ -222,6 +222,18 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         doubleButton.setText("Double");
         tripleButton.setText("Triple");
 
+
+        game.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+//                if(game.getChangeState()){
+                    writeToFileSerial();
+//                }
+                //game.setIsDrawingUpdated(true);
+                //return false;
+                return false;
+            }
+        });
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -311,7 +323,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                 tripleButton.setText("Triple");
             }
         });
-
 
         circleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -408,6 +419,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 game.deleteSelectedNode();
+                writeToFileSerial();
             }
         });
 
@@ -511,6 +523,18 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             oos.writeObject(game.getBondArrayList());
             fos.close();
             oos.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -522,6 +546,18 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             oos.writeObject(game.getShapeArrayList());
             fos.close();
             oos.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -533,6 +569,18 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             oos.writeObject(answerStructure);
             fos.close();
             oos.close();
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        }catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
