@@ -238,6 +238,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 if (isChecked) {
                     game.setBondingMode(true, 1);
                     doubleButton.setEnabled(false);
@@ -269,6 +270,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 if (isChecked) {
                     game.setBondingMode(true, 2);
                     singleButton.setEnabled(false);
@@ -300,6 +302,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 if (isChecked) {
                     game.setBondingMode(true, 3);
                     singleButton.setEnabled(false);
@@ -331,6 +334,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 1;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleImage);
@@ -343,6 +347,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 2;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(squareImage);
@@ -355,6 +360,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 3;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(triangleImage);
@@ -367,6 +373,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 4;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(hexagonImage);
@@ -379,6 +386,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 final int action = event.getAction();
                 int x = (int) event.getX();
                 int y = (int) event.getY();
@@ -429,6 +437,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
                 game.deleteSelectedNode();
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
             }
         });
 
@@ -438,6 +447,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 game.nullifyFirstSelectedShapeToBondWith();
+                game.nullifyCurrentNode();
                 ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
                 if (game.getShapeArrayList().size() > 0) {
                     int numPlayerKonnectedNodes = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);

@@ -226,6 +226,8 @@ public class GameCanvas extends View implements Serializable {
                                         wasExistingBondChanged = true;
                                     }
                                 }
+                                nullifySelectedShape(shapeUserSelectedThisRound);
+
                                 // Case 2: Otherwise, add a new bond between two previously unbonded nodes...
                                 if (!wasExistingBondChanged) {
                                     // Add neighbors to each other, set bond type, increment konnections...
@@ -256,10 +258,9 @@ public class GameCanvas extends View implements Serializable {
                                             shapeUserSelectedThisRound.incrementKonnections();
                                             break;
                                     }
+                                    nullifySelectedShape(shapeUserSelectedThisRound);
                                 }
-                                // Make sure you deselect first node selected and turn off bonding mode...
-                                firstSelectedShapeToBondWith = null;
-                                //bondingMode = false;    // this doesn't quite work - how to send message to GameScreen to reactivate buttons?
+                                nullifySelectedShape(firstSelectedShapeToBondWith);
                             }
                         }
                     }
@@ -324,8 +325,30 @@ public class GameCanvas extends View implements Serializable {
         return bondArrayList;
     }
 
+
+    public void nullifySelectedShape(Node selectedNode) {
+        if (selectedNode != null) {
+            selectedNode.setSelect(false);
+        }
+        selectedNode = null;
+        invalidate();
+    }
+
+
     public void nullifyFirstSelectedShapeToBondWith() {
+        if (firstSelectedShapeToBondWith != null) {
+            firstSelectedShapeToBondWith.setSelect(false);
+        }
         firstSelectedShapeToBondWith = null;
+        invalidate();
+    }
+
+    public void nullifyCurrentNode() {
+        if (currentNode != null) {
+            currentNode.setSelect(false);
+        }
+        currentNode = null;
+        invalidate();
     }
 
 }
