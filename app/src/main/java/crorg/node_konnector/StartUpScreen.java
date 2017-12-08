@@ -288,13 +288,19 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         return true;
     }
 
+
+
+
+
     public void notifyUserOfSurpassingFriendScore(View view) {
         // The id of the channel.
         String CHANNEL_ID = "nodeKonnector_channel_0156";
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.ic_stat_name);
-        mBuilder.setContentTitle("HIGH SCORE BEATEN");
-        mBuilder.setContentText("A friend of yours has just BEATEN your high score!");
+        mBuilder.setContentTitle("NEW SCORE!");
+        //mBuilder.setContentText("A friend of yours has just BEATEN your high score!");
+        //mBuilder.setContentTitle("HIGH SCORE BEATEN");
+        mBuilder.setContentText("You just beat your old score!");
 //        mBuilder.setChannel(CHANNEL_ID);
         mBuilder.setTicker("NODES!");   // what does this do?
         mBuilder.setVibrate(new long[]{0, 100, 100, 100, 100, 100, 100, 1500, 1000, 100, 100, 100, 100, 100, 100, 1500});
@@ -306,10 +312,10 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         //mBuilder.setOngoing(true);  // this makes it impossible to swipe away
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, GameScreen.class);
+        Intent resultIntent = new Intent(this, StartUpScreen.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(LevelSelectScreen.class);
+        stackBuilder.addParentStack(StartUpScreen.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
