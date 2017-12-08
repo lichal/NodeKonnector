@@ -13,8 +13,10 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -54,6 +56,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 
@@ -63,6 +67,8 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
     /* The TextView for Press to Start */
     private TextView pressStart;
+    private TextView loadingText;
+    private TextView doneText;
     private File userProgress;  // local storage of user progress for the current Structure object
     private File structureAnswer;  // local storage of user progress for the current Structure object
 
@@ -96,20 +102,27 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         currentLevel = 1;
         currentScore = 0;
         isrunning = true;
+        mAuth = FirebaseAuth.getInstance();
 
         startUpCanvas = (StartUpCanvas) findViewById(R.id.startUpCanvas);
 
-        // firebase authentication
-        mAuth = FirebaseAuth.getInstance();
         // instantiate firebase database
         database = FirebaseDatabase.getInstance();
 
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
-        pressStart.setAnimation(manageBlinkEffect());
+        loadingText = (TextView) findViewById(R.id.loadingText);
+        doneText = (TextView)findViewById(R.id.doneText);
 
-        currentUser = mAuth.getCurrentUser();
-        myLevel = database.getReference("USERS_TABLE");
+        pressStart.setAnimation(manageBlinkEffect());
+        loadingText.setAnimation(manageBlinkEffect());
+
+        doneText.setTextSize(15f);
+        doneText.setTextSize(Color.BLACK);
+
+        loadingText.setTextSize(15f);
+        loadingText.setTextColor(Color.BLACK);
+//        loadingText.setVisibility(View.INVISIBLE);
 
         // facebook login button
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -134,22 +147,21 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         // App code
+                        Log.v("MESSAGE#", "LOGGED IN");
                         handleFacebookAccessToken(loginResult.getAccessToken());
-                        checkLoginStatus();
-                        Log.v("MESSSAGE#", "here i am");
                     }
                     @Override
                     public void onCancel() {
                         System.out.println("Success cancel");
-                        checkLoginStatus();
                         // App code
                     }
                     @Override
                     public void onError(FacebookException exception) {
-                        checkLoginStatus();
                         // App code
                     }
                 });
+
+
 
         AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -157,7 +169,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                                                        AccessToken currentAccessToken) {
                 if (currentAccessToken == null) {
                     //write your code here what to do when user clicks on facebook logout
-                    checkLoginStatus();
+                    updateLogout();
                     Log.v("MESSAGE#", "over here");
                 }
                 if(currentAccessToken != null){
@@ -171,30 +183,37 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     }
 
     private void checkLoginStatus(){
-        if(isLoggedIn()) {
+        if(AccessToken.getCurrentAccessToken() !=null) {
+            Log.v("MESSAGE#", "TOKEN");
             updateLogin();
         }else{
+            Log.v("MESSAGE#", "NoTOKEN");
             updateLogout();
         }
     }
 
     private void updateLogout(){
         // case user is not login, we will use the local copy of the score and levels.
+        currentUser = null;
         if(levelReadFromFile()) {
-            Log.d("MESSAGE###", "level read" + currentLevel);
+            Log.d("MESSAGE###", "LOADED" + currentLevel);
         }else{
             currentLevel = 1;
         }
         if(scoreReadFromFile()){
-            Log.d("MESSAGE###", "score read" + currentScore);
+//            Log.d("MESSAGE###", "score read" + currentScore);
         }else{
             currentScore = 0;
         }
     }
 
-
     private void updateLogin(){
         // retreive level information from firebase
+        if(isLoggedIn()) {
+            // firebase authentication
+            currentUser = mAuth.getCurrentUser();
+        }
+        myLevel = database.getReference("USERS_TABLE");
         myLevel.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -202,7 +221,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
                     int levelValue = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
                     currentLevel = levelValue;
-                    Log.d("TAG", "Level is: " + levelValue);
                 } else{
                     currentLevel = 1;
                     myLevel.child(currentUser.getUid()).child("Level").setValue(1);
@@ -211,7 +229,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
                     int scoreValue = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
                     currentScore = scoreValue;
-                    Log.d("TAG", "Score is: " + scoreValue);
                 } else{
                     currentScore = 0;
                     myLevel.child(currentUser.getUid()).child("Score").setValue(0);
@@ -284,41 +301,62 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     }
 
     @Override
-    protected void onResume(){
-        super.onResume();
-        checkLoginStatus();
-    }
-
-    @Override
     public void onStart() {
-
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
 
-        if(!isLoggedIn()){
-            FirebaseAuth.getInstance().signOut();
-        }else {
+        // Check if user is signed in (non-null) and update UI accordingly.
+        if(isLoggedIn()){
             currentUser = mAuth.getCurrentUser();
+            updateLogin();
+        }else {
+            FirebaseAuth.getInstance().signOut();
+            updateLogout();
+            Log.d("MESSAGE", "HERE IN SIGNOUT START");
+            currentUser = null;
         }
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d("TAG", "handleFacebookAccessToken:" + token);
+    public void onResume(){
+        super.onResume();
+        if(isLoggedIn()){
+            currentUser = mAuth.getCurrentUser();
+            updateLogin();
+        }else {
+            FirebaseAuth.getInstance().signOut();
+            updateLogout();
+            Log.d("MESSAGE", "HERE IN SIGNOUT START");
+            currentUser = null;
+        }
+    }
 
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d("MESSAGE#", "handleFacebookAccessToken:" + token);
+
+        loadingText.setTextColor(Color.LTGRAY);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        ///right here make some fading out
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    loadingText.setTextColor(Color.BLACK);
+                    doneText.setTextColor(Color.LTGRAY);
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d("TAG", "signInWithCredential:success");
-                    if(!isLoggedIn()){
-                        FirebaseAuth.getInstance().signOut();
-                    }else {
-                        currentUser = mAuth.getCurrentUser();
-                    }
+                    ////remove the fading out
+                    Log.v("MESSAGE#", "signInWithCredential:success");
+                    currentUser = mAuth.getCurrentUser();
+                    updateLogin();
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    Animation fade;
+                    fade = new AlphaAnimation(1, 0);
+                    fade.setDuration(750);
+                    fade.setFillAfter(true);
+                    doneText.setAnimation(fade);
                 }
-
             }
         });
     }
@@ -359,6 +397,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         switch (event.getAction()){
             // Case touch down
             case MotionEvent.ACTION_DOWN:
+                checkLoginStatus();
                 Log.d("MESSAGE#", "level" + currentLevel);
                 Log.d("MESSAGE#", "score" + currentScore);
                 // Setting a bew intent for screen transition
@@ -368,8 +407,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 Log.d("MESSAGE#", "why are you" + currentScore);
                 // Transition to level screen
                 startActivity(intent);
-                // End start up activity
-//                finish();
         }
         return true;
     }
