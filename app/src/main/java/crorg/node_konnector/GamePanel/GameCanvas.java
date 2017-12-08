@@ -79,7 +79,7 @@ public class GameCanvas extends View implements Serializable {
 
 
         numSelect = 0;
-        typeBond = 0;
+        typeBond = Bond.SINGLE;
 
         bondingMode = false;
         currentNode = null;
@@ -156,21 +156,11 @@ public class GameCanvas extends View implements Serializable {
     }
 
 
-
-
-
-
-
-
     // we should separate these - deleting a node for one button, deleting a bond for another (deleting a bond means selecting the two nodes to delete it from, then hitting the button
     public void deleteSelectedNode(){
-        if (currentNode != null) {
-            Structure.deleteGivenNode(currentNode, bondArrayList, shapeArrayList, currentNode, firstSelectedShapeToBondWith, selectedNode2);
-            //firstSelectedShapeToBondWith = null;
-            //selectedNode2 = null;
-            //currentNode = null;
-            invalidate();
-        }
+        Log.v("ERROR44", "Preparing to delete node...");
+        Structure.deleteGivenNode(currentNode, bondArrayList, shapeArrayList);
+        invalidate();
     }
 
     @Override
@@ -182,103 +172,6 @@ public class GameCanvas extends View implements Serializable {
             case MotionEvent.ACTION_DOWN:
                 actionDownMethod(x, y);
                 invalidate();
-                // regardless, set all things back to null
-
-
-//                // NOT IN BONDING MODE....
-//                if (!bondingMode) {
-//                    boolean wasAShapeTouched = false;
-//                    for (Node k : shapeArrayList) {
-//                        if(k.checkSelect(x, y)){
-//                            currentNode = k;
-//                            wasAShapeTouched = true;
-//                        }
-//                    }
-//                    currentNode = (wasAShapeTouched) ? currentNode : null;
-//                // IN BONDING MODE...
-//                } else {
-//                    if (currentNode != null) {
-//                        currentNode.setSelect(false);
-//                        //redraw canvas here???  Get rid of white square?
-//                    }
-//                    currentNode = null;
-//                    Node shapeUserSelectedThisRound = null;
-//                    boolean wasAShapeTouched = false;
-//                    for (Node k : shapeArrayList) {
-//                        if (k.checkSelect(x, y)) {
-//                            wasAShapeTouched = true;
-//                            shapeUserSelectedThisRound = k;
-//                        }
-//                    }
-//                    if (!wasAShapeTouched) {
-//                        firstSelectedShapeToBondWith = null;
-//                    } else {
-//                        // Assign firstNodeToBond if it is now blank...
-//                        if (firstSelectedShapeToBondWith == null) {
-//                            firstSelectedShapeToBondWith = shapeUserSelectedThisRound;
-//                        } else {
-//                            // Otherwise, compare it to the node the user just selected THIS round...
-//                            if (shapeUserSelectedThisRound != firstSelectedShapeToBondWith) {
-//                                // Case 1: Change an existing bond to a different type...
-//                                boolean wasExistingBondChanged = false;
-//                                for (Bond b : bondArrayList) {
-//                                    Node one = b.getNode1();
-//                                    Node two = b.getNode2();
-//                                    if (((firstSelectedShapeToBondWith == one) || (firstSelectedShapeToBondWith == two))
-//                                            && ((shapeUserSelectedThisRound == one) || (shapeUserSelectedThisRound == two))) {
-//                                        b.setBondType(typeBond);
-//                                        wasExistingBondChanged = true;
-//                                        nullifySelectedShape(firstSelectedShapeToBondWith);
-//                                        nullifySelectedShape(shapeUserSelectedThisRound);
-//                                        shapeUserSelectedThisRound.setSelect(false);
-//                                    }
-//                                }
-//                                //nullifySelectedShape(shapeUserSelectedThisRound);
-//
-//                                // Case 2: Otherwise, add a new bond between two previously unbonded nodes...
-//                                if (!wasExistingBondChanged) {
-//                                    // Add neighbors to each other, set bond type, increment konnections...
-//                                    Bond temp = new Bond(firstSelectedShapeToBondWith, shapeUserSelectedThisRound);
-//                                    bondArrayList.add(temp);
-//                                    firstSelectedShapeToBondWith.addNeighborNode(shapeUserSelectedThisRound);
-//                                    shapeUserSelectedThisRound.addNeighborNode(firstSelectedShapeToBondWith);
-//                                    switch (typeBond) {
-//                                        case 1:
-//                                            temp.setBondType(Bond.SINGLE);
-//                                            firstSelectedShapeToBondWith.incrementKonnections();
-//                                            shapeUserSelectedThisRound.incrementKonnections();
-//                                            nullifySelectedShape(firstSelectedShapeToBondWith);
-//                                            nullifySelectedShape(shapeUserSelectedThisRound);
-//                                            break;
-//                                        case 2:
-//                                            temp.setBondType(Bond.DOUBLE);
-//                                            firstSelectedShapeToBondWith.incrementKonnections();
-//                                            shapeUserSelectedThisRound.incrementKonnections();
-//                                            firstSelectedShapeToBondWith.incrementKonnections();
-//                                            shapeUserSelectedThisRound.incrementKonnections();
-//                                            nullifySelectedShape(firstSelectedShapeToBondWith);
-//                                            nullifySelectedShape(shapeUserSelectedThisRound);
-//                                            break;
-//                                        case 3:
-//                                            temp.setBondType(Bond.TRIPLE);
-//                                            firstSelectedShapeToBondWith.incrementKonnections();
-//                                            shapeUserSelectedThisRound.incrementKonnections();
-//                                            firstSelectedShapeToBondWith.incrementKonnections();
-//                                            shapeUserSelectedThisRound.incrementKonnections();
-//                                            firstSelectedShapeToBondWith.incrementKonnections();
-//                                            shapeUserSelectedThisRound.incrementKonnections();
-//                                            nullifySelectedShape(firstSelectedShapeToBondWith);
-//                                            nullifySelectedShape(shapeUserSelectedThisRound);
-//                                            break;
-//                                    }
-//                                    nullifySelectedShape(firstSelectedShapeToBondWith);
-//                                    nullifySelectedShape(shapeUserSelectedThisRound);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(!bondingMode) {
@@ -344,23 +237,6 @@ public class GameCanvas extends View implements Serializable {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
     // EXPERIMENTAL
@@ -399,7 +275,6 @@ public class GameCanvas extends View implements Serializable {
     private void processInBondingMode(int x, int y) {
         deselectAll();
         currentNode = null;
-
         Node shapeUserSelectedThisRound = null;
         boolean wasAShapeTouched = false;
         mainLoop:
@@ -428,32 +303,28 @@ public class GameCanvas extends View implements Serializable {
     }
 
 
-
     private void startBondingProcess(Node shapeUserSelectedThisRound, Node previousShapePicked) {
         // Case 1: Change an existing bond to a different type...
-        // do I have to clear all existing bonds first?
         boolean wasExistingBondChanged = false;
         for (Bond b : bondArrayList) {
             Node one = b.getNode1();
             Node two = b.getNode2();
-            if (((previousShapePicked == one) || (previousShapePicked == two))
-                    && ((shapeUserSelectedThisRound == one) || (shapeUserSelectedThisRound == two))) {
+            if (((previousShapePicked == one) && (shapeUserSelectedThisRound == two))
+                    || ((previousShapePicked == two) && (shapeUserSelectedThisRound == one))) {
                 b.setBondType(typeBond);
                 wasExistingBondChanged = true;
                 deselectAll();
                 firstSelectedShapeToBondWith = null;
                 currentNode = null;
-                //nullifySelectedShape(firstSelectedShapeToBondWith);
-                //nullifySelectedShape(shapeUserSelectedThisRound);
-                //shapeUserSelectedThisRound.setSelect(false);
             }
         }
         // Case 2: Otherwise, add a new bond between two previously unbonded nodes...
+        // CLEAR all previous bonds FIRST...
         if (!wasExistingBondChanged) {
+            Structure.clearAllBondsBetweenTwoNodes(shapeUserSelectedThisRound, previousShapePicked, bondArrayList);
             createNewBondBetweenNodes(shapeUserSelectedThisRound, previousShapePicked);
         }
     }
-
 
 
     private void createNewBondBetweenNodes(Node shapeUserSelectedThisRound, Node previousShapePicked) {
@@ -467,8 +338,6 @@ public class GameCanvas extends View implements Serializable {
                 temp.setBondType(Bond.SINGLE);
                 previousShapePicked.incrementKonnections();
                 shapeUserSelectedThisRound.incrementKonnections();
-                //nullifySelectedShape(firstSelectedShapeToBondWith);
-                //nullifySelectedShape(shapeUserSelectedThisRound);
                 break;
             case 2:
                 temp.setBondType(Bond.DOUBLE);
@@ -476,8 +345,6 @@ public class GameCanvas extends View implements Serializable {
                 shapeUserSelectedThisRound.incrementKonnections();
                 previousShapePicked.incrementKonnections();
                 shapeUserSelectedThisRound.incrementKonnections();
-                //nullifySelectedShape(firstSelectedShapeToBondWith);
-                //nullifySelectedShape(shapeUserSelectedThisRound);
                 break;
             case 3:
                 temp.setBondType(Bond.TRIPLE);
@@ -487,12 +354,8 @@ public class GameCanvas extends View implements Serializable {
                 shapeUserSelectedThisRound.incrementKonnections();
                 previousShapePicked.incrementKonnections();
                 shapeUserSelectedThisRound.incrementKonnections();
-                //nullifySelectedShape(firstSelectedShapeToBondWith);
-                //nullifySelectedShape(shapeUserSelectedThisRound);
                 break;
         }
-        //nullifySelectedShape(firstSelectedShapeToBondWith);
-        //nullifySelectedShape(shapeUserSelectedThisRound);
         deselectAll();
         firstSelectedShapeToBondWith = null;
         currentNode = null;
@@ -513,39 +376,5 @@ public class GameCanvas extends View implements Serializable {
         currentNode = null;
         firstSelectedShapeToBondWith = null;
     }
-
-
-
-
-
-
-    //    public void nullifySelectedShape(Node selectedNode) {
-//        if (selectedNode != null) {
-//            selectedNode.setSelect(false);
-//            selectedNode = null;
-//            invalidate();
-//        }
-//    }
-
-
-//    public void nullifyFirstSelectedShapeToBondWith() {
-//        if (firstSelectedShapeToBondWith != null) {
-//            firstSelectedShapeToBondWith.setSelect(false);
-//            firstSelectedShapeToBondWith = null;
-//            invalidate();
-//        }
-//    }
-//
-//    public void nullifyCurrentNode() {
-//        if (currentNode != null) {
-//            currentNode.setSelect(false);
-//            currentNode = null;
-//            invalidate();
-//        }
-//    }
-
-
-
-
 
 }

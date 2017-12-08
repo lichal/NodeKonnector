@@ -437,6 +437,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                 game.deleteSelectedNode();
                 game.deselectAll();
                 game.nullifyCurrentNodeAndFirstSelectedNode();
+                Log.v("ERROR44", "Passed trash button");
             }
         });
 

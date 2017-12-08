@@ -2,8 +2,10 @@ package crorg.node_konnector;
 
 import android.graphics.Color;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -394,14 +396,20 @@ public class Structure implements Serializable {
 
 
 
-    public static void deleteGivenNode(Node nodeToRemove, ArrayList<Bond> playerBonds, ArrayList<Node> playerNodes, Node currentNode, Node selectedNode1, Node selectedNode2) {
+
+
+    public static void deleteGivenNode(Node nodeToRemove, ArrayList<Bond> playerBonds, ArrayList<Node> playerNodes) {
+        if ((nodeToRemove == null) || (playerBonds == null) || (playerNodes == null)) {
+            Log.v("ERROR44", "currentNode is null, or bonds or shapes is null");
+          return;
+        }
+        Log.v("ERROR44", "Passed null tests...");
         ArrayList<Bond> bondsToRemove = new ArrayList<Bond>();
         System.out.println("Got into delete method!");
         for (Bond b : playerBonds) {
-            System.out.println("Here is a bond!");
             if ((b.getNode1() == nodeToRemove) || (b.getNode2() == nodeToRemove)) {
                 bondsToRemove.add(b);
-                System.out.println("Found a bond to remove!");
+                Log.v("ERROR44", "Found a bond to remove!");
                 Node one = b.getNode1();
                 Node two = b.getNode2();
 
@@ -411,11 +419,13 @@ public class Structure implements Serializable {
                 if (b.getBondType() == Bond.SINGLE) {
                     one.decrementKonnections();
                     two.decrementKonnections();
+                    Log.v("ERROR44", "Decrementing konnections for single bonds...");
                 } else if (b.getBondType() == Bond.DOUBLE) {
                     one.decrementKonnections();
                     two.decrementKonnections();
                     one.decrementKonnections();
                     two.decrementKonnections();
+                    Log.v("ERROR44", "Decrementing konnections for double bonds...");
                 } else if (b.getBondType() == Bond.TRIPLE) {
                     one.decrementKonnections();
                     two.decrementKonnections();
@@ -423,6 +433,7 @@ public class Structure implements Serializable {
                     two.decrementKonnections();
                     one.decrementKonnections();
                     two.decrementKonnections();
+                    Log.v("ERROR44", "Decrementing konnections for triple bonds...");
                 } else {
                 }
             }
@@ -431,10 +442,54 @@ public class Structure implements Serializable {
         // Now remove bond from player list and node from shapes list
         for (Bond removeBonds : bondsToRemove) {
             playerBonds.remove(removeBonds);
-            System.out.println("removing a bond!");
+            Log.v("ERROR44", "Removed bond from player list!");
         }
         nodeToRemove.setSelect(false);
         playerNodes.remove(nodeToRemove);
+        bondsToRemove.clear();
+        Log.v("ERROR44", "Node deleted.");
+    }
+
+
+    public static void clearAllBondsBetweenTwoNodes(Node node1, Node node2, ArrayList<Bond> playerBonds) {
+        ArrayList<Bond> bondsToRemove = new ArrayList<Bond>();
+        for (Bond b : playerBonds) {
+            Node one = b.getNode1();
+            Node two = b.getNode2();
+            if (((node1 == one) && (node2 == two))
+                    || ((node1 == two) || (node2 == one))) {
+                bondsToRemove.add(b);
+            }
+        }
+
+        // Now, delete all neighbor nodes, update konnections, and finally remove bonds from arrayList
+        // Now remove bond from player list and node from shapes list
+        for (Bond bondToRemove : bondsToRemove) {
+            Node one = bondToRemove.getNode1();
+            Node two = bondToRemove.getNode2();
+            one.removeNeighborNode(two);
+            two.removeNeighborNode(one);
+            if (bondToRemove.getBondType() == Bond.SINGLE) {
+                one.decrementKonnections();
+                two.decrementKonnections();
+            } else if (bondToRemove.getBondType() == Bond.DOUBLE) {
+                one.decrementKonnections();
+                two.decrementKonnections();
+                one.decrementKonnections();
+                two.decrementKonnections();
+            } else if (bondToRemove.getBondType() == Bond.TRIPLE) {
+                one.decrementKonnections();
+                two.decrementKonnections();
+                one.decrementKonnections();
+                two.decrementKonnections();
+                one.decrementKonnections();
+                two.decrementKonnections();
+            } else {
+                // Do NOTHING...
+            }
+        }
+
+        // Don't know if this is necessary, but clear this reference also...
         bondsToRemove.clear();
     }
 
