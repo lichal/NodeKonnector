@@ -23,16 +23,15 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
 
     private final List<LevelItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private int level;
+    private int level = 0;
 
     public LevelAdapter(List<LevelItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-        level = 1;
     }
 
-    public void setLevel(int level){
-        this.level = level;
+    public static void setLevel(int level){
+
     }
 
     @Override

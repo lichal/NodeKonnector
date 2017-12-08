@@ -24,11 +24,14 @@ public class LevelContent implements Serializable {
      */
     public static final Map<String, LevelItem> ITEM_MAP = new HashMap<String, LevelItem>();
 
-    private static int COUNT = 1;
+    public static int COUNT = 5;
 
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
+    private static void numItems(){
+
+    }
+
+    public static void createList(int count){
+        for (int i = 1; i <= count; i++) {
             addItem(createDummyItem(i));
         }
     }
@@ -36,6 +39,10 @@ public class LevelContent implements Serializable {
     private static void addItem(LevelItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
+    }
+
+    private static void removeItem(){
+        ITEMS.remove(1);
     }
 
     private static LevelItem createDummyItem(int position) {

@@ -80,6 +80,9 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     private int currentLevel;
     private int currentScore;
 
+    private boolean isrunning;
+    private StartUpCanvas startUpCanvas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +90,9 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
         currentLevel = 1;
         currentScore = 0;
+        isrunning = true;
+
+        startUpCanvas = (StartUpCanvas) findViewById(R.id.startUpCanvas);
 
         // firebase authentication
         mAuth = FirebaseAuth.getInstance();
@@ -166,7 +172,15 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 }
             });
         }
-
+        Timer t = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                // update the y coordinate in c
+                startUpCanvas.updateCanvas();
+            }
+        };
+        t.schedule(task, 0, 10);
     }
 
     public boolean isLoggedIn() {

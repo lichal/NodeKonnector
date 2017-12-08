@@ -16,18 +16,14 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     public static final String LEVEL_MESSAGE = "crorg.nodekonnector.LEVELMESSAGE";
 
     private int level;
-    private RecyclerView levelView;
-    private LevelAdapter adapter;
     // a comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        levelView = (RecyclerView) findViewById(R.id.levelList);
+
         LevelContent.LevelItem i = new LevelContent.LevelItem("1", "","");
-
-
 
         // initialize level with 1
         level = 1;
@@ -35,8 +31,8 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         // retreive the level information
         Intent intent = getIntent();
         int levelMessage = intent.getIntExtra(StartUpScreen.LEVEL_NOW, 0);
-
         level = levelMessage;
+        LevelContent.createList(2);
     }
 
     @Override
