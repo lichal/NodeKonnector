@@ -30,6 +30,7 @@ public class StartUpCanvas extends View implements Serializable {
     private Drawable square;
     private Drawable triangle;
     private Drawable hexagon;
+    private Drawable title;
     private int width;
     private float rotateRate;
 
@@ -43,13 +44,18 @@ public class StartUpCanvas extends View implements Serializable {
         square = getResources().getDrawable(R.drawable.square);
         triangle = getResources().getDrawable(R.drawable.triangle);
         hexagon = getResources().getDrawable(R.drawable.hexagon);
+        title = getResources().getDrawable(R.drawable.title);
     }
 
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         width = getWidth()/9;
 
+        int titleX = width/2;
         // x y position for circle
+        int titleY = getWidth()/5;
+        int titleWidth = getWidth()-width/2;
+        int titleHeight = getHeight()/4;
         int circleX = getWidth()/2+width/2*2;
         int circleY = getHeight()/2-(int)(width*3.5) + 2*width;
 
@@ -77,6 +83,9 @@ public class StartUpCanvas extends View implements Serializable {
         doubleBond1.setStrokeWidth(15f);
         doubleBond2.setColor(Color.BLACK);
         doubleBond2.setStrokeWidth(5f);
+
+        title.setBounds(titleX, titleY, titleWidth, titleY + titleHeight);
+        title.draw(canvas);
 
         // from triangle to hexagon double bond
         canvas.drawLine(triX + width/2, triY+20, hexX+20,hexY+width/2, doubleBond1);
