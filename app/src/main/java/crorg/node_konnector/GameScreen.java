@@ -4,8 +4,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.PathShape;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,11 +20,8 @@ import android.widget.ToggleButton;
 import com.facebook.AccessToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,7 +64,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private ImageView hexagonImage;
 
     private Button checkStructure;
-    private int level;
 
     private ImageButton trashButton;
 
@@ -81,20 +75,24 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private GameCanvas game;
     private DrawPath drawShape;
 
-    private int scores;
+    private int currentNodePlaying;
+    private int currentLevelPlaying;
+    private int highestScore;
 
     private ArrayList<Bond> userBonds_LIST;
     private ArrayList<Node> userNodes_LIST;
-    private Structure answerStructure;    // the logic holding the answer for a given level
+    private Structure answerStructure;    // the logic holding the answer for a given currentNodePlaying
     private File userBonds_FILE;
     private File userNodes_FILE;
     private File answerStructure_FILE;
 
     // primitive data only
     private File userScore_FILE;
-    public static File userLevel_FILE;
+    private File userLevel_FILE;
 
     private int lastLevelPlayed;
+
+    private int highestLevel;
 
     /** Firecase set and retrieve variables */
     private DatabaseReference userData;
@@ -107,23 +105,30 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.v("MESSAGE#45689", "Before content view...");
         setContentView(R.layout.activity_game_screen);
-        //Log.v("MESSAGE#45689", "AFTER content view");
 
-
-        // intent gets the level selected
-        Intent intent = getIntent();
-        scores = 0;
-        String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
-        level = 0;
-
+        highestScore = 0;
         dragType = 0;
-        ////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////
-        level = 1 + Integer.parseInt(message);
-// VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
-// setting up local storage for user's progres on a given level...
+        highestLevel = 1;
+        currentLevelPlaying = 1;
+        currentNodePlaying = 0;
+        highestLevel = 1;
+
+        // intent gets the currentNodePlaying selected
+        Intent intent = getIntent();
+        highestLevel = intent.getIntExtra(LevelSelectScreen.HIGHEST_LEVEL, highestLevel);
+
+        currentLevelPlaying = intent.getIntExtra(LevelSelectScreen.LEVEL_MESSAGE, currentLevelPlaying);
+
+        highestScore = intent.getIntExtra(LevelSelectScreen.HIGHEST_SCORE, highestScore);
+
+//        highestScore = intent.getIntExtra(LevelSelectScreen.HIGHEST_SCORE, highestScore);
+
+        Log.d("MESSAGE#", "What are you" + highestScore + " current" + currentLevelPlaying + " hight" + highestLevel );
+        currentNodePlaying = currentLevelPlaying + 1;
+
+        // VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
+        // setting up local storage for user's progres on a given currentNodePlaying...
         final String uBondsFile = "userProgressBonds123";
         final String uNodesFile = "userProgressNodes123";
         final String answerStructureFile = "answerStructure123";
@@ -137,9 +142,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         userNodes_LIST = null;
         answerStructure = null;
         //readFromFileSerial();
-        answerStructure = new Structure(level);
-
-
+        answerStructure = new Structure(currentNodePlaying);
 
         // TEMPORARILY delete these...
         //userBonds_FILE.delete();
@@ -151,7 +154,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 //        if (userBonds_LIST != null) {
 //            if (userNodes_LIST != null) {
 //                if (answerStructure != null) {
-//                    if (level == answerStructure.getNodes().size()) {
+//                    if (currentNodePlaying == answerStructure.getNodes().size()) {
 //                        Log.v("MESSAGE#45689", "DATA FROM FILES LOADED... recreating structure...");
 //                        game.setNodesArrayList(userNodes_LIST);
 //                        Log.v("MESSAGE#45689", "after set node");
@@ -160,39 +163,32 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 //                        game.invalidate();
 //                        Log.v("MESSAGE#45689", "after repaint");
 //                    } else {
-//                        Log.v("MESSAGE#45689", "level not the same as answer");
+//                        Log.v("MESSAGE#45689", "currentNodePlaying not the same as answer");
 //                        Log.v("MESSAGE#45689", "Creating new structure...");
-//                        answerStructure = new Structure(level);
+//                        answerStructure = new Structure(currentNodePlaying);
 //                    }
 //                } else {
 //                    Log.v("MESSAGE#45689", "answer structure is null!");
 //                    Log.v("MESSAGE#45689", "Creating new structure...");
-//                    answerStructure = new Structure(level);
+//                    answerStructure = new Structure(currentNodePlaying);
 //                }
 //            } else {
 //                Log.v("MESSAGE#45689", "nodes list is null!");
 //                Log.v("MESSAGE#45689", "Creating new structure...");
-//                answerStructure = new Structure(level);
+//                answerStructure = new Structure(currentNodePlaying);
 //            }
 //        } else {
 //            Log.v("MESSAGE#45689", "bonds list is null!");
 //            Log.v("MESSAGE#45689", "Creating new structure...");
-//            answerStructure = new Structure(level);
+//            answerStructure = new Structure(currentNodePlaying);
 //        }
-
-
-
-
-
-
-
 
 
         ////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
         gameStat = (TextView) findViewById(R.id.gameStat);
-        gameStat.setText("Total Nodes:  " + level);
+        gameStat.setText("Total Nodes:  " + currentNodePlaying);
         gameStat.setTextColor(Color.rgb(255, 165, 00));
         gameStat.setTextSize(20f);
 
@@ -238,18 +234,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         doubleButton.setText("Double");
         tripleButton.setText("Triple");
 
-
-//        game.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-////                if(game.getChangeState()){
-//                    //writeToFileSerial();
-////                }
-//                //game.setIsDrawingUpdated(true);
-//                //return false;
-//                return false;
-//            }
-//        });
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -467,22 +451,34 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                                                         userBonds_FILE.delete();
                                                         userNodes_FILE.delete();
 
+                                                        // check if current level playing is the highest level player get to.
+                                                        if(currentLevelPlaying == highestLevel){
+                                                            highestLevel++;
+                                                        }
 
                                                         // WE NEED To seT the LOCAL COPY OF THEIR SCORE ALSO
                                                         if (isLoggedIn()) {
                                                             // WE NEED to compare firebase's values with local values - if they don't match,
-                                                            // set both to the HIGHER of the two.  THEN up the score and level as below...
-                                                            scores += Math.pow(3, level);
-                                                            userData.child(currentUser.getUid()).child("Score").setValue(scores);
-                                                            userData.child(currentUser.getUid()).child("Level").setValue(level);
-                                                            // update level and score LOCALLY also...
-                                                            nonSerialWriteToFile();
+                                                            // set both to the HIGHER of the two.  THEN up the score and currentNodePlaying as below...
+                                                            highestScore += Math.pow(3, currentNodePlaying);
+                                                            userData.child(currentUser.getUid()).child("Score").setValue(highestScore);
+                                                            userData.child(currentUser.getUid()).child("Level").setValue(highestLevel);
+                                                            // update currentNodePlaying and score LOCALLY also...
                                                         } else {
-                                                            scores += Math.pow(3, level);
+                                                            highestScore += Math.pow(3, currentNodePlaying);
                                                             nonSerialWriteToFile();
-                                                            // up their current level...
+                                                            // up their current currentNodePlaying...
                                                             // SAVE this stuff LOCaLlY so that when they open the app again, the data remains
                                                         }
+                                                        checkStructure.setEnabled(false);
+                                                        singleButton.setEnabled(false);
+                                                        doubleButton.setEnabled(false);
+                                                        tripleButton.setEnabled(false);
+                                                        trashButton.setEnabled(false);
+                                                        circleImage.setEnabled(false);
+                                                        squareImage.setEnabled(false);
+                                                        triangleImage.setEnabled(false);
+                                                        hexagonImage.setEnabled(false);
                                                     } else {
                                                         gameStat.setText("Oops! Shape AMOUNTS don't match!");
                                                     }
@@ -515,49 +511,42 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             }
         });
 
-        if(nonSerialReadFromFile()){
-            Log.v("MESSAGE#", "inside fail"+scores);
-        }else{
-            scores=0;
-        }
-        Log.v("MESSAGE#", "outside"+scores);
 
-        if (isLoggedIn()) {
-            database = FirebaseDatabase.getInstance();
-            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        userData = database.getReference("USERS_TABLE");
 
-            userData = database.getReference("USERS_TABLE");
-
-            // Read from the database
-            userData.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
-                        int value = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
-                        if(level<value) {
-                            level = value;
-                        }
-                    } else{
-                        userData.child(currentUser.getUid()).child("Level").setValue(level);
-                    }
-                    if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
-                        int value = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
-                        if(scores<value){
-                            scores = value;
-                        }
-                    } else{
-                        userData.child(currentUser.getUid()).child("Score").setValue(scores);
-                    }
-                    nonSerialWriteToFile();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    Log.v("TAG", "Failed to read value.", error.toException());
-                }
-            });
-        }
+//        if (isLoggedIn()) {
+//
+//
+//
+//
+//
+//            // Read from the database
+//            userData.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
+//                        int value = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
+//                        currentNodePlaying = value;
+//                    } else{
+//                        userData.child(currentUser.getUid()).child("Level").setValue(currentNodePlaying);
+//                    }
+//                    if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
+//                        int value = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
+//                        highestScore = value;
+//                    } else{
+//                        userData.child(currentUser.getUid()).child("Score").setValue(highestScore);
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError error) {
+//                    // Failed to read value
+//                    Log.v("TAG", "Failed to read value.", error.toException());
+//                }
+//            });
+//        }
     }
 
 
@@ -569,7 +558,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         // save user score...
         try {
             outputStream = openFileOutput(userScore_FILE.getName(), Context.MODE_PRIVATE);
-            outputStream.write(scores);
+            outputStream.write(highestScore);
+            Log.d("MESSAGE#", "DO I GET SCORE SAVE?" + highestScore);
             outputStream.close();
         } catch (FileNotFoundException ff) {
             Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
@@ -587,10 +577,11 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             e.printStackTrace();
         }
 
-        // save user level
+        // save user currentNodePlaying
         try {
             outputStream = openFileOutput(userLevel_FILE.getName(), Context.MODE_PRIVATE);
-            outputStream.write(level);
+            outputStream.write(highestLevel);
+            Log.d("MESSAGE#", "DO I GET SCORE SAVE?" + highestLevel);
             outputStream.close();
         } catch (FileNotFoundException ff) {
             Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
@@ -610,7 +601,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     }
 
     //
-    // use these to save the current state of the level...
+    // use these to save the current state of the currentNodePlaying...
     public void writeToFileSerial() {
         // write player bonds to file...
         try {
@@ -682,7 +673,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         }
     }
 
-    // use these to save the current state of the level...
+    // use these to save the current state of the currentNodePlaying...
     public void readFromFileSerial() {
         // get user nodes...
         try {
@@ -777,69 +768,69 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     }
 
 
-    public boolean nonSerialReadFromFile() {
-        FileInputStream inputStream;
-//        String s = "";
+//    public boolean nonSerialReadFromFile() {
+//        FileInputStream inputStream;
+////        String s = "";
+////        try {
+////            inputStream = openFileInput(userBonds_FILE.getName());
+////            int nextByte = 0;
+////            while (nextByte != -1) {
+////                nextByte = inputStream.read();
+////                s += (char) nextByte;
+////            }
+////            inputStream.close();
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+//
+//        // get user currentNodePlaying
 //        try {
-//            inputStream = openFileInput(userBonds_FILE.getName());
-//            int nextByte = 0;
-//            while (nextByte != -1) {
-//                nextByte = inputStream.read();
-//                s += (char) nextByte;
-//            }
+//            inputStream = openFileInput(userLevel_FILE.getName());
+//            currentNodePlaying = inputStream.read();
 //            inputStream.close();
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-
-        // get user level
-        try {
-            inputStream = openFileInput(userLevel_FILE.getName());
-            level = inputStream.read();
-            inputStream.close();
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // get user scores
-        try {
-            inputStream = openFileInput(userScore_FILE.getName());
-            scores = inputStream.read();
-            inputStream.close();
-            return true;
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+//
+//        // get user highestScore
+//        try {
+//            inputStream = openFileInput(userScore_FILE.getName());
+//            highestScore = inputStream.read();
+//            inputStream.close();
+//            return true;
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
 
 //    public void testStructureList() {
-//        // when a fragment is touched, send that level integer to the next screen
+//        // when a fragment is touched, send that currentNodePlaying integer to the next screen
 //        // the next screen will generate a structure
 //        // don't know where this goes, but...
 //

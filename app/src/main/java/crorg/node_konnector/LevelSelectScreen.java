@@ -14,34 +14,90 @@ import crorg.node_konnector.dummy.LevelContent;
 
 public class LevelSelectScreen extends AppCompatActivity implements LevelFragment.OnListFragmentInteractionListener, Serializable {
     public static final String LEVEL_MESSAGE = "crorg.nodekonnector.LEVELMESSAGE";
+    public static final String HIGHEST_SCORE = "crorg.nodekonnector.HIGHESTSCORE";
+    public static final String HIGHEST_LEVEL = "crorg.nodekonnector.HIGHESTLEVEL";
 
-    private int level;
+    private int highestLevel;
+    private int highestScore;
     // a comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LevelContent.ITEMS.clear();
 
-        LevelContent.LevelItem i = new LevelContent.LevelItem("1", "","");
-
-        // initialize level with 1
-        level = 1;
-
+        highestLevel = 1;
+        highestScore = 0;
         // retreive the level information
         Intent intent = getIntent();
-        int levelMessage = intent.getIntExtra(StartUpScreen.LEVEL_NOW, 0);
-        level = levelMessage;
-        LevelContent.createList(2);
+        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
+        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
+
+//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
+//        highestLevel = Integer.parseInt(levelMessage);
+        LevelContent.createList(highestLevel);
     }
 
     @Override
     public void onListFragmentInteraction(LevelContent.LevelItem item) {
         Intent intent = new Intent(this, GameScreen.class);
-        intent.putExtra(LEVEL_MESSAGE, item.id);
+
+        intent.putExtra(HIGHEST_SCORE, highestScore);
+
+        intent.putExtra(HIGHEST_LEVEL, highestLevel);
+
+        int levelSelect = Integer.parseInt(item.id);
+        intent.putExtra(LEVEL_MESSAGE, levelSelect);
         //Log.v("MESSAGE#45689", "BEFORE sending intent...ItemID: " + item.id);
         startActivity(intent);
         //Log.v("MESSAGE#45689", "AFER sending intent...");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        LevelContent.ITEMS.clear();
+        highestLevel = 1;
+        highestScore = 0;
+        // retreive the level information
+        Intent intent = getIntent();
+        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
+        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
+
+//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
+//        highestLevel = Integer.parseInt(levelMessage);
+        LevelContent.createList(highestLevel);
+//        finish();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        LevelContent.ITEMS.clear();
+        highestLevel = 1;
+        highestScore = 0;
+        // retreive the level information
+        Intent intent = getIntent();
+        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
+        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
+
+//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
+//        highestLevel = Integer.parseInt(levelMessage);
+        LevelContent.createList(highestLevel);
+
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        finish();
+
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        finish();
     }
 
 
