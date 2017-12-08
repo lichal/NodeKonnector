@@ -31,8 +31,10 @@ public class LevelContent implements Serializable {
     }
 
     public static void createList(int count){
-        for (int i = 1; i <= count; i++) {
-            addItem(createDummyItem(i));
+        int size = ITEMS.size();
+        while (size < count){
+            addItem(createLevelItem(size+1));
+            size++;
         }
     }
 
@@ -41,11 +43,7 @@ public class LevelContent implements Serializable {
         ITEM_MAP.put(item.id, item);
     }
 
-    private static void removeItem(){
-        ITEMS.remove(1);
-    }
-
-    private static LevelItem createDummyItem(int position) {
+    private static LevelItem createLevelItem(int position) {
         return new LevelItem(String.valueOf(position), (position + 1) + " Nodes", makeDetails(position));
     }
 

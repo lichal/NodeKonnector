@@ -32,78 +32,36 @@ public class StartUpCanvas extends View implements Serializable {
     private Drawable hexagon;
     private int width;
     private float rotateRate;
-    private int rotateHeight;
-    private Random rand;
-    private int move;
-
 
     public StartUpCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         tmr = new Timer();
-
-
-
-        rand = new Random();
-        move = 0;
         width = 0;
 
         rotateRate = 0f;
-        rotateHeight = 0;
         circle = getResources().getDrawable(R.drawable.circle);
         square = getResources().getDrawable(R.drawable.square);
         triangle = getResources().getDrawable(R.drawable.triangle);
         hexagon = getResources().getDrawable(R.drawable.hexagon);
-
-//        TimerTask task = new TimerTask() {
-//            @Override
-//            public void run() {
-//                // update the y coordinate in c
-//                rotateRate++;
-//                if(rotateRate>=360){
-//                    rotateHeight = -(width);
-//                    rotateRate=0;
-//                }
-
-//                // ask for the view to be redrawn
-//                invalidate();
-//            }
-//        };
-//
-//        tmr.schedule(task, 0, 10);
-
-//        Timer timer = new Timer();
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//            public void run() {
-//                updateCanvas();
-//                invalidate();
-//            }
-//        }, 0, 20);//5 seconds
-
     }
-
-
-    public void updateCanvas() {
-        rotateRate++;
-        if (rotateRate >= 360) {
-            rotateHeight = -(width);
-            rotateRate = 0;
-        }
-    }
-
 
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         width = getWidth()/9;
 
+        // x y position for circle
         int circleX = getWidth()/2+width/2*2;
         int circleY = getHeight()/2-(int)(width*3.5) + 2*width;
 
+        // x y position for hexagon
         int hexX = getWidth()/2-width/2;
         int hexY = getHeight()/2-(int)(width*1.5) +2*width;
 
+        // x y position for triangle
         int triX = getWidth()/2 - width*2;
         int triY = getHeight()/2+width/2 +width;
 
+        // x y position square
         int sqrX = getWidth()/2 + width;
         int sqrY = getHeight()/2+width/2+2*width;
 

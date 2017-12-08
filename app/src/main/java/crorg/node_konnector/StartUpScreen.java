@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,12 +30,11 @@ import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.TaskStackBuilder;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -62,6 +59,7 @@ import static android.app.Notification.VISIBILITY_PUBLIC;
 
 public class StartUpScreen extends AppCompatActivity implements Serializable, FacebookFragment.OnFragmentInteractionListener {
     public static final String LEVEL_NOW = "crorg.nodekonnector.LEVELNOW";
+    public static final String SCORE_NOW = "crorg.nodekonnector.SCORENOW";
 
     /* The TextView for Press to Start */
     private TextView pressStart;
@@ -69,12 +67,13 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     private File structureAnswer;  // local storage of user progress for the current Structure object
     private Button serialLoad;
     private Button serialSave;
-    private FirebaseAuth mAuth;
-    public LoginButton loginButton;
 
+    /** face book stuff */
+    private LoginButton loginButton;
     private CallbackManager callbackManager;
 
     /** Firebase user */
+    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private DatabaseReference myLevel;
@@ -85,10 +84,16 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     private boolean isrunning;
     private StartUpCanvas startUpCanvas;
 
+    private File userScore_FILE;
+    private File userLevel_FILE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
+
+        userScore_FILE = new File(getFilesDir(), "userScore_File");
+        userLevel_FILE = new File(getFilesDir(), "userLevel_File");
 
         currentLevel = 1;
         currentScore = 0;
@@ -106,6 +111,9 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         pressStart.setAnimation(manageBlinkEffect());
         serialLoad = (Button)findViewById(R.id.serialLoad);
         serialSave = (Button)findViewById(R.id.serialSave);
+
+        currentUser = mAuth.getCurrentUser();
+        myLevel = database.getReference("USERS_TABLE");
 
         // facebook login button
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -131,63 +139,129 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     public void onSuccess(LoginResult loginResult) {
                         // App code
                         handleFacebookAccessToken(loginResult.getAccessToken());
+                        checkLoginStatus();
                         System.out.println("Success login1");
                     }
                     @Override
                     public void onCancel() {
                         System.out.println("Success cancel");
+                        checkLoginStatus();
                         // App code
                     }
                     @Override
                     public void onError(FacebookException exception) {
+                        checkLoginStatus();
                         // App code
                     }
                 });
 
+        AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken,
+                                                       AccessToken currentAccessToken) {
+                if (currentAccessToken == null) {
+                    //write your code here what to do when user clicks on facebook logout
+                    checkLoginStatus();
+                }
+            }
+        };
+
+        checkLoginStatus();
+    }
+
+    private void checkLoginStatus(){
         if(isLoggedIn()) {
-            currentUser = mAuth.getCurrentUser();
-            myLevel = database.getReference("USERS_TABLE");
-
-            // retreive level information from firebase
-            myLevel.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
-                        int value = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
-                        currentLevel = value;
-                        Log.d("TAG", "Level is: " + value);
-                    } else{
-                        myLevel.child(currentUser.getUid()).child("Level").setValue(currentLevel);
-                    }
-                    if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
-                        int value = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
-                        Log.d("TAG", "Score is: " + value);
-                    } else{
-                        myLevel.child(currentUser.getUid()).child("Score").setValue(currentScore);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    Log.w("TAG", "Failed to read value.", error.toException());
-                }
-            });
+            updateLogin();
+        }else{
+            updateLogout();
         }
     }
 
+    private void updateLogout(){
+        // case user is not login, we will use the local copy of the score and levels.
+        if(levelReadFromFile()) {
+            Log.d("MESSAGE###", "level read" + currentLevel);
+        }else{
+            currentLevel = 1;
+        }
+        if(scoreReadFromFile()){
+            Log.d("MESSAGE###", "score read" + currentScore);
+        }else{
+            currentScore = 0;
+        }
+    }
+
+
+    private void updateLogin(){
+        // retreive level information from firebase
+        myLevel.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // checks if the level data exist or not
+                if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
+                    int levelValue = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
+                    currentLevel = levelValue;
+                    Log.d("TAG", "Level is: " + levelValue);
+                } else{
+                    currentLevel = 1;
+                    myLevel.child(currentUser.getUid()).child("Level").setValue(1);
+                }
+                // checks if the score data exist or not
+                if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
+                    int scoreValue = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
+                    currentScore = scoreValue;
+                    Log.d("TAG", "Score is: " + scoreValue);
+                } else{
+                    currentScore = 0;
+                    myLevel.child(currentUser.getUid()).child("Score").setValue(0);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
+    }
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
     }
 
-    public boolean nonSerialReadFromFile() {
+    public boolean levelReadFromFile() {
         FileInputStream inputStream;
         // get user level
         try {
-            inputStream = openFileInput(GameScreen.userLevel_FILE.getName());
+            inputStream = openFileInput(userLevel_FILE.getName());
             currentLevel = inputStream.read();
+            inputStream.close();
+            return true;
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        } catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean scoreReadFromFile() {
+        FileInputStream inputStream;
+        // get user level
+        try {
+            inputStream = openFileInput(userScore_FILE.getName());
+            currentScore = inputStream.read();
             inputStream.close();
             return true;
         } catch (FileNotFoundException ff) {
@@ -219,8 +293,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         }else {
             currentUser = mAuth.getCurrentUser();
         }
-
-//        updateUI(currentUser);
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -238,7 +310,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     }else {
                         currentUser = mAuth.getCurrentUser();
                     }
-//                            updateUI(user);
                 }
 
             }
@@ -251,10 +322,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         // Pass the activity result back to the Facebook SDK
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
-
-
-
 
     /*******************************************************************
      * This method performs a blinking animation for press to start text
@@ -288,6 +355,8 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 // Setting a bew intent for screen transition
                 Intent intent = new Intent(this, LevelSelectScreen.class);
                 intent.putExtra(LEVEL_NOW, currentLevel);
+                intent.putExtra(SCORE_NOW, currentScore);
+                Log.d("MESSAGE#", "why are you" + currentScore);
                 // Transition to level screen
                 startActivity(intent);
                 // End start up activity
@@ -295,10 +364,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         }
         return true;
     }
-
-
-
-
 
     public void notifyUserOfSurpassingFriendScore(View view) {
         // The id of the channel.
