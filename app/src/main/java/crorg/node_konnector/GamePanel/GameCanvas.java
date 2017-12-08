@@ -259,7 +259,7 @@ public class GameCanvas extends View implements Serializable {
                                 }
                                 // Make sure you deselect first node selected and turn off bonding mode...
                                 firstSelectedShapeToBondWith = null;
-                                bondingMode = false;    // this doesn't quite work - how to send message to GameScreen to reactivate buttons?
+                                //bondingMode = false;    // this doesn't quite work - how to send message to GameScreen to reactivate buttons?
                             }
                         }
                     }
@@ -324,5 +324,8 @@ public class GameCanvas extends View implements Serializable {
         return bondArrayList;
     }
 
+    public void nullifyFirstSelectedShapeToBondWith() {
+        firstSelectedShapeToBondWith = null;
+    }
 
 }

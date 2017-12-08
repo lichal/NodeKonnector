@@ -237,6 +237,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 if (isChecked) {
                     game.setBondingMode(true, 1);
                     doubleButton.setEnabled(false);
@@ -267,6 +268,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         doubleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 if (isChecked) {
                     game.setBondingMode(true, 2);
                     singleButton.setEnabled(false);
@@ -297,6 +299,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         tripleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 if (isChecked) {
                     game.setBondingMode(true, 3);
                     singleButton.setEnabled(false);
@@ -327,6 +330,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         circleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 1;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleImage);
@@ -338,6 +342,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         squareImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 2;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(squareImage);
@@ -349,6 +354,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         triangleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 3;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(triangleImage);
@@ -360,6 +366,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         hexagonImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 4;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(hexagonImage);
@@ -371,6 +378,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         game.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 final int action = event.getAction();
                 int x = (int) event.getX();
                 int y = (int) event.getY();
@@ -418,7 +426,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         trashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 game.deleteSelectedNode();
+                game.nullifyFirstSelectedShapeToBondWith();
             }
         });
 
@@ -427,6 +437,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                game.nullifyFirstSelectedShapeToBondWith();
                 ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
                 if (game.getShapeArrayList().size() > 0) {
                     int numPlayerKonnectedNodes = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
@@ -515,38 +526,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         database = FirebaseDatabase.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userData = database.getReference("USERS_TABLE");
-
-//        if (isLoggedIn()) {
-//
-//
-//
-//
-//
-//            // Read from the database
-//            userData.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
-//                        int value = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
-//                        currentNodePlaying = value;
-//                    } else{
-//                        userData.child(currentUser.getUid()).child("Level").setValue(currentNodePlaying);
-//                    }
-//                    if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
-//                        int value = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
-//                        highestScore = value;
-//                    } else{
-//                        userData.child(currentUser.getUid()).child("Score").setValue(highestScore);
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError error) {
-//                    // Failed to read value
-//                    Log.v("TAG", "Failed to read value.", error.toException());
-//                }
-//            });
-//        }
     }
 
 
