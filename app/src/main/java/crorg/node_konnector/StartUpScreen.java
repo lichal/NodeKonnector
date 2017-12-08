@@ -172,15 +172,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 }
             });
         }
-        Timer t = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                // update the y coordinate in c
-                startUpCanvas.updateCanvas();
-            }
-        };
-        t.schedule(task, 0, 10);
     }
 
     public boolean isLoggedIn() {

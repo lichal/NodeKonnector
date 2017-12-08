@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -112,7 +114,17 @@ public class StartUpCanvas extends View implements Serializable {
 //            }
 //        };
 //        tmr.schedule(task, 0, 10);
+        final Handler handler = new Handler(Looper.getMainLooper());
+        Runnable movePlayer0Runnable = new Runnable() {
+            public void run() {
+                updateCanvas();
+                handler.postDelayed(this, 20); //in 5 sec player0 will move again
+            }
+        };
+
     }
+
+
 
     public void updateCanvas() {
         rotateRate++;
