@@ -34,8 +34,6 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
         highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
 
-//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
-//        highestLevel = Integer.parseInt(levelMessage);
         LevelContent.createList(highestLevel);
     }
 
@@ -54,52 +52,12 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         //Log.v("MESSAGE#45689", "AFER sending intent...");
     }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        LevelContent.ITEMS.clear();
-        highestLevel = 1;
-        highestScore = 0;
-        // retreive the level information
-        Intent intent = getIntent();
-        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
-        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
-
-//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
-//        highestLevel = Integer.parseInt(levelMessage);
-        LevelContent.createList(highestLevel);
-//        finish();
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        LevelContent.ITEMS.clear();
-        highestLevel = 1;
-        highestScore = 0;
-        // retreive the level information
-        Intent intent = getIntent();
-        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
-        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
-
-//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
-//        highestLevel = Integer.parseInt(levelMessage);
-        LevelContent.createList(highestLevel);
-
-    }
-    @Override
-    protected void onStop(){
-        super.onStop();
-        finish();
-
-    }
 
     @Override
     protected void onPause(){
         super.onPause();
+        Log.d("MESSAGE#", "PAUSE");
         finish();
     }
-
-
 
 }
