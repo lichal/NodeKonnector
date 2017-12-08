@@ -2,7 +2,7 @@
     <string name="app_name">Node Konnector</string>
     <string name="touchStart">PRESS TO START</string>
     <string name="faceBookLogin">FaceBook Login</string>
-    <string name="levelCaption">Select Level</string>
+    <string name="levelCaption">Select a Level</string>
     <string name="checkStruct">Check</string>
     <string name="circleStr">CIRCLE</string>
     <string name="triangleStr">TRIANGLE</string>
