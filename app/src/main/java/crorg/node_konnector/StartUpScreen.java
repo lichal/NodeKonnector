@@ -167,12 +167,37 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
             });
         }
 
-
     }
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
+    }
+
+    public boolean nonSerialReadFromFile() {
+        FileInputStream inputStream;
+        // get user level
+        try {
+            inputStream = openFileInput(GameScreen.userLevel_FILE.getName());
+            currentLevel = inputStream.read();
+            inputStream.close();
+            return true;
+        } catch (FileNotFoundException ff) {
+            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+        } catch (SecurityException ff) {
+            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+        } catch (InvalidClassException ff) {
+            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+        } catch (NullPointerException ff) {
+            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+        } catch (NotSerializableException ff) {
+            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+        } catch (IOException ff) {
+            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         setContentView(R.layout.activity_main);
 
         levelView = (RecyclerView) findViewById(R.id.levelList);
-
+        LevelContent.LevelItem i = new LevelContent.LevelItem("1", "","");
 
 
 

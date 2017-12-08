@@ -125,16 +125,16 @@ public class StartUpCanvas extends View implements Serializable {
         width = getWidth()/9;
 
         int circleX = getWidth()/2+width/2*2;
-        int circleY = getHeight()/2-(int)(width*3.5) + 2*width;
+        int circleY = getHeight()/2-(int)(width*3.5) + 2*width - width*3;
 
         int hexX = getWidth()/2-width/2;
-        int hexY = getHeight()/2-(int)(width*1.5) +2*width;
+        int hexY = getHeight()/2-(int)(width*1.5) +2*width- width*3;
 
         int triX = getWidth()/2 - width*2;
-        int triY = getHeight()/2+width/2 +width;
+        int triY = getHeight()/2+width/2 +width- width*3;
 
         int sqrX = getWidth()/2 + width;
-        int sqrY = getHeight()/2+width/2+2*width;
+        int sqrY = getHeight()/2+width/2+2*width- width*3;
 
         // rotate the canvas
 //        canvas.rotate(rotateRate,canvas.getWidth()/2+width/2,canvas.getHeight()/2+rotateHeight);

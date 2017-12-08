@@ -92,13 +92,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     // primitive data only
     private File userScore_FILE;
-    private File userLevel_FILE;
-
+    public static File userLevel_FILE;
 
     private int lastLevelPlayed;
 
+    /** Firecase set and retrieve variables */
     private DatabaseReference userData;
-
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -118,33 +117,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         scores = 0;
         String message = intent.getStringExtra(LevelSelectScreen.LEVEL_MESSAGE);
         level = 0;
-
-
-        if (isLoggedIn()) {
-            database = FirebaseDatabase.getInstance();
-            currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            userData = database.getReference("USERS_TABLE");
-            myRef = database.getReference("USERS_TABLE").child(currentUser.getUid()).child("Score");
-
-            // Read from the database
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    int value = dataSnapshot.getValue(Integer.class);
-                    scores = value;
-                    Log.v("TAG", "Score is: " + value);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    Log.v("TAG", "Failed to read value.", error.toException());
-                }
-            });
-        }
 
         dragType = 0;
         ////////////////////////////////////////////////////////////////////////
@@ -504,8 +476,10 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                                                             userData.child(currentUser.getUid()).child("Score").setValue(scores);
                                                             userData.child(currentUser.getUid()).child("Level").setValue(level);
                                                             // update level and score LOCALLY also...
+                                                            nonSerialWriteToFile();
                                                         } else {
                                                             scores += Math.pow(3, level);
+                                                            nonSerialWriteToFile();
                                                             // up their current level...
                                                             // SAVE this stuff LOCaLlY so that when they open the app again, the data remains
                                                         }
@@ -540,11 +514,55 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
             }
         });
+
+        if(nonSerialReadFromFile()){
+            Log.v("MESSAGE#", "inside fail"+scores);
+        }else{
+            scores=0;
+        }
+        Log.v("MESSAGE#", "outside"+scores);
+
+        if (isLoggedIn()) {
+            database = FirebaseDatabase.getInstance();
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            userData = database.getReference("USERS_TABLE");
+
+            // Read from the database
+            userData.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.child(currentUser.getUid()).child("Level").exists()){
+                        int value = dataSnapshot.child(currentUser.getUid()).child("Level").getValue(Integer.class);
+                        if(level<value) {
+                            level = value;
+                        }
+                    } else{
+                        userData.child(currentUser.getUid()).child("Level").setValue(level);
+                    }
+                    if(dataSnapshot.child(currentUser.getUid()).child("Score").exists()){
+                        int value = dataSnapshot.child(currentUser.getUid()).child("Score").getValue(Integer.class);
+                        if(scores<value){
+                            scores = value;
+                        }
+                    } else{
+                        userData.child(currentUser.getUid()).child("Score").setValue(scores);
+                    }
+                    nonSerialWriteToFile();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.v("TAG", "Failed to read value.", error.toException());
+                }
+            });
+        }
     }
 
 
     // use these to save the state of the game
-    public void nonSerialWriteToFile(View view) {
+    public void nonSerialWriteToFile() {
         String textToDisplay = "hello, boyo!";
         FileOutputStream outputStream;
 
@@ -759,7 +777,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     }
 
 
-    public void nonSerialReadFromFile(View view) {
+    public boolean nonSerialReadFromFile() {
         FileInputStream inputStream;
 //        String s = "";
 //        try {
@@ -800,6 +818,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             inputStream = openFileInput(userScore_FILE.getName());
             scores = inputStream.read();
             inputStream.close();
+            return true;
         } catch (FileNotFoundException ff) {
             Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
         } catch (SecurityException ff) {
@@ -815,6 +834,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
