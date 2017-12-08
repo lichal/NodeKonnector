@@ -24,7 +24,7 @@ public class LevelContent implements Serializable {
      */
     public static final Map<String, LevelItem> ITEM_MAP = new HashMap<String, LevelItem>();
 
-    private static final int COUNT = 25;
+    private static int COUNT = 1;
 
     static {
         // Add some sample items.
