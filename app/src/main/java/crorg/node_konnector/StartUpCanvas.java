@@ -57,42 +57,6 @@ public class StartUpCanvas extends View implements Serializable {
 //        TimerTask task = new TimerTask() {
 //            @Override
 //            public void run() {
-//                // update rotation
-//                rotateRate++;
-//                if (rotateRate >= 360) {
-//                    int i = rand.nextInt(3) + 1;
-//                    rotateHeight = -(width);
-////                    switch (i){
-////                        case 0:
-////                            rotateHeight = width;
-////                            move++;
-////                            break;
-////                        case 1:
-////                            rotateHeight = -(width);
-////                            move++;
-////                            break;
-////                        case 2:
-////                            rotateHeight = 2*width;
-////                            move++;
-////                            break;
-////                        case 3:
-////                            rotateHeight = 3*width;
-////                            move = 0;
-////                            break;
-////                    }
-//                    if (rotateRate >= 359) {
-//                        rotateRate = 0;
-//                    }
-//                    // ask for the view to be redrawn
-//                    invalidate();
-//                }
-//            }
-//        };
-//        tmr.schedule(task,0,10);
-
-//        TimerTask task = new TimerTask() {
-//            @Override
-//            public void run() {
 //                // update the y coordinate in c
 //                rotateRate++;
 //                if(rotateRate>=360){
@@ -107,23 +71,15 @@ public class StartUpCanvas extends View implements Serializable {
 //
 //        tmr.schedule(task, 0, 10);
 
-//                Log.d("TAG", "Got HERE!");
-//                // ask for the view to be redrawn
-//                //invalidate();
-//
-//            }
-//        };
-//        tmr.schedule(task, 0, 10);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        Runnable movePlayer0Runnable = new Runnable() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 updateCanvas();
-                handler.postDelayed(this, 20); //in 5 sec player0 will move again
+                invalidate();
             }
-        };
+        }, 0, 20);//5 seconds
 
     }
-
 
 
     public void updateCanvas() {
@@ -132,7 +88,6 @@ public class StartUpCanvas extends View implements Serializable {
             rotateHeight = -(width);
             rotateRate = 0;
         }
-        invalidate();
     }
 
 
