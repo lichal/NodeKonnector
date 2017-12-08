@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -55,6 +56,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 
@@ -64,6 +67,8 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
     /* The TextView for Press to Start */
     private TextView pressStart;
+    private TextView loadingText;
+    private TextView doneText;
     private File userProgress;  // local storage of user progress for the current Structure object
     private File structureAnswer;  // local storage of user progress for the current Structure object
 
@@ -106,9 +111,18 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
+        loadingText = (TextView) findViewById(R.id.loadingText);
+        doneText = (TextView)findViewById(R.id.doneText);
+
         pressStart.setAnimation(manageBlinkEffect());
+        loadingText.setAnimation(manageBlinkEffect());
 
+        doneText.setTextSize(15f);
+        doneText.setTextSize(Color.BLACK);
 
+        loadingText.setTextSize(15f);
+        loadingText.setTextColor(Color.BLACK);
+//        loadingText.setVisibility(View.INVISIBLE);
 
         // facebook login button
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -143,7 +157,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                     }
                     @Override
                     public void onError(FacebookException exception) {
-                        checkLoginStatus();
                         // App code
                     }
                 });
@@ -156,11 +169,11 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                                                        AccessToken currentAccessToken) {
                 if (currentAccessToken == null) {
                     //write your code here what to do when user clicks on facebook logout
-                    checkLoginStatus();
+                    updateLogout();
                     Log.v("MESSAGE#", "over here");
                 }
                 if(currentAccessToken != null){
-                    checkLoginStatus();
+                    updateLogin();
                     Log.v("MESSAGE#", "over here in");
                 }
             }
@@ -181,6 +194,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
     private void updateLogout(){
         // case user is not login, we will use the local copy of the score and levels.
+        currentUser = null;
         if(levelReadFromFile()) {
             Log.d("MESSAGE###", "LOADED" + currentLevel);
         }else{
@@ -296,6 +310,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
             updateLogin();
         }else {
             FirebaseAuth.getInstance().signOut();
+            updateLogout();
             Log.d("MESSAGE", "HERE IN SIGNOUT START");
             currentUser = null;
         }
@@ -308,6 +323,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
             updateLogin();
         }else {
             FirebaseAuth.getInstance().signOut();
+            updateLogout();
             Log.d("MESSAGE", "HERE IN SIGNOUT START");
             currentUser = null;
         }
@@ -315,24 +331,31 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
 
 
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d("TAG", "handleFacebookAccessToken:" + token);
+        Log.d("MESSAGE#", "handleFacebookAccessToken:" + token);
 
+        loadingText.setTextColor(Color.LTGRAY);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        ///right here make some fading out
 
+        ///right here make some fading out
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    loadingText.setTextColor(Color.BLACK);
+                    doneText.setTextColor(Color.LTGRAY);
                     // Sign in success, update UI with the signed-in user's information
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     ////remove the fading out
-                    pressStart.setText("done");
                     Log.v("MESSAGE#", "signInWithCredential:success");
                     currentUser = mAuth.getCurrentUser();
                     updateLogin();
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    Animation fade;
+                    fade = new AlphaAnimation(1, 0);
+                    fade.setDuration(750);
+                    fade.setFillAfter(true);
+                    doneText.setAnimation(fade);
                 }
             }
         });

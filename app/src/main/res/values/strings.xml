@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Node Konnector</string>
     <string name="touchStart">PRESS TO START</string>
+    <string name="loading">Loading...</string>
+    <string name="done">DONE!</string>
     <string name="faceBookLogin">FaceBook Login</string>
     <string name="levelCaption">Select a Level</string>
     <string name="checkStruct">Check</string>
