@@ -25,6 +25,8 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LevelContent.ITEMS.clear();
+
         highestLevel = 1;
         highestScore = 0;
         // retreive the level information
@@ -46,10 +48,56 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         intent.putExtra(HIGHEST_LEVEL, highestLevel);
 
         int levelSelect = Integer.parseInt(item.id);
-        intent.putExtra(LEVEL_MESSAGE, item.id);
+        intent.putExtra(LEVEL_MESSAGE, levelSelect);
         //Log.v("MESSAGE#45689", "BEFORE sending intent...ItemID: " + item.id);
         startActivity(intent);
         //Log.v("MESSAGE#45689", "AFER sending intent...");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        LevelContent.ITEMS.clear();
+        highestLevel = 1;
+        highestScore = 0;
+        // retreive the level information
+        Intent intent = getIntent();
+        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
+        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
+
+//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
+//        highestLevel = Integer.parseInt(levelMessage);
+        LevelContent.createList(highestLevel);
+//        finish();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        LevelContent.ITEMS.clear();
+        highestLevel = 1;
+        highestScore = 0;
+        // retreive the level information
+        Intent intent = getIntent();
+        highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
+        highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
+
+//        String levelMessage = intent.getStringExtra(StartUpScreen.LEVEL_NOW);
+//        highestLevel = Integer.parseInt(levelMessage);
+        LevelContent.createList(highestLevel);
+
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        finish();
+
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        finish();
     }
 
 

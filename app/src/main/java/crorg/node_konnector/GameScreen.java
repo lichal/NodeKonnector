@@ -125,7 +125,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 //        highestScore = intent.getIntExtra(LevelSelectScreen.HIGHEST_SCORE, highestScore);
 
         Log.d("MESSAGE#", "What are you" + highestScore + " current" + currentLevelPlaying + " hight" + highestLevel );
-        currentNodePlaying = currentLevelPlaying+1;
+        currentNodePlaying = currentLevelPlaying + 1;
 
         // VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
         // setting up local storage for user's progres on a given currentNodePlaying...

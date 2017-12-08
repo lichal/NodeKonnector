@@ -65,8 +65,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     private TextView pressStart;
     private File userProgress;  // local storage of user progress for the current Structure object
     private File structureAnswer;  // local storage of user progress for the current Structure object
-    private Button serialLoad;
-    private Button serialSave;
 
     /** face book stuff */
     private LoginButton loginButton;
@@ -109,8 +107,6 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         // set blink animation for the text view
         pressStart = (TextView)findViewById(R.id.startUpTxt);
         pressStart.setAnimation(manageBlinkEffect());
-        serialLoad = (Button)findViewById(R.id.serialLoad);
-        serialSave = (Button)findViewById(R.id.serialSave);
 
         currentUser = mAuth.getCurrentUser();
         myLevel = database.getReference("USERS_TABLE");
@@ -140,7 +136,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                         // App code
                         handleFacebookAccessToken(loginResult.getAccessToken());
                         checkLoginStatus();
-                        System.out.println("Success login1");
+                        Log.v("MESSSAGE#", "here i am");
                     }
                     @Override
                     public void onCancel() {
@@ -162,6 +158,11 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 if (currentAccessToken == null) {
                     //write your code here what to do when user clicks on facebook logout
                     checkLoginStatus();
+                    Log.v("MESSAGE#", "over here");
+                }
+                if(currentAccessToken != null){
+                    updateLogin();
+                    Log.v("MESSAGE#", "over here in");
                 }
             }
         };
@@ -283,6 +284,12 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        checkLoginStatus();
+    }
+
+    @Override
     public void onStart() {
 
         super.onStart();
@@ -352,6 +359,8 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
         switch (event.getAction()){
             // Case touch down
             case MotionEvent.ACTION_DOWN:
+                Log.d("MESSAGE#", "level" + currentLevel);
+                Log.d("MESSAGE#", "score" + currentScore);
                 // Setting a bew intent for screen transition
                 Intent intent = new Intent(this, LevelSelectScreen.class);
                 intent.putExtra(LEVEL_NOW, currentLevel);
@@ -435,7 +444,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 try {
                     Structure loaded = (Structure) ois.readObject();
-                    serialLoad.setText("Nodes: " + loaded.getNodes().size());
+//                    serialLoad.setText("Nodes: " + loaded.getNodes().size());
                     ois.close();
                 } catch (ClassNotFoundException i) {
                     System.out.println("Read object fail: ClassNotFoundException");
