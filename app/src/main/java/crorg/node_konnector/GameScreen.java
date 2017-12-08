@@ -237,8 +237,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 if (isChecked) {
                     game.setBondingMode(true, 1);
                     doubleButton.setEnabled(false);
@@ -269,8 +269,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         doubleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 if (isChecked) {
                     game.setBondingMode(true, 2);
                     singleButton.setEnabled(false);
@@ -301,8 +301,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         tripleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 if (isChecked) {
                     game.setBondingMode(true, 3);
                     singleButton.setEnabled(false);
@@ -333,8 +333,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         circleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 1;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(circleImage);
@@ -346,8 +346,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         squareImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 2;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(squareImage);
@@ -359,8 +359,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         triangleImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 3;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(triangleImage);
@@ -372,8 +372,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         hexagonImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 ClipData data = ClipData.newPlainText("", "");
                 dragType = 4;
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(hexagonImage);
@@ -385,8 +385,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         game.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 final int action = event.getAction();
                 int x = (int) event.getX();
                 int y = (int) event.getY();
@@ -434,10 +434,9 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         trashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 game.deleteSelectedNode();
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
             }
         });
 
@@ -446,8 +445,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                game.nullifyFirstSelectedShapeToBondWith();
-                game.nullifyCurrentNode();
+                game.deselectAll();
+                game.nullifyCurrentNodeAndFirstSelectedNode();
                 ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
                 if (game.getShapeArrayList().size() > 0) {
                     int numPlayerKonnectedNodes = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
