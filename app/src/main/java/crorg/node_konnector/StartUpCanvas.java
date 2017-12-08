@@ -71,13 +71,13 @@ public class StartUpCanvas extends View implements Serializable {
 //
 //        tmr.schedule(task, 0, 10);
 
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                updateCanvas();
-                invalidate();
-            }
-        }, 0, 20);//5 seconds
+//        Timer timer = new Timer();
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            public void run() {
+//                updateCanvas();
+//                invalidate();
+//            }
+//        }, 0, 20);//5 seconds
 
     }
 
