@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import crorg.node_konnector.LevelRecyclerView.LevelFragment.OnListFragmentInteractionListener;
 import crorg.node_konnector.R;
-import crorg.node_konnector.dummy.LevelContent.LevelItem;
+import crorg.node_konnector.contents.LevelContent.LevelItem;
 
 import java.io.Serializable;
 import java.util.List;

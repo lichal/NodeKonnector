@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import java.io.Serializable;
 
 import crorg.node_konnector.R;
-import crorg.node_konnector.dummy.LevelContent;
-import crorg.node_konnector.dummy.LevelContent.LevelItem;
+import crorg.node_konnector.contents.LevelContent;
+import crorg.node_konnector.contents.LevelContent.LevelItem;
 
 /**
  * A fragment representing a list of Items.
