@@ -3,7 +3,6 @@ package crorg.node_konnector;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +12,7 @@ import java.io.Serializable;
 
 import crorg.node_konnector.LevelRecyclerView.LevelAdapter;
 import crorg.node_konnector.LevelRecyclerView.LevelFragment;
-import crorg.node_konnector.dummy.LevelContent;
+import crorg.node_konnector.contents.LevelContent;
 
 public class LevelSelectScreen extends AppCompatActivity implements LevelFragment.OnListFragmentInteractionListener, Serializable {
     public static final String LEVEL_MESSAGE = "crorg.nodekonnector.LEVELMESSAGE";
@@ -82,11 +81,11 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.rankingMenu) {
-            Intent intent = new Intent(LevelSelectScreen.this,
-                    RankingActivity.class);
+//            Intent intent = new Intent(LevelSelectScreen.this,
+//                    RankingActivity.class);
 
-            startActivityForResult(intent, RANKING_TRANS );
-            return true;
+//            startActivityForResult(intent, RANKING_TRANS );
+//            return true;
         }
         return false;
     }
