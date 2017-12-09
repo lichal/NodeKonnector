@@ -307,7 +307,7 @@ public class Structure implements Serializable {
         return true;
     }
 
-    public static boolean areBondsSimilar(ArrayList<Bond> bonds1, ArrayList<Bond> bonds2) {
+    public static boolean areBondConfigsSimilar(ArrayList<Bond> bonds1, ArrayList<Bond> bonds2) {
         int structure1Singles = 0;
         int structure1Doubles = 0;
         int structure1Triples = 0;
@@ -451,47 +451,47 @@ public class Structure implements Serializable {
     }
 
 
-    public static void clearAllBondsBetweenTwoNodes(Node node1, Node node2, ArrayList<Bond> playerBonds) {
-        ArrayList<Bond> bondsToRemove = new ArrayList<Bond>();
-        for (Bond b : playerBonds) {
-            Node one = b.getNode1();
-            Node two = b.getNode2();
-            if (((node1 == one) && (node2 == two))
-                    || ((node1 == two) || (node2 == one))) {
-                bondsToRemove.add(b);
-            }
-        }
-
-        // Now, delete all neighbor nodes, update konnections, and finally remove bonds from arrayList
-        // Now remove bond from player list and node from shapes list
-        for (Bond bondToRemove : bondsToRemove) {
-            Node one = bondToRemove.getNode1();
-            Node two = bondToRemove.getNode2();
-            one.removeNeighborNode(two);
-            two.removeNeighborNode(one);
-            if (bondToRemove.getBondType() == Bond.SINGLE) {
-                one.decrementKonnections();
-                two.decrementKonnections();
-            } else if (bondToRemove.getBondType() == Bond.DOUBLE) {
-                one.decrementKonnections();
-                two.decrementKonnections();
-                one.decrementKonnections();
-                two.decrementKonnections();
-            } else if (bondToRemove.getBondType() == Bond.TRIPLE) {
-                one.decrementKonnections();
-                two.decrementKonnections();
-                one.decrementKonnections();
-                two.decrementKonnections();
-                one.decrementKonnections();
-                two.decrementKonnections();
-            } else {
-                // Do NOTHING...
-            }
-        }
+//    public static void clearAllBondsBetweenTwoNodes(Node node1, Node node2, ArrayList<Bond> playerBonds) {
+//        ArrayList<Bond> bondsToRemove = new ArrayList<Bond>();
+//        for (Bond b : playerBonds) {
+//            Node one = b.getNode1();
+//            Node two = b.getNode2();
+//            if (((node1 == one) && (node2 == two))
+//                    || ((node1 == two) || (node2 == one))) {
+//                bondsToRemove.add(b);
+//            }
+//        }
+//
+//        // Now, delete all neighbor nodes, update konnections, and finally remove bonds from arrayList
+//        // Now remove bond from player list and node from shapes list
+//        for (Bond bondToRemove : bondsToRemove) {
+//            Node one = bondToRemove.getNode1();
+//            Node two = bondToRemove.getNode2();
+//            one.removeNeighborNode(two);
+//            two.removeNeighborNode(one);
+//            if (bondToRemove.getBondType() == Bond.SINGLE) {
+//                one.decrementKonnections();
+//                two.decrementKonnections();
+//            } else if (bondToRemove.getBondType() == Bond.DOUBLE) {
+//                one.decrementKonnections();
+//                two.decrementKonnections();
+//                one.decrementKonnections();
+//                two.decrementKonnections();
+//            } else if (bondToRemove.getBondType() == Bond.TRIPLE) {
+//                one.decrementKonnections();
+//                two.decrementKonnections();
+//                one.decrementKonnections();
+//                two.decrementKonnections();
+//                one.decrementKonnections();
+//                two.decrementKonnections();
+//            } else {
+//                // Do NOTHING...
+//            }
+//        }
 
         // Don't know if this is necessary, but clear this reference also...
-        bondsToRemove.clear();
-    }
+//        bondsToRemove.clear();
+//    }
 
 
 

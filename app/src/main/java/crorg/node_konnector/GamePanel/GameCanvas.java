@@ -19,6 +19,10 @@ import crorg.node_konnector.Bond;
 import crorg.node_konnector.GameScreen;
 import crorg.node_konnector.Node;
 import crorg.node_konnector.Scaler;
+import crorg.node_konnector.Shapes.Circle;
+import crorg.node_konnector.Shapes.Hexagon;
+import crorg.node_konnector.Shapes.Square;
+import crorg.node_konnector.Shapes.Triangle;
 import crorg.node_konnector.Structure;
 
 /**
@@ -145,15 +149,15 @@ public class GameCanvas extends View implements Serializable {
 
 
 
-    public void setBondArrayList(ArrayList<Bond> newBonds) {
-        bondArrayList = newBonds;
-    }
-
-    public void setNodesArrayList(ArrayList<Node> newNodes) {
-        Log.v("MESSAGE#45689", "Assigning file nodes to user current nodes...");
-        shapeArrayList = newNodes;
-        Log.v("MESSAGE#45689", "... Success. Nodes assigned!");
-    }
+//    public void setBondArrayList(ArrayList<Bond> newBonds) {
+//        bondArrayList = newBonds;
+//    }
+//
+//    public void setNodesArrayList(ArrayList<Node> newNodes) {
+//        Log.v("MESSAGE#45689", "Assigning file nodes to user current nodes...");
+//        shapeArrayList = newNodes;
+//        Log.v("MESSAGE#45689", "... Success. Nodes assigned!");
+//    }
 
 
     // we should separate these - deleting a node for one button, deleting a bond for another (deleting a bond means selecting the two nodes to delete it from, then hitting the button
@@ -194,9 +198,13 @@ public class GameCanvas extends View implements Serializable {
                                 movingNode.redraw(collide.getPositionX() + (int) (collide.getWidth() * 1.5), collide.getPositionY() + (int) (collide.getHeight() / 2));
                         }
                     }
+                printAllNodes();
+                printAllBonds();
                 invalidate();
                 break;
         }
+
+
         return true;
     }
 
@@ -311,6 +319,10 @@ public class GameCanvas extends View implements Serializable {
             Node two = b.getNode2();
             if (((previousShapePicked == one) && (shapeUserSelectedThisRound == two))
                     || ((previousShapePicked == two) && (shapeUserSelectedThisRound == one))) {
+                int currentBondType = b.getBondType();
+                int netKonnections = typeBond - currentBondType;
+                previousShapePicked.addKonnections(netKonnections);
+                shapeUserSelectedThisRound.addKonnections(netKonnections);
                 b.setBondType(typeBond);
                 wasExistingBondChanged = true;
                 deselectAll();
@@ -321,7 +333,7 @@ public class GameCanvas extends View implements Serializable {
         // Case 2: Otherwise, add a new bond between two previously unbonded nodes...
         // CLEAR all previous bonds FIRST...
         if (!wasExistingBondChanged) {
-            Structure.clearAllBondsBetweenTwoNodes(shapeUserSelectedThisRound, previousShapePicked, bondArrayList);
+            //Structure.clearAllBondsBetweenTwoNodes(shapeUserSelectedThisRound, previousShapePicked, bondArrayList);
             createNewBondBetweenNodes(shapeUserSelectedThisRound, previousShapePicked);
         }
     }
@@ -336,24 +348,18 @@ public class GameCanvas extends View implements Serializable {
         switch (typeBond) {
             case 1:
                 temp.setBondType(Bond.SINGLE);
-                previousShapePicked.incrementKonnections();
-                shapeUserSelectedThisRound.incrementKonnections();
+                previousShapePicked.addKonnections(1);
+                shapeUserSelectedThisRound.addKonnections(1);
                 break;
             case 2:
                 temp.setBondType(Bond.DOUBLE);
-                previousShapePicked.incrementKonnections();
-                shapeUserSelectedThisRound.incrementKonnections();
-                previousShapePicked.incrementKonnections();
-                shapeUserSelectedThisRound.incrementKonnections();
+                previousShapePicked.addKonnections(2);
+                shapeUserSelectedThisRound.addKonnections(2);
                 break;
             case 3:
                 temp.setBondType(Bond.TRIPLE);
-                previousShapePicked.incrementKonnections();
-                shapeUserSelectedThisRound.incrementKonnections();
-                previousShapePicked.incrementKonnections();
-                shapeUserSelectedThisRound.incrementKonnections();
-                previousShapePicked.incrementKonnections();
-                shapeUserSelectedThisRound.incrementKonnections();
+                previousShapePicked.addKonnections(3);
+                shapeUserSelectedThisRound.addKonnections(3);
                 break;
         }
         deselectAll();
@@ -376,5 +382,82 @@ public class GameCanvas extends View implements Serializable {
         currentNode = null;
         firstSelectedShapeToBondWith = null;
     }
+
+
+    public void printAllBonds() {
+        int i = 1;
+        Log.v("PRINTBONDSANDNODES1", "\t\t---------------- BONDS -------------------");
+        for (Bond b : bondArrayList) {
+
+            Node one = b.getNode1();
+            Node two = b.getNode2();
+            Log.v("PRINTBONDSANDNODES1", "Bond Type: " + b.getBondType());
+            String nodeDescription1 = "\t";
+            String nodeDescription2 = "\t";
+            // Node one data
+            if (one instanceof Circle) {
+                nodeDescription1 += "Circle" + i;
+            } else if (one instanceof Square) {
+                nodeDescription1 += "Square" + i;
+            } else if (one instanceof Triangle) {
+                nodeDescription1 += "Triangle" + i;
+            } else if (one instanceof Hexagon) {
+                nodeDescription1 += "Hexagon" + i;
+            }
+            nodeDescription1 += ": Konnections: " + one.getNumberOfKonnections();
+            Log.v("PRINTBONDSANDNODES1", nodeDescription1);
+
+            // Node 2 data
+            if (two instanceof Circle) {
+                nodeDescription2 += "Circle" + i;
+            } else if (two instanceof Square) {
+                nodeDescription2 += "Square" + i;
+            } else if (two instanceof Triangle) {
+                nodeDescription2 += "Triangle" + i;
+            } else if (two instanceof Hexagon) {
+                nodeDescription2 += "Hexagon" + i;
+            }
+            nodeDescription2 += ": Konnections: " + two.getNumberOfKonnections();
+            Log.v("PRINTBONDSANDNODES1", nodeDescription2);
+            i++;
+        }
+    }
+
+
+    public void printAllNodes() {
+        int i = 1;
+        Log.v("PRINTBONDSANDNODES1", "\t\t---------------- NODES -------------------");
+        for (Node n : shapeArrayList) {
+            String nodeDescription1 = "\t";
+            if (n instanceof Circle) {
+                nodeDescription1 += "Circle" + i;
+            } else if (n instanceof Square) {
+                nodeDescription1 += "Square" + i;
+            } else if (n instanceof Triangle) {
+                nodeDescription1 += "Triangle" + i;
+            } else if (n instanceof Hexagon) {
+                nodeDescription1 += "Hexagon" + i;
+            }
+            nodeDescription1 += ": Konnections: " + n.getNumberOfKonnections();
+            Log.v("PRINTBONDSANDNODES1", nodeDescription1);
+
+            for (Node neighbor : n.getNeighbors()) {
+                String nodeDescription2 = "\t\t";
+                if (neighbor instanceof Circle) {
+                    nodeDescription2 += "Circle" + i;
+                } else if (neighbor instanceof Square) {
+                    nodeDescription2 += "Square" + i;
+                } else if (neighbor instanceof Triangle) {
+                    nodeDescription2 += "Triangle" + i;
+                } else if (neighbor instanceof Hexagon) {
+                    nodeDescription2 += "Hexagon" + i;
+                }
+                nodeDescription2 += ": Konnections: " + neighbor.getNumberOfKonnections();
+                Log.v("PRINTBONDSANDNODES1", nodeDescription2);
+            }
+            i++;
+        }
+    }
+
 
 }

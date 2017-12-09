@@ -24,17 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.io.Serializable;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import crorg.node_konnector.GamePanel.GameCanvas;
@@ -79,18 +74,18 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private int currentLevelPlaying;
     private int highestScore;
 
-    private ArrayList<Bond> userBonds_LIST;
-    private ArrayList<Node> userNodes_LIST;
+    //private ArrayList<Bond> userBonds_LIST;
+    //private ArrayList<Node> userNodes_LIST;
     private Structure answerStructure;    // the logic holding the answer for a given currentNodePlaying
-    private File userBonds_FILE;
-    private File userNodes_FILE;
-    private File answerStructure_FILE;
+    //private File userBonds_FILE;
+    //private File userNodes_FILE;
+    //private File answerStructure_FILE;
 
     // primitive data only
     private File userScore_FILE;
     private File userLevel_FILE;
 
-    private int lastLevelPlayed;
+    //private int lastLevelPlayed;
 
     private int highestLevel;
 
@@ -98,7 +93,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     private DatabaseReference userData;
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    //private DatabaseReference myRef;
 
     private int dragType;
 
@@ -129,20 +124,24 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
         // VERY IMPORTANT THING HERE - LOADING FROM FILE!!!!  //////////////////////////
         // setting up local storage for user's progres on a given currentNodePlaying...
-        final String uBondsFile = "userProgressBonds123";
-        final String uNodesFile = "userProgressNodes123";
-        final String answerStructureFile = "answerStructure123";
-        userBonds_FILE = new File(getFilesDir(), uBondsFile);
-        userNodes_FILE = new File(getFilesDir(), uNodesFile);
-        answerStructure_FILE = new File(getFilesDir(), answerStructureFile);
+        //final String uBondsFile = "userProgressBonds123";
+        //final String uNodesFile = "userProgressNodes123";
+        //final String answerStructureFile = "answerStructure123";
+        //userBonds_FILE = new File(getFilesDir(), uBondsFile);
+        //userNodes_FILE = new File(getFilesDir(), uNodesFile);
+        //answerStructure_FILE = new File(getFilesDir(), answerStructureFile);
         userScore_FILE = new File(getFilesDir(), "userScore_File");
         userLevel_FILE = new File(getFilesDir(), "userLevel_File");
 
-        userBonds_LIST = null;
-        userNodes_LIST = null;
-        answerStructure = null;
+        //userBonds_LIST = null;
+        //userNodes_LIST = null;
+        //answerStructure = null;
         //readFromFileSerial();
         answerStructure = new Structure(currentNodePlaying);
+
+        database = FirebaseDatabase.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        userData = database.getReference("USERS_TABLE");
 
         // TEMPORARILY delete these...
         //userBonds_FILE.delete();
@@ -441,7 +440,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
             }
         });
 
-
         // also need to verify number of konnections...
         checkStructure.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -450,27 +448,38 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                 game.nullifyCurrentNodeAndFirstSelectedNode();
                 ArrayList<Node> allFriendKonnections = new ArrayList<Node>();
                 if (game.getShapeArrayList().size() > 0) {
+                    Log.v("TESTCHECKBUTTON", "(1) PASSED: More than one shape in array list");
                     int numPlayerKonnectedNodes = Structure.countAllNodeRelatives(game.getShapeArrayList().get(0), allFriendKonnections);
                     // Is the player's structure intact?
                     if (numPlayerKonnectedNodes == game.getShapeArrayList().size()) {
+                        Log.v("TESTCHECKBUTTON", "(2) PASSED: Number of nodes in array list matches size calculated from recursive formula!");
                         // does the player's number of nodes match the answer num of nodes?
                         if (numPlayerKonnectedNodes == answerStructure.getNodes().size()) {
+                            Log.v("TESTCHECKBUTTON", "(3) PASSED: Number of nodes for player matches number of nodes for ANSWER STRUCTURE!");
                             // Right number of bonds?...
                             if (game.getBondArrayList().size() == answerStructure.getBonds().size()) {
+                                Log.v("TESTCHECKBUTTON", "(4) PASSED: Player bond count matches answer structure bond count!");
                                 // Now check the BOND configs...
-                                if (Structure.areBondsSimilar(game.getBondArrayList(), answerStructure.getBonds())) {
+                                if (Structure.areBondConfigsSimilar(game.getBondArrayList(), answerStructure.getBonds())) {
+                                    Log.v("TESTCHECKBUTTON", "(5) PASSED: Player bond configs matches answer bond configs!");
                                     // check All Konnections...
                                     if (Structure.checkAllCircleKonnections(game.getShapeArrayList())) {
+                                        Log.v("TESTCHECKBUTTON", "(6) PASSED: All circles have exactly 1 Konnection!");
                                         if (Structure.checkAllSquareKonnections(game.getShapeArrayList())) {
+                                            Log.v("TESTCHECKBUTTON", "(7) PASSED: All squares have exactly 2 Konnections!");
                                             if (Structure.checkAllTriangleKonnections(game.getShapeArrayList())) {
+                                                Log.v("TESTCHECKBUTTON", "(8) PASSED: All triangles have exactly 3 Konnections!");
                                                 if (Structure.checkAllHexagonKonnections(game.getShapeArrayList())) {
+                                                    Log.v("TESTCHECKBUTTON", "(9) PASSED: All hexagons have exactly 4 Konnections!");
                                                     if (Structure.areShapeConfigsSimilar(game.getShapeArrayList(), answerStructure.getNodes())) {
                                                         gameStat.setText("Congratz!");
 
+                                                        Log.v("TESTCHECKBUTTON", "(10) PASSED: Shape configs for player and the answer are similar enough!");
+                                                        Log.v("TESTCHECKBUTTON", "\t\t(SUCCESS) ALL TESTS PASSED!  USER WINS THE GAME!");
                                                         // if passed, delete local files...
-                                                        answerStructure_FILE.delete();
-                                                        userBonds_FILE.delete();
-                                                        userNodes_FILE.delete();
+                                                        //answerStructure_FILE.delete();
+                                                        //userBonds_FILE.delete();
+                                                        //userNodes_FILE.delete();
 
                                                         // check if current level playing is the highest level player get to.
                                                         if(currentLevelPlaying == highestLevel){
@@ -481,9 +490,12 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                                                         if (isLoggedIn()) {
                                                             // WE NEED to compare firebase's values with local values - if they don't match,
                                                             // set both to the HIGHER of the two.  THEN up the score and currentNodePlaying as below...
-                                                            highestScore += Math.pow(3, currentNodePlaying);
-                                                            userData.child(currentUser.getUid()).child("Score").setValue(highestScore);
-                                                            userData.child(currentUser.getUid()).child("Level").setValue(highestLevel);
+                                                            if(currentUser!=null) {
+                                                                highestScore += Math.pow(3, currentNodePlaying);
+                                                                Log.v("TESTCHECKBUTTON", "\t\t(SUCCESS)  THE GAME!");
+                                                                userData.child(currentUser.getUid()).child("Score").setValue(highestScore);
+                                                                userData.child(currentUser.getUid()).child("Level").setValue(highestLevel);
+                                                            }
                                                             // update currentNodePlaying and score LOCALLY also...
                                                         } else {
                                                             highestScore += Math.pow(3, currentNodePlaying);
@@ -527,15 +539,14 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     } else {
                         gameStat.setText("Oops! All nodes must be Konnected to the SAME structure!");
                     }
+                } else {
+                    gameStat.setText("YOU DON'T HAVE ANY NODES HERE!!!");
                 }
-
             }
         });
 
 
-        database = FirebaseDatabase.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        userData = database.getReference("USERS_TABLE");
+
     }
 
 
@@ -591,170 +602,170 @@ public class GameScreen extends AppCompatActivity implements Serializable {
 
     //
     // use these to save the current state of the currentNodePlaying...
-    public void writeToFileSerial() {
-        // write player bonds to file...
-        try {
-            FileOutputStream fos = openFileOutput(userBonds_FILE.getName(), Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(game.getBondArrayList());
-            fos.close();
-            oos.close();
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // write player nodes to file...
-        try {
-            FileOutputStream fos = openFileOutput(userNodes_FILE.getName(), Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(game.getShapeArrayList());
-            fos.close();
-            oos.close();
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // write answer to file
-        try {
-            FileOutputStream fos = openFileOutput(answerStructure_FILE.getName(), Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(answerStructure);
-            fos.close();
-            oos.close();
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // use these to save the current state of the currentNodePlaying...
-    public void readFromFileSerial() {
-        // get user nodes...
-        try {
-            FileInputStream fis = openFileInput(userNodes_FILE.getName());
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            userNodes_LIST = (ArrayList<Node>) ois.readObject();
-            ois.close();
-            fis.close();
-            Log.v("MESSAGE#45689", "User nodes loaded successfully!");
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (StreamCorruptedException ff) {
-            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
-        } catch (ClassNotFoundException ff) {
-            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
-        } catch (OptionalDataException ff) {
-            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // get user bonds...
-        try {
-            FileInputStream fis = openFileInput(userBonds_FILE.getName());
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            userBonds_LIST = (ArrayList<Bond>) ois.readObject();
-            ois.close();
-            fis.close();
-            Log.v("MESSAGE#45689", "User bonds loaded successfully!");
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (StreamCorruptedException ff) {
-            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
-        } catch (ClassNotFoundException ff) {
-            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
-        } catch (OptionalDataException ff) {
-            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // get answer structure
-        try {
-            FileInputStream fis = openFileInput(answerStructure_FILE.getName());
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            answerStructure = (Structure) ois.readObject();
-            ois.close();
-            fis.close();
-            Log.v("MESSAGE#45689", "Answer structure from file loaded successfully! Details: " + answerStructure.printNumBonds());
-
-        } catch (FileNotFoundException ff) {
-            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
-        } catch (SecurityException ff) {
-            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
-        } catch (InvalidClassException ff) {
-            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
-        } catch (StreamCorruptedException ff) {
-            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
-        } catch (ClassNotFoundException ff) {
-            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
-        } catch (OptionalDataException ff) {
-            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
-        } catch (NullPointerException ff) {
-            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
-        } catch (NotSerializableException ff) {
-            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
-        }catch (IOException ff) {
-            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void writeToFileSerial() {
+//        // write player bonds to file...
+//        try {
+//            FileOutputStream fos = openFileOutput(userBonds_FILE.getName(), Context.MODE_PRIVATE);
+//            ObjectOutputStream oos = new ObjectOutputStream(fos);
+//            oos.writeObject(game.getBondArrayList());
+//            fos.close();
+//            oos.close();
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        // write player nodes to file...
+//        try {
+//            FileOutputStream fos = openFileOutput(userNodes_FILE.getName(), Context.MODE_PRIVATE);
+//            ObjectOutputStream oos = new ObjectOutputStream(fos);
+//            oos.writeObject(game.getShapeArrayList());
+//            fos.close();
+//            oos.close();
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        // write answer to file
+//        try {
+//            FileOutputStream fos = openFileOutput(answerStructure_FILE.getName(), Context.MODE_PRIVATE);
+//            ObjectOutputStream oos = new ObjectOutputStream(fos);
+//            oos.writeObject(answerStructure);
+//            fos.close();
+//            oos.close();
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    // use these to save the current state of the currentNodePlaying...
+//    public void readFromFileSerial() {
+//        // get user nodes...
+//        try {
+//            FileInputStream fis = openFileInput(userNodes_FILE.getName());
+//            ObjectInputStream ois = new ObjectInputStream(fis);
+//            userNodes_LIST = (ArrayList<Node>) ois.readObject();
+//            ois.close();
+//            fis.close();
+//            Log.v("MESSAGE#45689", "User nodes loaded successfully!");
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (StreamCorruptedException ff) {
+//            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
+//        } catch (ClassNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
+//        } catch (OptionalDataException ff) {
+//            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        // get user bonds...
+//        try {
+//            FileInputStream fis = openFileInput(userBonds_FILE.getName());
+//            ObjectInputStream ois = new ObjectInputStream(fis);
+//            userBonds_LIST = (ArrayList<Bond>) ois.readObject();
+//            ois.close();
+//            fis.close();
+//            Log.v("MESSAGE#45689", "User bonds loaded successfully!");
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (StreamCorruptedException ff) {
+//            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
+//        } catch (ClassNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
+//        } catch (OptionalDataException ff) {
+//            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        // get answer structure
+//        try {
+//            FileInputStream fis = openFileInput(answerStructure_FILE.getName());
+//            ObjectInputStream ois = new ObjectInputStream(fis);
+//            answerStructure = (Structure) ois.readObject();
+//            ois.close();
+//            fis.close();
+//            Log.v("MESSAGE#45689", "Answer structure from file loaded successfully! Details: " + answerStructure.printNumBonds());
+//
+//        } catch (FileNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "FileNotFoundException: " + ff.getMessage());
+//        } catch (SecurityException ff) {
+//            Log.v("MESSAGE#45689", "SecurityException: " + ff.getMessage());
+//        } catch (InvalidClassException ff) {
+//            Log.v("MESSAGE#45689", "InvalidClassException: " + ff.getMessage());
+//        } catch (StreamCorruptedException ff) {
+//            Log.v("MESSAGE#45689", "StreamCorruptedException: " + ff.getMessage());
+//        } catch (ClassNotFoundException ff) {
+//            Log.v("MESSAGE#45689", "ClassNotFoundException: " + ff.getMessage());
+//        } catch (OptionalDataException ff) {
+//            Log.v("MESSAGE#45689", "OptionalDataException: " + ff.getMessage());
+//        } catch (NullPointerException ff) {
+//            Log.v("MESSAGE#45689", "NullPointerException: " + ff.getMessage());
+//        } catch (NotSerializableException ff) {
+//            Log.v("MESSAGE#45689", "NotSerializableException: " + ff.getMessage());
+//        }catch (IOException ff) {
+//            Log.v("MESSAGE#45689", "IOException: " + ff.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 //    public boolean nonSerialReadFromFile() {

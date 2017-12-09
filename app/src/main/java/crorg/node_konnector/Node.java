@@ -195,4 +195,20 @@ public class Node extends ShapeDrawable implements Serializable {
         }
     }
 
+    public void resetKonnections() {
+        numberKonnections = 0;
+    }
+
+
+    // used for changing bond types - makes new one relative to input
+    public void addKonnections(int difference) {
+        numberKonnections = numberKonnections + difference;
+        if (numberKonnections <= 0) {
+            numberKonnections = 0;
+        }
+    }
+
+
+
+
 }
