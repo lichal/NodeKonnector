@@ -241,7 +241,31 @@ public class GameCanvas extends View implements Serializable {
 
 
 
-
+    public void cycleCurrentNodeToNextShape() {
+        if (currentNode != null) {
+            if (currentNode instanceof Circle) {
+                try {
+                    currentNode =(Square) currentNode;
+                } catch (ClassCastException c) {
+                }
+            } else if (currentNode instanceof Square) {
+                try {
+                    currentNode =(Triangle) currentNode;
+                } catch (ClassCastException c) {
+                }
+            } else if (currentNode instanceof Triangle) {
+                try {
+                    currentNode =(Hexagon) currentNode;
+                } catch (ClassCastException c) {
+                }
+            } else if (currentNode instanceof Hexagon) {
+                try {
+                    currentNode =(Circle) currentNode;
+                } catch (ClassCastException c) {
+                }
+            }
+        }
+    }
 
 
 
