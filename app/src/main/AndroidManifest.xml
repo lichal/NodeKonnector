@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/approundicon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".StartUpScreen"
             android:screenOrientation="portrait">
@@ -69,15 +69,18 @@
         </service>
         <service android:name=".FirebaseIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <!--<service-->
-            <!--android:name=".FirebaseIDService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
-        <!--</service>-->
+        <!-- <service -->
+        <!-- android:name=".FirebaseIDService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"> -->
+        <!-- </service> -->
+        <activity
+            android:name=".RankingActivity"
+            android:label="@string/title_activity_ranking"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.Serializable;
 
@@ -19,6 +20,8 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
 
     private int highestLevel;
     private int highestScore;
+
+    private ImageView lock;
     // a comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,8 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
 
         LevelContent.ITEMS.clear();
 
+        lock = (ImageView) findViewById(R.id.lock);
+
         highestLevel = 1;
         highestScore = 0;
         // retreive the level information
@@ -34,7 +39,9 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
         highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
 
-        LevelContent.createList(highestLevel);
+        LevelContent.createList(highestLevel+4);
+
+        LevelAdapter.setLevel(highestLevel);
     }
 
     @Override

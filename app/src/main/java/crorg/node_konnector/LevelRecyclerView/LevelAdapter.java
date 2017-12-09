@@ -23,15 +23,15 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
 
     private final List<LevelItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private int level = 0;
+    private static int level = 0;
 
     public LevelAdapter(List<LevelItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public static void setLevel(int level){
-
+    public static void setLevel(int lev){
+        level = lev;
     }
 
     @Override
@@ -46,8 +46,14 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.ViewHolder> 
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
-        if(position <= level)
+        holder.mView.setEnabled(false);
+        holder.mlock.setVisibility(View.VISIBLE);
+        if(position < level) {
             holder.mlock.setVisibility(View.INVISIBLE);
+            holder.mView.setEnabled(true);
+        }
+
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
