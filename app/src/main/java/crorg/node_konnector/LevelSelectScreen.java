@@ -19,12 +19,8 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     public static final String HIGHEST_SCORE = "crorg.nodekonnector.HIGHESTSCORE";
     public static final String HIGHEST_LEVEL = "crorg.nodekonnector.HIGHESTLEVEL";
 
-    public static final int RANKING_TRANS = 10023;
-
     private int highestLevel;
     private int highestScore;
-
-    private ImageView lock;
     // a comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +28,6 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         setContentView(R.layout.activity_main);
 
         LevelContent.ITEMS.clear();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        lock = (ImageView) findViewById(R.id.lock);
 
         highestLevel = 1;
         highestScore = 0;
@@ -70,24 +62,6 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     protected void onPause(){
         super.onPause();
         Log.d("MESSAGE#", "PAUSE");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.rankingMenu) {
-//            Intent intent = new Intent(LevelSelectScreen.this,
-//                    RankingActivity.class);
-
-//            startActivityForResult(intent, RANKING_TRANS );
-//            return true;
-        }
-        return false;
     }
 
 }
