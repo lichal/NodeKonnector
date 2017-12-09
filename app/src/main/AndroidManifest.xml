@@ -80,7 +80,8 @@
         <!-- </service> -->
         <activity
             android:name=".RankingActivity"
-            android:label="@string/title_activity_ranking"></activity>
+            android:label="@string/title_activity_ranking"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
