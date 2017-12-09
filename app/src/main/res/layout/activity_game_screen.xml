@@ -23,23 +23,30 @@
 
     <ToggleButton
         android:id="@+id/bondButton"
+        style="@android:style/Widget.Button.Toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="ToggleButton"
+        android:layout_marginLeft="8dp"
+        android:textOn=""
+        android:textOff=""
+        android:padding="2dp"
+        android:drawableTop="@drawable/singlebond"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/checkStructure"
-        android:layout_marginLeft="0dp" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/checkStructure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:text="@string/checkStruct"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/tripleButton"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
         android:id="@+id/numShapes"
@@ -68,25 +75,31 @@
 
     <ToggleButton
         android:id="@+id/doubleButton"
+        style="@android:style/Widget.Button.Toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ToggleButton"
-        app:layout_constraintLeft_toRightOf="@+id/bondButton"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
+        android:drawableTop="@drawable/doublebond"
+        android:padding="2dp"
+        android:textOff=""
+        android:textOn=""
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintLeft_toRightOf="@+id/bondButton" />
 
     <ToggleButton
         android:id="@+id/tripleButton"
+        style="@android:style/Widget.Button.Toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ToggleButton"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/doubleButton"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="8dp"
+        android:drawableTop="@drawable/triplebond"
+        android:padding="2dp"
+        android:textOff=""
+        android:textOn=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/doubleButton" />
 
     <TextView
         android:id="@+id/gameStat"
@@ -109,7 +122,7 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/circle"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkStructure"
+        app:layout_constraintBottom_toTopOf="@+id/bondButton"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -121,7 +134,7 @@
         app:layout_constraintLeft_toRightOf="@+id/circleView"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkStructure" />
+        app:layout_constraintBottom_toTopOf="@+id/bondButton" />
 
     <ImageView
         android:id="@+id/triangleView"
@@ -129,9 +142,9 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/triangle"
         app:layout_constraintLeft_toRightOf="@+id/squareView"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/bondButton" />
+        app:layout_constraintBottom_toTopOf="@+id/doubleButton" />
 
     <ImageView
         android:id="@+id/hexagonView"
@@ -139,19 +152,20 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/hexagon"
         app:layout_constraintLeft_toRightOf="@+id/triangleView"
-        android:layout_marginLeft="7dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/doubleButton" />
 
     <ImageButton
         android:id="@+id/trashBtn"
+        style="@style/Base.Widget.AppCompat.DrawerArrowToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintBottom_toTopOf="@+id/doubleButton"
-        app:layout_constraintLeft_toRightOf="@+id/hexagonView"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@android:drawable/ic_delete" />
 
 
 </android.support.constraint.ConstraintLayout>

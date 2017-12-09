@@ -229,10 +229,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         trashButton = (ImageButton) findViewById(R.id.trashBtn);
 
 
-        singleButton.setText("Single");
-        doubleButton.setText("Double");
-        tripleButton.setText("Triple");
-
         singleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -259,9 +255,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     trashButton.setEnabled(true);
                     game.invalidate();
                 }
-                singleButton.setText("Single");
-                doubleButton.setText("Double");
-                tripleButton.setText("Triple");
             }
         });
 
@@ -291,9 +284,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     trashButton.setEnabled(true);
                     game.invalidate();
                 }
-                singleButton.setText("Single");
-                doubleButton.setText("Double");
-                tripleButton.setText("Triple");
             }
         });
 
@@ -323,9 +313,6 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                     trashButton.setEnabled(true);
                     game.invalidate();
                 }
-                singleButton.setText("Single");
-                doubleButton.setText("Double");
-                tripleButton.setText("Triple");
             }
         });
 

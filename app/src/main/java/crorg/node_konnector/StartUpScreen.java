@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.File;
@@ -201,7 +199,7 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
             currentLevel = 1;
         }
         if(scoreReadFromFile()){
-//            Log.d("MESSAGE###", "score read" + currentScore);
+            Log.d("MESSAGE###", "score read" + currentScore);
         }else{
             currentScore = 0;
         }
@@ -360,10 +358,11 @@ public class StartUpScreen extends AppCompatActivity implements Serializable, Fa
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.v("MESSAGE#", "callback");
         // Pass the activity result back to the Facebook SDK
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
