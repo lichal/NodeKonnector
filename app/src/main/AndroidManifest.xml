@@ -79,9 +79,14 @@
         <!-- android:exported="true"> -->
         <!-- </service> -->
         <activity
+
+            android:name=".TestingArrowThing"
+            android:label="@string/title_activity_testing_arrow_thing"></activity>
+        <activity
             android:name=".RankingActivity"
             android:label="@string/title_activity_ranking"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+
     </application>
 
 </manifest>
