@@ -110,7 +110,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         currentNodePlaying = 0;
         highestLevel = 1;
 
-        cycleButton = (Button) findViewById(R.id.button2);
+        //cycleButton = (Button) findViewById(R.id.button2);
 
         // intent gets the currentNodePlaying selected
         Intent intent = getIntent();
