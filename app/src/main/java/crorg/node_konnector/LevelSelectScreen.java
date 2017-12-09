@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ImageView;
 
 import java.io.Serializable;
 
@@ -17,8 +20,12 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     public static final String HIGHEST_SCORE = "crorg.nodekonnector.HIGHESTSCORE";
     public static final String HIGHEST_LEVEL = "crorg.nodekonnector.HIGHESTLEVEL";
 
+    public static final int RANKING_TRANS = 10023;
+
     private int highestLevel;
     private int highestScore;
+
+    private ImageView lock;
     // a comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,10 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
 
         LevelContent.ITEMS.clear();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        lock = (ImageView) findViewById(R.id.lock);
+
         highestLevel = 1;
         highestScore = 0;
         // retreive the level information
@@ -34,7 +45,9 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         highestLevel = intent.getIntExtra(StartUpScreen.LEVEL_NOW, highestLevel);
         highestScore = intent.getIntExtra(StartUpScreen.SCORE_NOW, highestScore);
 
-        LevelContent.createList(highestLevel);
+        LevelContent.createList(highestLevel+4);
+
+        LevelAdapter.setLevel(highestLevel);
     }
 
     @Override
@@ -50,6 +63,7 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
         //Log.v("MESSAGE#45689", "BEFORE sending intent...ItemID: " + item.id);
         startActivity(intent);
         //Log.v("MESSAGE#45689", "AFER sending intent...");
+        finish();
     }
 
 
@@ -57,7 +71,24 @@ public class LevelSelectScreen extends AppCompatActivity implements LevelFragmen
     protected void onPause(){
         super.onPause();
         Log.d("MESSAGE#", "PAUSE");
-        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.rankingMenu) {
+            Intent intent = new Intent(LevelSelectScreen.this,
+                    RankingActivity.class);
+
+            startActivityForResult(intent, RANKING_TRANS );
+            return true;
+        }
+        return false;
     }
 
 }
