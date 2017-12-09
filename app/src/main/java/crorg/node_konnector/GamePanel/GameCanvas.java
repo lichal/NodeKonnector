@@ -20,7 +20,10 @@ import crorg.node_konnector.GameScreen;
 import crorg.node_konnector.Node;
 import crorg.node_konnector.Scaler;
 import crorg.node_konnector.Shapes.Circle;
+import crorg.node_konnector.Shapes.DrawPath;
 import crorg.node_konnector.Shapes.Hexagon;
+import crorg.node_konnector.Shapes.MyOvalShape;
+import crorg.node_konnector.Shapes.MyPathShape;
 import crorg.node_konnector.Shapes.Square;
 import crorg.node_konnector.Shapes.Triangle;
 import crorg.node_konnector.Structure;
@@ -65,11 +68,13 @@ public class GameCanvas extends View implements Serializable {
     private Paint paint3;
     private Paint paint4;
     private Paint paint5;
+    private DrawPath drawShape;
 
     private GameScreen gameScreen;
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        drawShape = new DrawPath();
 
         //Log.v("MESSAGE#45689", "After super method in game canvas...");
 
@@ -241,31 +246,39 @@ public class GameCanvas extends View implements Serializable {
 
 
 
-    public void cycleCurrentNodeToNextShape() {
-        if (currentNode != null) {
-            if (currentNode instanceof Circle) {
-                try {
-                    currentNode =(Square) currentNode;
-                } catch (ClassCastException c) {
-                }
-            } else if (currentNode instanceof Square) {
-                try {
-                    currentNode =(Triangle) currentNode;
-                } catch (ClassCastException c) {
-                }
-            } else if (currentNode instanceof Triangle) {
-                try {
-                    currentNode =(Hexagon) currentNode;
-                } catch (ClassCastException c) {
-                }
-            } else if (currentNode instanceof Hexagon) {
-                try {
-                    currentNode =(Circle) currentNode;
-                } catch (ClassCastException c) {
-                }
-            }
-        }
-    }
+//    public void cycleCurrentNodeToNextShape() {
+//        Circle circle = new Circle(new MyOvalShape(), currentNode.getMidX(), currentNode.getMidY());
+//        Square square = new Square(new MyPathShape(drawShape.drawSquare(), 100, 100), currentNode.getMidX(), currentNode.getMidY());
+//        Triangle triangle = new Triangle(new MyPathShape(drawShape.drawTriangle(), 100, 100), currentNode.getMidX(), currentNode.getMidY());
+//        Hexagon hexagon = new Hexagon(new MyPathShape(drawShape.drawHexagon(), 100, 100), currentNode.getMidX(), currentNode.getMidY());
+//        if (currentNode != null) {
+//            if (currentNode instanceof Circle) {
+//                try {
+//                    currentNode =(Square) currentNode;
+//                    currentNode.setShape(square.getShapeFromParent());
+//                } catch (ClassCastException c) {
+//                }
+//            } else if (currentNode instanceof Square) {
+//                try {
+//                    currentNode =(Triangle) currentNode;
+//                    currentNode.setShape(triangle.getShapeFromParent());
+//                } catch (ClassCastException c) {
+//                }
+//            } else if (currentNode instanceof Triangle) {
+//                try {
+//                    currentNode =(Hexagon) currentNode;
+//                    currentNode.setShape(hexagon.getShapeFromParent());
+//                } catch (ClassCastException c) {
+//                }
+//            } else if (currentNode instanceof Hexagon) {
+//                try {
+//                    currentNode =(Circle) currentNode;
+//                    currentNode.setShape(circle.getShapeFromParent());
+//                } catch (ClassCastException c) {
+//                }
+//            }
+//        }
+//    }
 
 
 

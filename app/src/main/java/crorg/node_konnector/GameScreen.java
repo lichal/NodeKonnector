@@ -88,6 +88,7 @@ public class GameScreen extends AppCompatActivity implements Serializable {
     //private int lastLevelPlayed;
 
     private int highestLevel;
+    private Button cycleButton;
 
     /** Firecase set and retrieve variables */
     private DatabaseReference userData;
@@ -108,6 +109,8 @@ public class GameScreen extends AppCompatActivity implements Serializable {
         currentLevelPlaying = 1;
         currentNodePlaying = 0;
         highestLevel = 1;
+
+        cycleButton = (Button) findViewById(R.id.button2);
 
         // intent gets the currentNodePlaying selected
         Intent intent = getIntent();
@@ -426,6 +429,18 @@ public class GameScreen extends AppCompatActivity implements Serializable {
                 Log.v("ERROR44", "Passed trash button");
             }
         });
+
+//        cycleButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                game.cycleCurrentNodeToNextShape();
+//                game.deselectAll();
+//                game.nullifyCurrentNodeAndFirstSelectedNode();
+//                game.invalidate();
+//                Log.v("Cycled", "cycled!");
+//            }
+//        });
+
 
         // also need to verify number of konnections...
         checkStructure.setOnClickListener(new View.OnClickListener() {

@@ -20,4 +20,8 @@ public class Square extends Node implements Serializable {
         getPaint().setColor(Color.BLUE);
         setBounds(x, y, x + width, y + height);
     }
+
+    public Shape getShapeFromParent() {
+        return s;
+    }
 }

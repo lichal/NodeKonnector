@@ -22,4 +22,8 @@ public class Circle extends Node implements Serializable{
         setBounds(x, y, x + width, y + height);
     }
 
+    public Shape getShapeFromParent() {
+        return s;
+    }
+
 }

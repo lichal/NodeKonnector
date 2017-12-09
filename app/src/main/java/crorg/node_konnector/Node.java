@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import crorg.node_konnector.Shapes.DrawPath;
+import crorg.node_konnector.Shapes.MyPathShape;
 
 /**
  * Created by Ryan on 2017-11-27.
@@ -102,6 +103,9 @@ public class Node extends ShapeDrawable implements Serializable {
         return neighbors;
     }
 
+    public Shape getShape() {
+        return s;
+    }
 
     public int getPositionX() {
         return positionX;
@@ -207,6 +211,10 @@ public class Node extends ShapeDrawable implements Serializable {
             numberKonnections = 0;
         }
     }
+
+    //public void setShape(MyPathShape s){
+      //  this.s = s;
+    //}
 
 
 
